@@ -7,9 +7,14 @@
 
 %options case-insensitive
 
-
+exp_bool  					    "true"|"false"
+exp_id 						    [a-zA-Z_][a-zA-Z0-9_]*
+exp_entero  				    [0-9]+\b
+exp_decimal 				    [0-9]+("."[0-9]+)?\b 
 exp_comentario_multilinea 	    \/\*[\s\S]*?\*\/
 exp_comentario_simple 		    \/\/.*
+exp_char 			            \'(([^\n\"\\]|\\.)*)\'
+exp_string  			        [\"][^\"\n]+[\"]
 
 
 %%
@@ -20,8 +25,8 @@ exp_comentario_simple 		    \/\/.*
 {COM_SIMPLE} 		    {} /* No hacer nada */
 
 /* Expresiones Regulares */
-{exp_comentario_multilinea}		 return 'COMENTARIO_MULTILINEA'; 
-{exp_comentario_simple}			 return 'COMENTARIO_SIMPLE'; 
+{exp_comentario_multilinea}		 return 'COM_MULT'; 
+{exp_comentario_simple}			 return 'COM_SIMPLE'; 
 
 
 // Palabras reservadas
@@ -32,6 +37,15 @@ exp_comentario_simple 		    \/\/.*
 'char'				return 'PR_CHAR';
 'std::string'	    return 'PR_STRING';
 
+
+{exp_bool}		    return 'BOOLEAN'; 
+{exp_char}		    return 'CHAR'; 
+{exp_string}	    return 'STRING'; 
+{exp_id}		    return 'ID'; 
+{exp_decimal}	    return 'DECIMAL'; 
+{exp_entero}		return 'ENTERO'; 
+
+
 // Secuencias de Escape
 '\\n'				return 'SALTO_LINEA';
 '\\'                return 'BARRA_INVERTIDA';
@@ -39,34 +53,37 @@ exp_comentario_simple 		    \/\/.*
 '\\t'				return 'TABULACION';
 '\''                return 'COMILLA_SIMPLE';
 
-
 // Operadores
-'+'                return 'MAS';
-'-'                return 'MENOS';
-'*'                return 'POR';
-'/'                return 'DIVIDIDO';
-'pow'              return 'POTENCIA';
-'%'                return 'MODULO';
-'-exp'             return 'UMENOS';
+'+'                 return 'MAS';
+'-'                 return 'MENOS';
+'*'                 return 'POR';
+'/'                 return 'DIVIDIDO';
+'pow'               return 'POTENCIA';
+'%'                 return 'MODULO';
+'-exp'              return 'UMENOS';
 
 // Operadores relacionales
-'=='               return 'IGUALES';
-'!='               return 'DIFERENTE';
-'<'                return 'MENOR_QUE';
-'<='               return 'MENOR_IGUAL';
-'>'                return 'MAYOR_QUE';
-'>='               return 'MAYOR_IGUAL';
+'=='                return 'IGUALES';
+'!='                return 'DIFERENTE';
+'<'                 return 'MENOR_QUE';
+'<='                return 'MENOR_IGUAL';
+'>'                 return 'MAYOR_QUE';
+'>='                return 'MAYOR_IGUAL';
+'='                 return 'IGUAL';
 
 // Operadores lógicos
-'||'               return 'OR';
-'&&'               return 'AND';
-'!'                return 'NOT';
+'||'                return 'OR';
+'&&'                return 'AND';
+'!'                 return 'NOT';
 
 // Simbolos
 '('                 return 'PARIZQ';
 ')'                 return 'PARDER';
 "{"                 return 'LLAVIZQ';
 "}"                 return 'LLAVDER';
+';'                 return 'PTCOMA';
+','                 return 'COMA';
+
 
 
 
@@ -100,6 +117,35 @@ instrucciones
 	| instruccion
 ;
 
+instruccion
+    : declaracionVariables
+;
+
+identificadores
+    : ID COMA identificadores
+    | ID
+;
+
+tiposVar
+    : PR_INT
+    | PR_DOUBLE
+    | PR_BOOL
+    | PR_CHAR
+    | PR_STRING
+;
+
+valores 
+    : ENTERO
+    | DECIMAL
+    | BOOLEAN
+    | STRING
+    | CHAR
+;
+
+declaracionVariables
+    : tiposVar identificadores PTCOMA
+    | tiposVar identificadores IGUAL valores PTCOMA
+;
 
 
 
