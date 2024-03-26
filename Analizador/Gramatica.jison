@@ -9,8 +9,8 @@
 
 exp_bool  					    "true"|"false"
 exp_id 						    [a-zA-Z_][a-zA-Z0-9_]*
+exp_decimal 				    [0-9]+\.[0-9]+\b
 exp_entero  				    [0-9]+\b
-exp_decimal 				    [0-9]+("."[0-9]+)?\b 
 exp_comentario_multilinea 	    \/\*[\s\S]*?\*\/
 exp_comentario_simple 		    \/\/.*
 exp_char 			            \'(([^\n\"\\]|\\.)*)\'
@@ -36,6 +36,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 'bool'				return 'PR_BOOL';
 'char'				return 'PR_CHAR';
 'std::string'	    return 'PR_STRING';
+'new'	            return 'PR_NEW';
+'if'	            return 'PR_IF';
+'else'	            return 'PR_ELSE';
+'while'	            return 'PR_WHILE';
 
 
 {exp_bool}		    return 'BOOLEAN'; 
@@ -44,6 +48,8 @@ exp_string  			        [\"][^\"\n]+[\"]
 {exp_id}		    return 'ID'; 
 {exp_decimal}	    return 'DECIMAL'; 
 {exp_entero}		return 'ENTERO'; 
+
+
 
 
 // Secuencias de Escape
@@ -65,10 +71,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 // Operadores relacionales
 '=='                return 'IGUALES';
 '!='                return 'DIFERENTE';
-'<'                 return 'MENOR_QUE';
 '<='                return 'MENOR_IGUAL';
-'>'                 return 'MAYOR_QUE';
 '>='                return 'MAYOR_IGUAL';
+'>'                 return 'MAYOR_QUE';
+'<'                 return 'MENOR_QUE';
 '='                 return 'IGUAL';
 
 // Operadores lógicos
@@ -79,8 +85,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 // Simbolos
 '('                 return 'PARIZQ';
 ')'                 return 'PARDER';
-"{"                 return 'LLAVIZQ';
-"}"                 return 'LLAVDER';
+'{'                 return 'LLAVIZQ';
+'}'                 return 'LLAVDER';
+'['                 return 'CORIZQ';
+']'                 return 'CORDER';
 ';'                 return 'PTCOMA';
 ','                 return 'COMA';
 
@@ -119,6 +127,14 @@ instrucciones
 
 instruccion
     : declaracionVariables
+    | VectoresMatrices
+    | sentenciaIfCompleta
+    | comentarios 
+;
+
+comentarios 
+    : COM_MULT
+    | COM_SIMPLE
 ;
 
 identificadores
@@ -135,17 +151,91 @@ tiposVar
 ;
 
 valores 
-    : ENTERO
-    | DECIMAL
+    : DECIMAL
+    | ENTERO
     | BOOLEAN
     | STRING
     | CHAR
+    | ID
 ;
+
+valoresArreglos
+    : valoresArreglos COMA valores
+    | valores
+;
+
 
 declaracionVariables
     : tiposVar identificadores PTCOMA
     | tiposVar identificadores IGUAL valores PTCOMA
+    // Casteos
+    | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valores PTCOMA
+;
+
+//Incremento y Decremento de variables
+IncrementoDecremento
+    : ID MAS MAS
+    | ID MENOS MENOS
 ;
 
 
+// Estructura de Datos
+// Vectores
 
+VectoresMatrices
+    // Tipo 1 de vectores y matrices declarados con tamaño
+    : tiposVar ID CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ ENTERO CORDER PTCOMA
+    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER PTCOMA
+    // Tipo 2 de vectores y matrices declarados directamente
+    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA
+    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ CORIZQ valoresArreglos CORDER COMA CORIZQ valoresArreglos CORDER CORDER PTCOMA
+    // Acceso a Vectores
+    | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER PTCOMA
+    | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER PTCOMA
+    // Modificacion de Vectores
+    | ID CORIZQ ENTERO CORDER IGUAL valores PTCOMA
+    | ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL valores PTCOMA
+
+;
+
+
+// Setentecia if 
+sentenciaIf
+    : PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+;
+
+sentenciaIfElse
+    : sentenciaIfElse PR_ELSE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER 
+    | PR_ELSE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+;
+
+sentenciaElse
+    : PR_ELSE LLAVIZQ instrucciones LLAVDER
+;
+
+sentenciaIfCompleta
+    : sentenciaIf sentenciaIfElse sentenciaElse
+    | sentenciaIf sentenciaIfElse
+    | sentenciaIf sentenciaElse
+    | sentenciaIf
+;
+
+
+// Sentencia Relacionales
+sentenciaRelacional
+    : valores IGUALES valores
+    | valores DIFERENTE valores
+    | valores MENOR_QUE valores
+    | valores MENOR_IGUAL valores
+    | valores MAYOR_QUE valores
+    | valores MAYOR_IGUAL valores
+    | valores
+    | NOT valores
+;
+
+// Sentencia Logicas
+sentenciaLogica
+    : sentenciaLogica OR sentenciaRelacional 
+    | sentenciaLogica AND sentenciaRelacional
+    | sentenciaRelacional
+;
