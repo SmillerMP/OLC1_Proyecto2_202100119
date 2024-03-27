@@ -35,7 +35,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 'double'			return 'PR_DOUBLE';
 'bool'				return 'PR_BOOL';
 'char'				return 'PR_CHAR';
-'std::string'	    return 'PR_STRING';
+'string'	    return 'PR_STRING';
 'new'	            return 'PR_NEW';
 'if'	            return 'PR_IF';
 'else'	            return 'PR_ELSE';
@@ -48,6 +48,16 @@ exp_string  			        [\"][^\"\n]+[\"]
 'void'	            return 'PR_VOID';
 'cout'	            return 'PR_COUT';
 'endl'	            return 'PR_ENDL';
+'toupper'	        return 'PR_TOUPPER';
+'tolower'	        return 'PR_TOLOWER';
+'round'	            return 'PR_ROUND';
+'leghth'	        return 'PR_LENGTH';
+'typeof'	        return 'PR_TYPEOF';
+'tostring'	        return 'PR_TOSTRING';
+'std'	            return 'PR_STD';
+'c_str'	            return 'PR_C_STR';
+'execute'	        return 'PR_EXECUTE';
+
 
 {exp_bool}		    return 'BOOLEAN'; 
 {exp_char}		    return 'CHAR'; 
@@ -60,10 +70,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 
 
 // Secuencias de Escape
-'\\n'				return 'SALTO_LINEA';
+'\n'				return 'SALTO_LINEA';
 '\\'                return 'BARRA_INVERTIDA';
 '\"'				return 'COMILLA_DOBLE';
-'\\t'				return 'TABULACION';
+'\t'				return 'TABULACION';
 '\''                return 'COMILLA_SIMPLE';
 
 // Operadores
@@ -101,6 +111,8 @@ exp_string  			        [\"][^\"\n]+[\"]
 ']'                 return 'CORDER';
 ';'                 return 'PTCOMA';
 ','                 return 'COMA';
+':'                 return 'DOSPUNTOS';
+'.'                 return 'PUNTO';
 
 
 
@@ -144,7 +156,8 @@ instruccion
     | cicloFor
     | funciones
     | metodos
-    | impresion
+    | funcionExecute
+    | impresionCout
     | PR_BREAK PTCOMA
     | PR_CONTINUE PTCOMA
     | PR_RETURN valoresPlus PTCOMA
@@ -162,13 +175,25 @@ identificadores
     | ID
 ;
 
+secuenciasEscape
+    : secuenciasEscape SALTO_LINEA
+    | secuenciasEscape BARRA_INVERTIDA
+    | secuenciasEscape COMILLA_DOBLE
+    | secuenciasEscape TABULACION
+    | secuenciasEscape COMILLA_SIMPLE
+    | SALTO_LINEA
+    | BARRA_INVERTIDA
+    | COMILLA_DOBLE
+    | TABULACION
+    | COMILLA_SIMPLE
+;
 
 tiposVar
     : PR_INT
     | PR_DOUBLE
     | PR_BOOL
     | PR_CHAR
-    | PR_STRING
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_STRING
 ;
 
 valores
@@ -208,6 +233,12 @@ declaracionVariables
     | tiposVar identificadores IGUAL valoresPlus PTCOMA
     | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
+    | tiposVar identificadores IGUAL PR_TOUPPER PARIZQ STRING PARDER PTCOMA
+    | tiposVar identificadores IGUAL PR_TOLOWER PARIZQ STRING PARDER PTCOMA
+    | tiposVar identificadores IGUAL PR_ROUND PARIZQ DECIMAL PARDER PTCOMA
+    | tiposVar identificadores IGUAL PR_ROUND PARIZQ ENTERO PARDER PTCOMA
+    | tiposVar identificadores IGUAL ID PUNTO PR_LENGTH PARIZQ PARDER PTCOMA
+    | tiposVar identificadores IGUAL PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER PTCOMA
     // Casteos
     | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
 
@@ -219,10 +250,6 @@ IncrementoDecremento
     | ID MENOS MENOS
 ;
 
-impresion 
-    : PR_COUT SALIDA valoresPlus SALIDA PR_ENDL PTCOMA
-    | PR_COUT SALIDA valoresPlus PTCOMA
-;
 
 // Estructura de Datos
 // Vectores
@@ -240,6 +267,8 @@ VectoresMatrices
     // Modificacion de Vectores
     | ID CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
     | ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
+    // fUNCION C_STR
+    | tiposVar ID CORIZQ CORDER IGUAL ID PUNTO PR_C_STR PARIZQ PARDER PTCOMA
 
 ;
 
@@ -317,4 +346,33 @@ metodos
     // llamados para metodos y funciones
     | ID PARIZQ valoresArreglos PARDER PTCOMA
     | ID PARIZQ PARDER PTCOMA
+;
+
+
+funcionExecute 
+    : PR_EXECUTE ID PARIZQ valoresArreglos PARDER PTCOMA
+    | PR_EXECUTE ID PARIZQ PARDER PTCOMA
+;
+
+
+posibilidadesCout
+    : valoresPlus
+    | ID PARIZQ valoresArreglos PARDER
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER
+    | PR_TYPEOF PARIZQ ID PARDER
+    | ID PUNTO PR_LENGTH PARIZQ PARDER
+    | PR_ROUND PARIZQ DECIMAL PARDER
+    | PR_ROUND PARIZQ ENTERO PARDER
+    | PR_TOUPPER PARIZQ STRING PARDER
+    | PR_TOLOWER PARIZQ STRING PARDER
+    | PR_ENDL
+;
+
+funcionCout
+    : funcionCout SALIDA posibilidadesCout
+    | posibilidadesCout 
+;
+
+impresionCout 
+    : PR_COUT SALIDA funcionCout PTCOMA
 ;
