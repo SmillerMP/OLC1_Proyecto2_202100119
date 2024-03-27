@@ -40,7 +40,14 @@ exp_string  			        [\"][^\"\n]+[\"]
 'if'	            return 'PR_IF';
 'else'	            return 'PR_ELSE';
 'while'	            return 'PR_WHILE';
-
+'for'	            return 'PR_FOR';
+'do'	            return 'PR_DO';
+'break'	            return 'PR_BREAK';
+'continue'	        return 'PR_CONTINUE';
+'return'	        return 'PR_RETURN';
+'void'	            return 'PR_VOID';
+'cout'	            return 'PR_COUT';
+'endl'	            return 'PR_ENDL';
 
 {exp_bool}		    return 'BOOLEAN'; 
 {exp_char}		    return 'CHAR'; 
@@ -66,7 +73,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 '/'                 return 'DIVIDIDO';
 'pow'               return 'POTENCIA';
 '%'                 return 'MODULO';
-'-exp'              return 'UMENOS';
+
+// otras
+'>>'                return 'ENTRADA';
+'<<'                return 'SALIDA';
 
 // Operadores relacionales
 '=='                return 'IGUALES';
@@ -91,6 +101,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 ']'                 return 'CORDER';
 ';'                 return 'PTCOMA';
 ','                 return 'COMA';
+
 
 
 
@@ -129,6 +140,15 @@ instruccion
     : declaracionVariables
     | VectoresMatrices
     | sentenciaIfCompleta
+    | ciclosWhile
+    | cicloFor
+    | funciones
+    | metodos
+    | impresion
+    | PR_BREAK PTCOMA
+    | PR_CONTINUE PTCOMA
+    | PR_RETURN valoresPlus PTCOMA
+    | PR_RETURN PTCOMA
     | comentarios 
 ;
 
@@ -142,6 +162,7 @@ identificadores
     | ID
 ;
 
+
 tiposVar
     : PR_INT
     | PR_DOUBLE
@@ -150,8 +171,10 @@ tiposVar
     | PR_STRING
 ;
 
-valores 
-    : DECIMAL
+valores
+    : MENOS DECIMAL
+    | MENOS ENTERO
+    | DECIMAL
     | ENTERO
     | BOOLEAN
     | STRING
@@ -159,17 +182,35 @@ valores
     | ID
 ;
 
-valoresArreglos
-    : valoresArreglos COMA valores
+valoresPlus
+    : valoresPlus MAS valores
+    | valoresPlus MENOS valores
+    | valoresPlus POR valores
+    | valoresPlus DIVIDIDO valores
+    | valoresPlus POTENCIA valores
+    | valoresPlus MODULO valores
     | valores
 ;
 
 
+valoresArreglos
+    : valoresArreglos COMA valoresPlus
+    | valoresPlus
+;
+
+arregloDeclaraciones
+    : arregloDeclaraciones COMA tiposVar ID 
+    | tiposVar ID 
+;
+
 declaracionVariables
     : tiposVar identificadores PTCOMA
-    | tiposVar identificadores IGUAL valores PTCOMA
+    | tiposVar identificadores IGUAL valoresPlus PTCOMA
+    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA
+    | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     // Casteos
-    | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valores PTCOMA
+    | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
+
 ;
 
 //Incremento y Decremento de variables
@@ -178,6 +219,10 @@ IncrementoDecremento
     | ID MENOS MENOS
 ;
 
+impresion 
+    : PR_COUT SALIDA valoresPlus SALIDA PR_ENDL PTCOMA
+    | PR_COUT SALIDA valoresPlus PTCOMA
+;
 
 // Estructura de Datos
 // Vectores
@@ -193,8 +238,8 @@ VectoresMatrices
     | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER PTCOMA
     | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER PTCOMA
     // Modificacion de Vectores
-    | ID CORIZQ ENTERO CORDER IGUAL valores PTCOMA
-    | ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL valores PTCOMA
+    | ID CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
+    | ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
 
 ;
 
@@ -205,8 +250,8 @@ sentenciaIf
 ;
 
 sentenciaIfElse
-    : sentenciaIfElse PR_ELSE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER 
-    | PR_ELSE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+    : sentenciaIfElse PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER 
+    | PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
 ;
 
 sentenciaElse
@@ -223,14 +268,14 @@ sentenciaIfCompleta
 
 // Sentencia Relacionales
 sentenciaRelacional
-    : valores IGUALES valores
-    | valores DIFERENTE valores
-    | valores MENOR_QUE valores
-    | valores MENOR_IGUAL valores
-    | valores MAYOR_QUE valores
-    | valores MAYOR_IGUAL valores
-    | valores
-    | NOT valores
+    : valoresPlus IGUALES valoresPlus
+    | valoresPlus DIFERENTE valoresPlus
+    | valoresPlus MENOR_QUE valoresPlus
+    | valoresPlus MENOR_IGUAL valoresPlus
+    | valoresPlus MAYOR_QUE valoresPlus
+    | valoresPlus MAYOR_IGUAL valoresPlus
+    | valoresPlus
+    | NOT valoresPlus
 ;
 
 // Sentencia Logicas
@@ -238,4 +283,38 @@ sentenciaLogica
     : sentenciaLogica OR sentenciaRelacional 
     | sentenciaLogica AND sentenciaRelacional
     | sentenciaRelacional
+;
+
+
+// Ciclos
+ciclosWhile
+    // Ciclo While
+    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+
+    // Ciclo Do While
+    | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA
+;
+
+cicloFor
+    : PR_FOR PARIZQ declaracionVariables PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+
+    | PR_FOR PARIZQ tiposVar identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+;
+
+
+// Funciones
+funciones 
+    : tiposVar ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
+    | tiposVar ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
+
+;
+
+// Metedos
+metodos
+    : PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
+    | PR_VOID ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
+    
+    // llamados para metodos y funciones
+    | ID PARIZQ valoresArreglos PARDER PTCOMA
+    | ID PARIZQ PARDER PTCOMA
 ;
