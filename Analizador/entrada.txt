@@ -1,0 +1,106 @@
+
+int numero;
+int var1, var2, var3;
+std::string cadena = "hola";
+char var4 = 'a';
+bool flag = true;
+double a, b, c = 5.5;
+
+double numero = (double) 16; 
+double vector [] = new double [ 102 ] ;
+char vector2[][] = new char[4][4];
+std::string vector3[] = ["Hola", "Mundo"];
+int vector4 [][] = [ [1, 2], [3, 4] ];
+
+std::string vector3[] = ["Hola", "Mundo"];
+std::string valor3 = vector3[0];  //hola
+
+int vector4 [][] = [ [1, 2], [3, 4] ];
+int valor4 = vector4[0][0]; // Almacena el valor 1
+
+// Ejemplos
+std::string vector3[] = ["Hola", "Mundo"];
+vector3[0] = "OLC1";
+vector3[1] = "1er Semestre";
+
+if (4 >= 4 || !true ) {
+    // hola coma
+} else if ( !true && x > 7) {
+    // hola
+} else {
+    //hola como estas
+}
+
+
+//Ejemplo
+for(int i = 0; i<3; i++){
+//sentencias
+}
+
+
+//Ejemplo
+do{
+//sentencias
+}while(x<100);
+
+//Ejemplo
+for(int i = 0; i<3; i++){
+    if (i==2){
+    return size/4+5 - 3; // me salgo en i = 2
+    }
+}
+
+
+//Ejemplo
+int conversion (double size, std::string tipo){
+    if(tipo=="metro"){
+        return size/3*3.281;
+    } else{
+        return -1;
+    }
+}
+
+
+//Ejemplo
+void hola_mundo (){
+    cout << "hola mundo" ;
+}
+
+
+//Ejemplo
+void hola_mundo (){
+    cout << "hola mundo" ;
+}
+hola_mundo();
+
+int conversion (double size, std::string tipo){
+    if(tipo=="metro"){
+        return size/3*3.281;
+    } else{
+        return -1;
+    }
+}
+int resultado = conversion(58.5, "metro");
+
+cout << "esto es una conversion: " << conversion(58.5, "metro") << !true <<endl;
+
+
+//ejemplos
+int edad = 18;
+switch( edad ) {
+    Case 10:
+        // sentencias
+        // mas sentencias Break;
+    Case 18:
+        // sentencias
+        // mas sentencias Break;
+    Case 25:
+        // sentencias
+        // mas sentencias Break;
+    Default:
+    // sentencias
+    // mas sentencias Break;
+}
+
+int edad = 18;
+bool banderaEdad = edad > 17 ? true : false;

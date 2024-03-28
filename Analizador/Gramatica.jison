@@ -57,6 +57,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 'std'	            return 'PR_STD';
 'c_str'	            return 'PR_C_STR';
 'execute'	        return 'PR_EXECUTE';
+'switch'	        return 'PR_SWITCH';
+'case'	            return 'PR_CASE';
+'default'	        return 'PR_DEFAULT';
+
 
 
 {exp_bool}		    return 'BOOLEAN'; 
@@ -113,6 +117,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 ','                 return 'COMA';
 ':'                 return 'DOSPUNTOS';
 '.'                 return 'PUNTO';
+'?'                 return 'INTERROGACION';
 
 
 
@@ -158,6 +163,7 @@ instruccion
     | metodos
     | funcionExecute
     | impresionCout
+    | switchCase
     | PR_BREAK PTCOMA
     | PR_CONTINUE PTCOMA
     | PR_RETURN valoresPlus PTCOMA
@@ -239,6 +245,7 @@ declaracionVariables
     | tiposVar identificadores IGUAL PR_ROUND PARIZQ ENTERO PARDER PTCOMA
     | tiposVar identificadores IGUAL ID PUNTO PR_LENGTH PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER PTCOMA
+    | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
     | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
 
@@ -295,6 +302,12 @@ sentenciaIfCompleta
 ;
 
 
+// Operador Ternario
+ternario
+    : sentenciaLogica INTERROGACION valoresPlus DOSPUNTOS valoresPlus 
+;
+
+
 // Sentencia Relacionales
 sentenciaRelacional
     : valoresPlus IGUALES valoresPlus
@@ -324,10 +337,25 @@ ciclosWhile
     | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA
 ;
 
+// Ciclo For
 cicloFor
     : PR_FOR PARIZQ declaracionVariables PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
 
     | PR_FOR PARIZQ tiposVar identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+;
+
+
+// Switch Case
+
+recursividadCase
+    : recursividadCase PR_CASE valoresPlus DOSPUNTOS instrucciones 
+    | PR_CASE valoresPlus DOSPUNTOS instrucciones
+;
+
+
+switchCase
+    : PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase PR_DEFAULT DOSPUNTOS instrucciones LLAVDER
+    | PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase LLAVDER
 ;
 
 
@@ -355,8 +383,11 @@ funcionExecute
 ;
 
 
+
 posibilidadesCout
     : valoresPlus
+    | NOT BOOLEAN
+    | PARIZQ sentenciaLogica PARDER
     | ID PARIZQ valoresArreglos PARDER
     | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER
     | PR_TYPEOF PARIZQ ID PARDER
