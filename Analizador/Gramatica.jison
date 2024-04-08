@@ -35,7 +35,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 'double'			return 'PR_DOUBLE';
 'bool'				return 'PR_BOOL';
 'char'				return 'PR_CHAR';
-'string'	    return 'PR_STRING';
+'string'	        return 'PR_STRING';
 'new'	            return 'PR_NEW';
 'if'	            return 'PR_IF';
 'else'	            return 'PR_ELSE';
@@ -51,7 +51,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 'toupper'	        return 'PR_TOUPPER';
 'tolower'	        return 'PR_TOLOWER';
 'round'	            return 'PR_ROUND';
-'leghth'	        return 'PR_LENGTH';
+'length'	        return 'PR_LENGTH';
 'typeof'	        return 'PR_TYPEOF';
 'tostring'	        return 'PR_TOSTRING';
 'std'	            return 'PR_STD';
@@ -138,7 +138,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 %left 'IGUALES' 'DIFERENTE' 'MENOR_QUE' 'MENOR_IGUAL' 'MAYOR_QUE' 'MAYOR_IGUAL'
 %left 'MAS' 'MENOS'
 %left 'POR' 'DIVIDIDO'
-%left UMENOS 0-
+%right UNOT
+%right UMENOS 
+
+
 
 %start ini
 
@@ -151,6 +154,7 @@ ini
 instrucciones
 	: instruccion instrucciones
 	| instruccion
+    //| error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 instruccion
@@ -164,10 +168,9 @@ instruccion
     | funcionExecute
     | impresionCout
     | switchCase
+    | sentenciaReturn
     | PR_BREAK PTCOMA
     | PR_CONTINUE PTCOMA
-    | PR_RETURN valoresPlus PTCOMA
-    | PR_RETURN PTCOMA
     | comentarios 
 ;
 
@@ -203,13 +206,23 @@ tiposVar
 ;
 
 valores
-    : MENOS DECIMAL
-    | MENOS ENTERO
+    : MENOS DECIMAL %prec UMENOS
+    | MENOS ENTERO  %prec UMENOS
     | DECIMAL
     | ENTERO
     | BOOLEAN
     | STRING
     | CHAR
+
+    // Valores extras
+    | ID PUNTO PR_LENGTH PARIZQ PARDER
+    | PR_TYPEOF PARIZQ ID PARDER
+    | PR_ROUND PARIZQ DECIMAL PARDER
+    | PR_ROUND PARIZQ ENTERO PARDER
+    | PR_TOUPPER PARIZQ STRING PARDER
+    | PR_TOLOWER PARIZQ STRING PARDER
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER
+    
     | ID
 ;
 
@@ -231,7 +244,10 @@ valoresArreglos
 
 arregloDeclaraciones
     : arregloDeclaraciones COMA tiposVar ID 
+    | arregloDeclaraciones COMA tiposVar ID CORIZQ CORDER
+    | tiposVar ID CORIZQ CORDER
     | tiposVar ID 
+
 ;
 
 declaracionVariables
@@ -239,16 +255,13 @@ declaracionVariables
     | tiposVar identificadores IGUAL valoresPlus PTCOMA
     | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
-    | tiposVar identificadores IGUAL PR_TOUPPER PARIZQ STRING PARDER PTCOMA
-    | tiposVar identificadores IGUAL PR_TOLOWER PARIZQ STRING PARDER PTCOMA
-    | tiposVar identificadores IGUAL PR_ROUND PARIZQ DECIMAL PARDER PTCOMA
-    | tiposVar identificadores IGUAL PR_ROUND PARIZQ ENTERO PARDER PTCOMA
-    | tiposVar identificadores IGUAL ID PUNTO PR_LENGTH PARIZQ PARDER PTCOMA
-    | tiposVar identificadores IGUAL PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
     | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
 
+    // Modificacion de variables
+    | identificadores IGUAL valoresPlus PTCOMA
+    | identificadores IGUAL ID CORIZQ valoresArreglos CORDER PTCOMA
 ;
 
 //Incremento y Decremento de variables
@@ -317,7 +330,7 @@ sentenciaRelacional
     | valoresPlus MAYOR_QUE valoresPlus
     | valoresPlus MAYOR_IGUAL valoresPlus
     | valoresPlus
-    | NOT valoresPlus
+    | NOT valoresPlus %prec UNOT
 ;
 
 // Sentencia Logicas
@@ -339,9 +352,8 @@ ciclosWhile
 
 // Ciclo For
 cicloFor
-    : PR_FOR PARIZQ declaracionVariables PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
-
-    | PR_FOR PARIZQ tiposVar identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+    : PR_FOR PARIZQ tiposVar identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+    | PR_FOR PARIZQ identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
 ;
 
 
@@ -386,16 +398,9 @@ funcionExecute
 
 posibilidadesCout
     : valoresPlus
-    | NOT BOOLEAN
+    | NOT BOOLEAN %prec UNOT            { console.log($1, $2); }
     | PARIZQ sentenciaLogica PARDER
     | ID PARIZQ valoresArreglos PARDER
-    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER
-    | PR_TYPEOF PARIZQ ID PARDER
-    | ID PUNTO PR_LENGTH PARIZQ PARDER
-    | PR_ROUND PARIZQ DECIMAL PARDER
-    | PR_ROUND PARIZQ ENTERO PARDER
-    | PR_TOUPPER PARIZQ STRING PARDER
-    | PR_TOLOWER PARIZQ STRING PARDER
     | PR_ENDL
 ;
 
@@ -406,4 +411,10 @@ funcionCout
 
 impresionCout 
     : PR_COUT SALIDA funcionCout PTCOMA
+;
+
+sentenciaReturn
+    : PR_RETURN valoresArreglos PTCOMA
+    | PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA
+    | PR_RETURN PTCOMA
 ;
