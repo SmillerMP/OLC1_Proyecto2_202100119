@@ -132,6 +132,10 @@ exp_string  			        [\"][^\"\n]+[\"]
 /lex
 /* Asociación de operadores y precedencia */
 
+%{
+    const dic = require('./Almacenamiento');
+%}      
+
 %left 'OR'
 %left 'AND'
 %left 'NOT'
@@ -148,23 +152,35 @@ exp_string  			        [\"][^\"\n]+[\"]
 %% /* Definición de la gramática */
 
 ini
-	: instrucciones EOF
+	: entornos EOF
 ;
 
-instrucciones
-	: instruccion instrucciones
-	| instruccion
+entornos
+    : entornos entorno
+    | entorno
     //| error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+;
+
+entorno
+    : declaracionVariables
+    | funcionExecute
+    | funciones
+    | comentarios 
+;
+
+ 
+
+instrucciones
+	: instrucciones instruccion
+	| instruccion
 ;
 
 instruccion
     : declaracionVariables
-    | VectoresMatrices
+    | llamarFunciones
     | sentenciaIfCompleta
     | ciclosWhile
     | cicloFor
-    | funciones
-    | metodos
     | funcionExecute
     | impresionCout
     | switchCase
@@ -222,7 +238,6 @@ valores
     | PR_TOUPPER PARIZQ STRING PARDER
     | PR_TOLOWER PARIZQ STRING PARDER
     | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER
-    
     | ID
 ;
 
@@ -251,9 +266,9 @@ arregloDeclaraciones
 ;
 
 declaracionVariables
-    : tiposVar identificadores PTCOMA
-    | tiposVar identificadores IGUAL valoresPlus PTCOMA
-    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA
+    : tiposVar identificadores PTCOMA { dic.almacenar($2, null) }
+    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA { dic.almacenar($2, $4) }
+    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA { console.log($2, $4, $6); }
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
@@ -262,6 +277,8 @@ declaracionVariables
     // Modificacion de variables
     | identificadores IGUAL valoresPlus PTCOMA
     | identificadores IGUAL ID CORIZQ valoresArreglos CORDER PTCOMA
+
+    | VectoresMatrices
 ;
 
 //Incremento y Decremento de variables
@@ -330,13 +347,13 @@ sentenciaRelacional
     | valoresPlus MAYOR_QUE valoresPlus
     | valoresPlus MAYOR_IGUAL valoresPlus
     | valoresPlus
-    | NOT valoresPlus %prec UNOT
 ;
 
 // Sentencia Logicas
 sentenciaLogica
     : sentenciaLogica OR sentenciaRelacional 
     | sentenciaLogica AND sentenciaRelacional
+    | NOT sentenciaLogica %prec UNOT  
     | sentenciaRelacional
 ;
 
@@ -375,19 +392,18 @@ switchCase
 funciones 
     : tiposVar ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
     | tiposVar ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
-
-;
-
-// Metedos
-metodos
-    : PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
+    
+    //Void
+    | PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
     | PR_VOID ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
     
-    // llamados para metodos y funciones
-    | ID PARIZQ valoresArreglos PARDER PTCOMA
-    | ID PARIZQ PARDER PTCOMA
 ;
 
+llamarFunciones
+    // llamados para metodos y funciones
+    : ID PARIZQ valoresArreglos PARDER PTCOMA
+    | ID PARIZQ PARDER PTCOMA
+;
 
 funcionExecute 
     : PR_EXECUTE ID PARIZQ valoresArreglos PARDER PTCOMA
