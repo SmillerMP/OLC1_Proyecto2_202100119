@@ -9,7 +9,7 @@ class Instruccion {
 }
 
 const tipoInstruccion = {
-    PRINT: 'PRINT',
+    COUT: 'COUT',
     IF: 'IF',
 }
 

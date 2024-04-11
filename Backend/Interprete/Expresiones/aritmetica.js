@@ -1,5 +1,5 @@
  
-const { Expresion, TipoDato } = require('./expresion');
+const { Expresion, TipoDato } = require('../expresion');
 
 class Aritmetica extends Expresion{
     constructor (izquierda, derecha, operacion, fila, columna){
@@ -14,131 +14,131 @@ class Aritmetica extends Expresion{
         this.derecha.interpretar(entorno);
 
         if (this.operacion == "+") {
-            // MANEJO DE INT
-            if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            // MANEJO DE ENTERO
+            if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
             
-            } else if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
             
-            } else if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.BOOLEAN) {
-                this.tipo = TipoDato.INT;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.BOOL) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
             
-            } else if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.INT;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor.charCodeAt(0));
                 return this;
             
-            } else if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.CADENA) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.STRING) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor).replace(/["]/g, '');
                 return this; 
 
             }
 
 
-            // MANEJO DE DOUBLE
-            else if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE DECIMAL
+            else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.BOOLEAN) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.BOOL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor.charCodeAt(0));
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.CADENA) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = Number(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.STRING) {
+                this.tipo = TipoDato.STRING;
+                this.valor = Number(this.izquierda.valor) + String(this.derecha.valor).replace(/["]/g, '');
                 return this;
 
             }
 
 
-            // MANEJO DE BOOLEAN
-            else if (this.izquierda.tipo == TipoDato.BOOLEAN && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            // MANEJO DE BOOL
+            else if (this.izquierda.tipo == TipoDato.BOOL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.BOOLEAN && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.BOOL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) + Number(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.BOOLEAN && this.derecha.tipo == TipoDato.CADENA) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.BOOL && this.derecha.tipo == TipoDato.STRING) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor).replace(/["]/g, '');
                 return this;
 
             }
 
 
             // MANEJO DE CHAR
-            else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) + Number(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) + Number(this.derecha.valor);
                 return this;
 
             } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["']/g, '');
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.CADENA) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.STRING) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["]/g, '');
                 return this;
 
             }
 
 
-            // MANEJO DE CADENA
-            else if (this.izquierda.tipo == TipoDato.CADENA && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            // MANEJO DE STRING
+            else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.CADENA && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.CADENA && this.derecha.tipo == TipoDato.BOOLEAN) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.BOOL) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor);
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.CADENA && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["']/g, '');
                 return this;
 
-            } else if (this.izquierda.tipo == TipoDato.CADENA && this.derecha.tipo == TipoDato.CADENA) {
-                this.tipo = TipoDato.CADENA;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
+            } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.STRING) {
+                this.tipo = TipoDato.STRING;
+                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["']/g, '');
                 return this;
 
             }
@@ -151,62 +151,62 @@ class Aritmetica extends Expresion{
         
         // OPERACION RESTA
         } else if (this.operacion == "-") {
-            // MANEJO DE INT
-            if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            // MANEJO DE ENTERO
+            if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.BOOLEAN) {
-                this.tipo = TipoDato.INT;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.BOOL) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.INT;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor.charCodeAt(0));
                 return this;
             
             }
 
 
-            // MANEJO DE DOUBLE
-            if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE DECIMAL
+            else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.BOOLEAN) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.BOOL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor.charCodeAt(0));
                 return this;
             
             }
 
 
-            // MANEJO DE BOOLEAN
-            if (this.izquierda.tipo == TipoDato.BOOLEAN && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            // MANEJO DE BOOL
+            else if (this.izquierda.tipo == TipoDato.BOOL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.BOOLEAN && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.BOOL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) - Number(this.derecha.valor);
                 return this;
             
@@ -214,13 +214,13 @@ class Aritmetica extends Expresion{
 
 
             // MANEJO DE CHAR
-            if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) - Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) - Number(this.derecha.valor);
                 return this;
             
@@ -233,38 +233,38 @@ class Aritmetica extends Expresion{
         }
 
         else if (this.operacion == "*") {
-            // MANEJO DE INT
-            if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            // MANEJO DE ENTERO
+            if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) * Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) * Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.INT;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) * Number(this.derecha.valor.charCodeAt(0));
                 return this;
             
             }
 
 
-            // MANEJO DE DOUBLE
-            if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE DECIMAL
+            else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) * Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) * Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) * Number(this.derecha.valor.charCodeAt(0));
                 return this;
             
@@ -272,13 +272,13 @@ class Aritmetica extends Expresion{
 
 
             // MANEJO DE CHAR
-            if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) * Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) * Number(this.derecha.valor);
                 return this;
             
@@ -291,50 +291,50 @@ class Aritmetica extends Expresion{
 
         // OPERACION DIVISION
         else if (this.operacion == "/") {
-            // MANEJO DE INT
-            if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE ENTERO
+            if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor.charCodeAt(0));
                 return this;
             
             }
 
-            // MANEJO DE DOUBLE
-            if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE DECIMAL
+            else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.CHAR) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.CHAR) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor.charCodeAt(0));
                 return this;
             }
 
 
             // MANEJO DE CHAR
-            if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) / Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor.charCodeAt(0)) / Number(this.derecha.valor);
                 return this;
             }
@@ -347,28 +347,28 @@ class Aritmetica extends Expresion{
 
         // OPERACION POTENCIA
         else if (this.operacion == "pow"){
-            // MANEJO DE INT
-            if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.INT;
+            // MANEJO DE ENTERO
+            if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Math.pow(Number(this.izquierda.valor), Number(this.derecha.valor));
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Math.pow(Number(this.izquierda.valor), Number(this.derecha.valor));
                 return this;
             
             }
 
 
-            // MANEJO DE DOUBLE
-            if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE DECIMAL
+            else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Math.pow(Number(this.izquierda.valor), Number(this.derecha.valor));
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Math.pow(Number(this.izquierda.valor), Number(this.derecha.valor));
                 return this;
             
@@ -383,28 +383,28 @@ class Aritmetica extends Expresion{
 
         // OPERACION MODULO
         else if (this.operacion == "%"){
-            //MANEJO DE INT
-            if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            //MANEJO DE ENTERO
+            if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) % Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.INT && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) % Number(this.derecha.valor);
                 return this;
             
             }
 
 
-            // MANEJO DE DOUBLE
-            if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.INT) {
-                this.tipo = TipoDato.DOUBLE;
+            // MANEJO DE DECIMAL
+            else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.ENTERO) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) % Number(this.derecha.valor);
                 return this;
             
-            } if (this.izquierda.tipo == TipoDato.DOUBLE && this.derecha.tipo == TipoDato.DOUBLE) {
-                this.tipo = TipoDato.DOUBLE;
+            } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.DECIMAL) {
+                this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) % Number(this.derecha.valor);
                 return this;
             
@@ -422,3 +422,6 @@ class Aritmetica extends Expresion{
 
     }
 }
+
+
+module.exports = Aritmetica;

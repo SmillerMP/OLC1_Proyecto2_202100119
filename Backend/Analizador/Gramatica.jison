@@ -133,7 +133,19 @@ exp_string  			        [\"][^\"\n]+[\"]
 /* Asociación de operadores y precedencia */
 
 %{
-    const dic = require('./Almacenamiento');
+
+    const {TipoDato} = require("../Interprete/expresion")
+
+    const Aritmetica = require("../Interprete/Expresiones/aritmetica")
+    const Relacional = require("../Interprete/Expresiones/relacional")
+    const Dato = require("../Interprete/Expresiones/dato")
+    const Negativo = require("../Interprete/Expresiones/negativo")
+
+
+    // Instrucciones
+    const Cout = require("../Interprete/Instrucciones/cout")
+
+    
 %}      
 
 %left 'OR'
@@ -141,7 +153,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 %left 'NOT'
 %left 'IGUALES' 'DIFERENTE' 'MENOR_QUE' 'MENOR_IGUAL' 'MAYOR_QUE' 'MAYOR_IGUAL'
 %left 'MAS' 'MENOS'
-%left 'POR' 'DIVIDIDO'
+%left 'POR' 'DIVIDIDO' 'MODULO'
 %right UNOT
 %right UMENOS 
 
@@ -152,12 +164,12 @@ exp_string  			        [\"][^\"\n]+[\"]
 %% /* Definición de la gramática */
 
 ini
-	: entornos EOF
+	: entornos EOF      {$$ = $1; return $$; }
 ;
 
 entornos
-    : entornos entorno
-    | entorno
+    : entornos entorno      {$$ = $1; $$.push($2);}
+    | entorno               {$$ = []; $$.push($1);}
     //| error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
@@ -166,6 +178,7 @@ entorno
     | funcionExecute
     | funciones
     | comentarios 
+    | impresionCout   {$$ = $1;} //console.log($1)}
 ;
 
  
@@ -222,13 +235,11 @@ tiposVar
 ;
 
 valores
-    : MENOS DECIMAL %prec UMENOS
-    | MENOS ENTERO  %prec UMENOS
-    | DECIMAL
-    | ENTERO
-    | BOOLEAN
-    | STRING
-    | CHAR
+    : DECIMAL                       {$$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column); }
+    | ENTERO                        {$$ = new Dato($1, TipoDato.ENTERO, @1.first_line, @1.first_column); }
+    | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column); }
+    | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column); }     
+    | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
 
     // Valores extras
     | ID PUNTO PR_LENGTH PARIZQ PARDER
@@ -242,13 +253,14 @@ valores
 ;
 
 valoresPlus
-    : valoresPlus MAS valores
-    | valoresPlus MENOS valores
-    | valoresPlus POR valores
-    | valoresPlus DIVIDIDO valores
-    | valoresPlus POTENCIA valores
-    | valoresPlus MODULO valores
-    | valores
+    : valoresPlus MAS valores                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus MENOS valores                                 { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | MENOS valoresPlus %prec UMENOS                            { $$ = new Negativo($2, @1.first_line, @1.first_column);           }
+    | valoresPlus POR valores                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus DIVIDIDO valores                              { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }      
+    | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER       { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column); }             
+    | valoresPlus MODULO valores                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | valores                                                   { $$ = $1; }
 ;
 
 
@@ -266,9 +278,9 @@ arregloDeclaraciones
 ;
 
 declaracionVariables
-    : tiposVar identificadores PTCOMA { dic.almacenar($2, null) }
-    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA { dic.almacenar($2, $4) }
-    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA { console.log($2, $4, $6); }
+    : tiposVar identificadores PTCOMA 
+    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA 
+    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA 
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
@@ -340,13 +352,13 @@ ternario
 
 // Sentencia Relacionales
 sentenciaRelacional
-    : valoresPlus IGUALES valoresPlus
-    | valoresPlus DIFERENTE valoresPlus
-    | valoresPlus MENOR_QUE valoresPlus
-    | valoresPlus MENOR_IGUAL valoresPlus
-    | valoresPlus MAYOR_QUE valoresPlus
-    | valoresPlus MAYOR_IGUAL valoresPlus
-    | valoresPlus
+    : valoresPlus IGUALES valoresPlus               { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus DIFERENTE valoresPlus             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus MENOR_QUE valoresPlus             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus MENOR_IGUAL valoresPlus           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus MAYOR_QUE valoresPlus             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus MAYOR_IGUAL valoresPlus           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus                                   { $$ = $1; }
 ;
 
 // Sentencia Logicas
@@ -413,7 +425,7 @@ funcionExecute
 
 
 posibilidadesCout
-    : valoresPlus
+    : sentenciaRelacional               { $$ = $1;}
     | NOT BOOLEAN %prec UNOT            { console.log($1, $2); }
     | PARIZQ sentenciaLogica PARDER
     | ID PARIZQ valoresArreglos PARDER
@@ -421,12 +433,12 @@ posibilidadesCout
 ;
 
 funcionCout
-    : funcionCout SALIDA posibilidadesCout
-    | posibilidadesCout 
+    : funcionCout SALIDA posibilidadesCout  { $$ = $3; }
+    | posibilidadesCout                     { $$ = $1; }
 ;
 
 impresionCout 
-    : PR_COUT SALIDA funcionCout PTCOMA
+    : PR_COUT SALIDA funcionCout PTCOMA     { $$ = new Cout($3, @1.first_line, @1.first_column);}
 ;
 
 sentenciaReturn

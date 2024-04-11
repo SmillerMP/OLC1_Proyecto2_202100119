@@ -12,11 +12,11 @@ class Expresion{
 }
 
 const TipoDato = {
-    INT: 'INT',
-    DOUBLE: 'DOUBLE',
-    BOOLEAN: 'BOOLEAN',
+    ENTERO: 'ENTERO',
+    DECIMAL: 'DECIMAL',
+    BOOL: 'BOOL',
     CHAR: 'CHAR',
-    CADENA: 'CADENA',
+    STRING: 'STRING',
     ERROR: 'ERROR'
 }
 
