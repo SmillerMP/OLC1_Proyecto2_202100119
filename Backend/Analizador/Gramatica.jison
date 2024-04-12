@@ -140,7 +140,8 @@ exp_string  			        [\"][^\"\n]+[\"]
     const Relacional = require("../Interprete/Expresiones/relacional")
     const Dato = require("../Interprete/Expresiones/dato")
     const Negativo = require("../Interprete/Expresiones/negativo")
-
+    const opLogico = require("../Interprete/Expresiones/opLogicos")
+    const Negacion = require("../Interprete/Expresiones/negacion")
 
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")
@@ -363,10 +364,10 @@ sentenciaRelacional
 
 // Sentencia Logicas
 sentenciaLogica
-    : sentenciaLogica OR sentenciaRelacional 
-    | sentenciaLogica AND sentenciaRelacional
-    | NOT sentenciaLogica %prec UNOT  
-    | sentenciaRelacional
+    : sentenciaLogica OR sentenciaRelacional        { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaLogica AND sentenciaRelacional       { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column); }
+    | NOT sentenciaLogica %prec UNOT                { $$ = new Negacion($1, $2, @1.first_line, @1.first_column); }
+    | sentenciaRelacional                           { $$ = $1; }
 ;
 
 

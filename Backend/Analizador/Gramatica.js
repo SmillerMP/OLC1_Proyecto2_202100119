@@ -119,11 +119,20 @@ break;
 case 60:
  this.$ = new Aritmetica($$[$0-3], $$[$0-1], $$[$0-4], _$[$0-5].first_line, _$[$0-5].first_column); 
 break;
-case 62: case 104: case 130: case 131:
+case 62: case 104: case 108: case 130: case 131:
  this.$ = $$[$0]; 
 break;
 case 98: case 99: case 100: case 101: case 102: case 103:
  this.$ = new Relacional($$[$0-2], $$[$0], $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column); 
+break;
+case 105:
+ this.$ = new opLogicos($$[$0-2], $$[$0], $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column); 
+break;
+case 106:
+ this.$ = new opLogico($$[$0-2], $$[$0], $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column); 
+break;
+case 107:
+ this.$ = new Negacion($$[$0-1], $$[$0], _$[$0-1].first_line, _$[$0-1].first_column); 
 break;
 case 125:
  this.$ = $$[$0];
@@ -292,7 +301,8 @@ parse: function parse(input) {
     const Relacional = require("../Interprete/Expresiones/relacional")
     const Dato = require("../Interprete/Expresiones/dato")
     const Negativo = require("../Interprete/Expresiones/negativo")
-
+    const opLogico = require("../Interprete/Expresiones/opLogicos")
+    const Negacion = require("../Interprete/Expresiones/negacion")
 
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")

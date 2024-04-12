@@ -13,6 +13,18 @@ class opLogicos extends Expresion{
         this.izquierda.interpretar(entorno);
         this.derecha.interpretar(entorno);
 
+        if (this.operacion == "&&") {
+            this.tipo = TipoDato.BOOL;
+            this.valor = this.izquierda.valor && this.derecha.valor;  
+            return this;
+
+        } else if (this.operacion == "||") {
+            this.tipo = TipoDato.BOOL;
+            this.valor = this.izquierda.valor || this.derecha.valor;  
+            return this;
+
+        
+        }
         // Error Semantico
         console.log("Error Semántico: Error en la operacion relacional.")
         return this;

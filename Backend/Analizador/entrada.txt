@@ -10,6 +10,8 @@ int arreglo2[] = [0,0,1,2,0,0,5,1,0,0,8,0,0];
 int valor1 = arreglo.length();
 temporal = arreglo[i];
 
+cout<<7;
+
 void main(){
     cout << "Archivo de prueba\n";
     cout << "Si sale compi1" << endl;

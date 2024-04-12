@@ -14,32 +14,32 @@ class Relacional extends Expresion{
         this.derecha.interpretar(entorno);
 
         if (this.operacion == "==") {
-            this.tipo = TipoDato.BOOLEANO;
+            this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor === this.derecha.valor;  
             return this;
 
         } else if (this.operacion == "!=") {
-            this.tipo = TipoDato.BOOLEANO;
+            this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor !== this.derecha.valor;  
             return this;
 
         } else if (this.operacion == "<") {
-            this.tipo = TipoDato.BOOLEANO;
+            this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor < this.derecha.valor;  
             return this;
 
         } else if (this.operacion == "<=") {
-            this.tipo = TipoDato.BOOLEANO;
+            this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor <= this.derecha.valor;  
             return this;
 
         } else if (this.operacion == ">") {
-            this.tipo = TipoDato.BOOLEANO;
+            this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor > this.derecha.valor;  
             return this;
 
         } else if (this.operacion == ">=") {
-            this.tipo = TipoDato.BOOLEANO;
+            this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor >= this.derecha.valor;  
             return this;
 
