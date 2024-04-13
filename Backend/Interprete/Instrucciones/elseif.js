@@ -1,39 +1,33 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
 
-class If extends Instruccion {
+class ElseIf extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
-        super(tipoInstruccion.IF, fila, columna);
+        super(tipoInstruccion.ELSEIF, fila, columna);
         this.condicion = condicion;
         this.instrucciones = instrucciones;
     }
 
     interpretar(entorno) {
 
-        let entornoIf = new Entorno(tipoInstruccion.IF, entorno)
-        this.condicion.interpretar(entornoIf);
+        let entornoElseIf = new Entorno(tipoInstruccion.ELSEIF, entorno)
+        this.condicion.interpretar(entornoElseIf);
 
         if (this.condicion.tipo != "BOOL") {
-            console.log("Error Semántico: La condición del if no es booleana.")
+            console.log("Error Semántico: La condición del else if no es booleana.")
             return this;
         }
 
 
         if (Boolean(this.condicion.valor)) {
 
-            //console.log(this.instrucciones);
-            /* 
-                en el momento que se realiza el console log no se ha ejecutado las instrucciones por lo que el resultado de las instrucciones suele ser un error, debe de pasar por el interprete de primero
-            */
-
             this.instrucciones.forEach(instruccion => {
-                instruccion.interpretar(entornoIf);
+                instruccion.interpretar(entornoElseIf);
 
                 //console.log(instruccion);
             });
 
             return true;
-
 
             // guardarrrr el entorno
         } else {
@@ -46,4 +40,4 @@ class If extends Instruccion {
 
 }
 
-module.exports = If;
+module.exports = ElseIf;

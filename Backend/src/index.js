@@ -3,7 +3,7 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const analizador = require("../Analizador/Gramatica.js");
-const entorno = require("../Interprete/entorno/entorno.js");
+const entorno = require("../Interprete/Entorno/entorno.js");
 
 
 
@@ -39,6 +39,8 @@ app.post('/Analizar', (req, res) => {
     resultado.forEach(instruccion => {
         instruccion.interpretar(entornoGlobal);
     });
+
+    //console.log(resultado);
 
     res.status(200).json({resultado: resultado});
 });

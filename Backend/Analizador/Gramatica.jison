@@ -147,7 +147,11 @@ exp_string  			        [\"][^\"\n]+[\"]
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")
     const If = require("../Interprete/Instrucciones/if")
+    const ElseIf = require("../Interprete/Instrucciones/elseif")
+    const Else = require("../Interprete/Instrucciones/else")
 
+    // Operaciones Mayores
+    const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
     
 %}      
 
@@ -182,7 +186,7 @@ entorno
     | funciones
     | comentarios 
     | impresionCout     {$$ = $1;} //console.log($1)}
-    | sentenciaIf       {$$ = $1;}
+    | sentenciaIfCompleta       {$$ = $1;}
 ;
 
  
@@ -332,19 +336,19 @@ sentenciaIf
 ;
 
 sentenciaIfElse
-    : sentenciaIfElse PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER 
-    | PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+    : sentenciaIfElse PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER     {$$ = $1; $$.push(new ElseIf($5, $8, @1.first_line, @1.first_column))}    
+    | PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER                     {$$ = []; $$.push(new ElseIf($4, $7, @1.first_line, @1.first_column))}
 ;
 
 sentenciaElse
-    : PR_ELSE LLAVIZQ instrucciones LLAVDER
+    : PR_ELSE LLAVIZQ instrucciones LLAVDER             {$$ = new Else($3, @1.first_line, @1.first_column)}
 ;
 
 sentenciaIfCompleta
-    : sentenciaIf sentenciaIfElse sentenciaElse
-    | sentenciaIf sentenciaIfElse
-    | sentenciaIf sentenciaElse
-    | sentenciaIf
+    : sentenciaIf sentenciaIfElse sentenciaElse         {$$ = new SentenciaIf($1, $2, $3, @1.first_line, @1.first_column);}
+    | sentenciaIf sentenciaIfElse                       {$$ = new SentenciaIf($1, $2, null, @1.first_line, @1.first_column);}
+    | sentenciaIf sentenciaElse                         {$$ = new SentenciaIf($1, null, $2, @1.first_line, @1.first_column);}
+    | sentenciaIf                                       {$$ = new SentenciaIf($1, null, null, @1.first_line, @1.first_column);}    
 ;
 
 

@@ -11,6 +11,9 @@ class Instruccion {
 const tipoInstruccion = {
     COUT: 'COUT',
     IF: 'IF',
+    ELSEIF: 'ELSEIF',
+    ELSE: 'ELSE',
+    SENTENCIAIF: 'SENTENCIAIF',
 }
 
 module.exports = { Instruccion, tipoInstruccion }
