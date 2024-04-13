@@ -1,5 +1,5 @@
-const { Expresion, TipoDato } = require("../Expresion");
-const { Simbolo } = require("./Simbolo");
+const { Expresion, TipoDato } = require("../expresion");
+const { Simbolo } = require("./simbolo");
 
 class Entorno{
     constructor(nombre, anterior){
@@ -7,6 +7,8 @@ class Entorno{
         this.anterior = anterior;
         this.tablaSim = {};
         this.tablaFunc = {};
+        //this.tablaSim[nombre] = Simbolo()
+         
     }
 
     addSimbolo(nombre, valor, tipo, tipoVar, fila, columna){
@@ -18,13 +20,15 @@ class Entorno{
     }
 
     getSimbolo(nombre){
-        let ent = this;
-        while(ent != null){
-            if(!(nombre in ent.tablaSim)){
-                ent = ent.anterior;
+        let entornoVar = this;
+        while(entornoVar != null){
+            if(!(nombre in entornoVar.tablaSim)){
+                entornoVar = entornoVar.anterior;
             }
-            return ent.tablaSim[nombre]
+            return entornoVar.tablaSim[nombre]
         }
+
+        console.log("Semantico: Variable no declarada");
         return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
     }
     

@@ -3,7 +3,8 @@ const morgan = require('morgan');
 const cors = require('cors');
 
 const analizador = require("../Analizador/Gramatica.js");
-//const entorno = require("../interprete/entorno/Entorno.js");
+const entorno = require("../Interprete/entorno/entorno.js");
+
 
 
 
@@ -30,13 +31,13 @@ app.get('/Login', (req, res) => {
 
 app.post('/Analizar', (req, res) => {
     const entrada = req.body.entrada;
-    
+    // Analizador Sintactico y lexico
     let resultado = analizador.parse(entrada);
     
-    //let entornoGlobal = new entorno("GLOBAL", null);
+    let entornoGlobal = new entorno("GLOBAL", null);
 
     resultado.forEach(instruccion => {
-        instruccion.interpretar("GLOBAL");
+        instruccion.interpretar(entornoGlobal);
     });
 
     res.status(200).json({resultado: resultado});
@@ -47,5 +48,6 @@ app.post('/Analizar', (req, res) => {
 
 // Enviando en que puerto salen los datas
 app.listen(app.get('port'), () => {
+    console.error('\x1b[31m%s\x1b[0m', ' --------------------------------------------------------------------');
     console.log('Servidor iniciado en el puerto:  8000 ');
 });

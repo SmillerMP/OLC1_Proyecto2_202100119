@@ -16,6 +16,7 @@ class Relacional extends Expresion{
         if (this.operacion == "==") {
             this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor === this.derecha.valor;  
+            console.log("");
             return this;
 
         } else if (this.operacion == "!=") {
@@ -30,7 +31,7 @@ class Relacional extends Expresion{
 
         } else if (this.operacion == "<=") {
             this.tipo = TipoDato.BOOL;
-            this.valor = this.izquierda.valor <= this.derecha.valor;  
+            this.valor = this.izquierda.valor <= this.derecha.valor; 
             return this;
 
         } else if (this.operacion == ">") {

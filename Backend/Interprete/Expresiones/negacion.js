@@ -1,6 +1,6 @@
 const {Expresion, TipoDato} = require('../expresion');
 
-class Negativo extends Expresion{
+class Negacion extends Expresion{
 
     constructor(operacion, derecha, fila, columna){
         super("ERROR", TipoDato.ERROR, fila, columna);
@@ -17,7 +17,7 @@ class Negativo extends Expresion{
             this.valor = !this.derecha.valor;
             return this;
         }
-        
+
         // Error Semantico
         console.log("Error Semántico: Error en la operacion negativo.")
         return this;
@@ -26,4 +26,4 @@ class Negativo extends Expresion{
 }   
 
 
-module.exports = Negativo ;
+module.exports = Negacion;

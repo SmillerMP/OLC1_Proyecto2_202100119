@@ -136,6 +136,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 
     const {TipoDato} = require("../Interprete/expresion")
 
+    // Expresiones
     const Aritmetica = require("../Interprete/Expresiones/aritmetica")
     const Relacional = require("../Interprete/Expresiones/relacional")
     const Dato = require("../Interprete/Expresiones/dato")
@@ -145,6 +146,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")
+    const If = require("../Interprete/Instrucciones/if")
 
     
 %}      
@@ -179,14 +181,15 @@ entorno
     | funcionExecute
     | funciones
     | comentarios 
-    | impresionCout   {$$ = $1;} //console.log($1)}
+    | impresionCout     {$$ = $1;} //console.log($1)}
+    | sentenciaIf       {$$ = $1;}
 ;
 
  
 
 instrucciones
-	: instrucciones instruccion
-	| instruccion
+	: instrucciones instruccion     {$$ = $1; $$.push($2);}
+	| instruccion                   {$$ = []; $$.push($1);}
 ;
 
 instruccion
@@ -196,7 +199,7 @@ instruccion
     | ciclosWhile
     | cicloFor
     | funcionExecute
-    | impresionCout
+    | impresionCout             {$$ = $1;} 
     | switchCase
     | sentenciaReturn
     | PR_BREAK PTCOMA
@@ -325,7 +328,7 @@ VectoresMatrices
 
 // Setentecia if 
 sentenciaIf
-    : PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+    : PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER     {$$ = new If($3, $6, @1.first_line, @1.first_column)}
 ;
 
 sentenciaIfElse
