@@ -126,9 +126,9 @@ exp_string  			        [\"][^\"\n]+[\"]
 
 
 
-<<EOF>>                 return 'EOF';
+<<EOF>>             return 'EOF';
 
-.                  {console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+.                   {console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 /lex
 /* Asociación de operadores y precedencia */
 
@@ -149,28 +149,29 @@ exp_string  			        [\"][^\"\n]+[\"]
     const If = require("../Interprete/Instrucciones/if")
     const ElseIf = require("../Interprete/Instrucciones/elseif")
     const Else = require("../Interprete/Instrucciones/else")
+    const While = require("../Interprete/Instrucciones/while")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
     
 %}      
 
-%left 'OR'
-%left 'AND'
-%left 'NOT'
-%left 'IGUALES' 'DIFERENTE' 'MENOR_QUE' 'MENOR_IGUAL' 'MAYOR_QUE' 'MAYOR_IGUAL'
-%left 'MAS' 'MENOS'
-%left 'POR' 'DIVIDIDO' 'MODULO'
+%left OR
+%left AND
+%left NOT
+%left IGUALES DIFERENTE MENOR_QUE MENOR_IGUAL MAYOR_QUE MAYOR_IGUAL
+%left MAS MENOS
+%left POR DIVIDIDO MODULO
 %right UNOT
 %right UMENOS 
 
 
 
-%start ini
+%start inicio
 
 %% /* Definición de la gramática */
 
-ini
+inicio
 	: entornos EOF      {$$ = $1; return $$; }
 ;
 
@@ -261,14 +262,14 @@ valores
 ;
 
 valoresPlus
-    : valoresPlus MAS valores                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus MENOS valores                                 { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | MENOS valoresPlus %prec UMENOS                            { $$ = new Negativo($2, @1.first_line, @1.first_column);           }
-    | valoresPlus POR valores                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus DIVIDIDO valores                              { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }      
-    | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER       { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column); }             
-    | valoresPlus MODULO valores                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | valores                                                   { $$ = $1; }
+    : valoresPlus MAS valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus MENOS valoresPlus                                 { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | MENOS valoresPlus %prec UMENOS                                { $$ = new Negativo($2, @1.first_line, @1.first_column);           }
+    | valoresPlus POR valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus DIVIDIDO valoresPlus                              { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }      
+    | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER           { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column); }             
+    | valoresPlus MODULO valoresPlus                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    | valores                                                       { $$ = $1; }
 ;
 
 
@@ -360,19 +361,19 @@ ternario
 
 // Sentencia Relacionales
 sentenciaRelacional
-    : valoresPlus IGUALES valoresPlus               { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus DIFERENTE valoresPlus             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus MENOR_QUE valoresPlus             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus MENOR_IGUAL valoresPlus           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus MAYOR_QUE valoresPlus             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus MAYOR_IGUAL valoresPlus           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus                                   { $$ = $1; }
+    : sentenciaRelacional IGUALES sentenciaRelacional               { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaRelacional DIFERENTE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaRelacional MENOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaRelacional MENOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaRelacional MAYOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaRelacional MAYOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    | valoresPlus                                                   { $$ = $1; }
 ;
 
 // Sentencia Logicas
 sentenciaLogica
-    : sentenciaLogica OR sentenciaRelacional        { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaLogica AND sentenciaRelacional       { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column); }
+    : sentenciaLogica OR sentenciaLogica            { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column); }
+    | sentenciaLogica AND sentenciaLogica           { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column); }
     | NOT sentenciaLogica %prec UNOT                { $$ = new Negacion($1, $2, @1.first_line, @1.first_column); }
     | sentenciaRelacional                           { $$ = $1; }
 ;
@@ -381,7 +382,7 @@ sentenciaLogica
 // Ciclos
 ciclosWhile
     // Ciclo While
-    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER
+    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER        { $$ = new While($3, $6, @1.first_line, @1.first_column); }
 
     // Ciclo Do While
     | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA

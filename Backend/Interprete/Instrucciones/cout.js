@@ -8,8 +8,14 @@ class Cout extends Instruccion {
 
     interpretar(entorno) {
         this.expresion.interpretar(entorno);
-        console.log("salida: " + this.expresion.valor);
-        return this;
+
+        if (this.expresion.tipo == "STRING") {
+            console.log("salida: " + (this.expresion.valor).replace(/['"]+/g, ''));
+            return this;
+        } else {
+            console.log("salida: " + this.expresion.valor);
+            return this;
+        }
     }
 
 }

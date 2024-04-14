@@ -14,6 +14,9 @@ const tipoInstruccion = {
     ELSEIF: 'ELSEIF',
     ELSE: 'ELSE',
     SENTENCIAIF: 'SENTENCIAIF',
+    WHILE: 'WHILE',
+    FOR: 'FOR',
+    BREAK: 'BREAK',
 }
 
 module.exports = { Instruccion, tipoInstruccion }

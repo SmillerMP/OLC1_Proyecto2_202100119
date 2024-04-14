@@ -16,7 +16,6 @@ class Relacional extends Expresion{
         if (this.operacion == "==") {
             this.tipo = TipoDato.BOOL;
             this.valor = this.izquierda.valor === this.derecha.valor;  
-            console.log("");
             return this;
 
         } else if (this.operacion == "!=") {

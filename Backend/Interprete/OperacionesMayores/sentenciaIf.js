@@ -17,7 +17,7 @@ class If extends Instruccion {
         // console.log("sentencia else: " + this.sentenciaElse);
         // cuando viene if, else if y else
         if (this.sentenciaIf != null && this.sentenciaElseIf != null && this.sentenciaElse != null) {
-
+        
             if (this.sentenciaIf.interpretar(entorno)) {
                 return;
             } 

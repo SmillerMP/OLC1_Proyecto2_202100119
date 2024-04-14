@@ -43,6 +43,7 @@ app.post('/Analizar', (req, res) => {
     //console.log(resultado);
 
     res.status(200).json({resultado: resultado});
+    console.error('\x1b[31m%s\x1b[0m', ' --------------------------- Ejecucion terminada ----------------------------------\n\n');
 });
 
 
@@ -50,6 +51,6 @@ app.post('/Analizar', (req, res) => {
 
 // Enviando en que puerto salen los datas
 app.listen(app.get('port'), () => {
-    console.error('\x1b[31m%s\x1b[0m', ' --------------------------------------------------------------------');
+    console.clear();
     console.log('Servidor iniciado en el puerto:  8000 ');
 });
