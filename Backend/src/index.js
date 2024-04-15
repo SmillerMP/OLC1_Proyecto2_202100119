@@ -40,6 +40,8 @@ app.post('/Analizar', (req, res) => {
         instruccion.interpretar(entornoGlobal);
     });
 
+    //console.log(entornoGlobal.getSimbolo("hola"));
+
     //console.log(resultado);
 
     res.status(200).json({resultado: resultado});

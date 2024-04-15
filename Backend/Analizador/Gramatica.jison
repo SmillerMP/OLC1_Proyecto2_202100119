@@ -153,6 +153,8 @@ exp_string  			        [\"][^\"\n]+[\"]
     const While = require("../Interprete/Instrucciones/while")
     const DoWhile = require("../Interprete/Instrucciones/dowhile")
     const Break = require("../Interprete/Instrucciones/break")
+    const Declaracion = require("../Interprete/Instrucciones/declaracion")
+    
     
 
     // Operaciones Mayores
@@ -186,7 +188,7 @@ entornos
 ;
 
 entorno
-    : declaracionVariables
+    : declaracionVariables      {$$ = $1;}
     | funcionExecute
     | funciones
     | comentarios 
@@ -223,8 +225,8 @@ comentarios
 ;
 
 identificadores
-    : ID COMA identificadores
-    | ID
+    : identificadores COMA ID       {}
+    | ID                            {$$ = $1;}
 ;
 
 secuenciasEscape
@@ -240,12 +242,12 @@ secuenciasEscape
     | COMILLA_SIMPLE
 ;
 
-tiposVar
-    : PR_INT
-    | PR_DOUBLE
-    | PR_BOOL
-    | PR_CHAR
-    | PR_STD DOSPUNTOS DOSPUNTOS PR_STRING
+tiposVar                    
+    : PR_INT                                    {$$ = "ENTERO";}
+    | PR_DOUBLE                                 {$$ = "DECIMAL";}
+    | PR_BOOL                                   {$$ = "BOOL";}
+    | PR_CHAR                                   {$$ = "CHAR";}
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_STRING      {$$ = "STRING";}
 ;
 
 valores
@@ -292,9 +294,9 @@ arregloDeclaraciones
 ;
 
 declaracionVariables
-    : tiposVar identificadores PTCOMA 
-    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA 
-    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA 
+    : tiposVar identificadores PTCOMA                                           {$$ = new Declaracion($1, $2, null, @1.first_line, @1.first_column);}
+    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA                     {$$ = new Declaracion($1, $2, $4, @1.first_line, @1.first_column);}
+    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA        
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
