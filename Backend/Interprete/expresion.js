@@ -17,6 +17,7 @@ const TipoDato = {
     BOOL: 'BOOL',
     CHAR: 'CHAR',
     STRING: 'STRING',
+    ID: 'ID',
     ERROR: 'ERROR'
 }
 

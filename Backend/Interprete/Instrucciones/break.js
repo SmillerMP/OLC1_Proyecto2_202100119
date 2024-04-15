@@ -1,18 +1,15 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
-const Entorno = require('../Entorno/entorno');
 
 class Break extends Instruccion {
-    constructor(expresion, fila, columna) {
-        super(tipoInstruccion.IF, fila, columna);
-        this.expresion = expresion;
+    constructor(valor, fila, columna) {
+        super(tipoInstruccion.BREAK, fila, columna);
+        this.valor = valor;
     }
 
     interpretar(entorno) {
-
-        this.expresion.interpretar(entorno);
         return "break";
     }
 
 }
 
-module.exports = If;
+module.exports = Break;

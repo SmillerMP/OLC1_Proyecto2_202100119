@@ -1,5 +1,4 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
-const Entorno = require('../Entorno/entorno');
 
 class If extends Instruccion {
     constructor(sentenciaIf, sentenciaElseIf, sentenciaElse,fila, columna) {
@@ -11,7 +10,6 @@ class If extends Instruccion {
 
     interpretar(entorno) {
 
-        let seguir = true;
         // console.log("sentencia if: " + this.sentenciaIf);
         // console.log("sentencia else if: " + this.sentenciaElseIf);
         // console.log("sentencia else: " + this.sentenciaElse);
@@ -22,17 +20,12 @@ class If extends Instruccion {
                 return;
             } 
 
-            this.sentenciaElseIf.forEach(elseIf => { 
-                if (seguir){
-                    if (elseIf.interpretar(entorno)) {
-                        seguir = false;
-                        return;
-                    }
-                }
-            });
 
-             if (!seguir) {
-                return;
+            for (let i = 0; i < this.sentenciaElseIf.length; i++) {
+                const elseIf = this.sentenciaElseIf[i];
+                if (elseIf.interpretar(entorno)) {
+                    return;
+                }
             }
 
             this.sentenciaElse.interpretar(entorno);
@@ -45,18 +38,13 @@ class If extends Instruccion {
                 return;
             } 
 
-            this.sentenciaElseIf.forEach(elseIf => { 
-                if (seguir){
-                    if (elseIf.interpretar(entorno)) {
-                        seguir = false;
-                        return;
-                    }
+            for (let i = 0; i < this.sentenciaElseIf.length; i++) {
+                const elseIf = this.sentenciaElseIf[i];
+                if (elseIf.interpretar(entorno)) {
+                    return;
                 }
-            });
-
-            if (!seguir) {
-                return;
             }
+            
             
         // cuando viene if y else
         } else if (this.sentenciaIf != null && this.sentenciaElseIf == null && this.sentenciaElse != null) {

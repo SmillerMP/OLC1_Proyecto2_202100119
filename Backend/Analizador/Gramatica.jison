@@ -143,6 +143,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const Negativo = require("../Interprete/Expresiones/negativo")
     const opLogico = require("../Interprete/Expresiones/opLogicos")
     const Negacion = require("../Interprete/Expresiones/negacion")
+    const FuncionCout = require("../Interprete/Expresiones/funcioncout")
 
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")
@@ -150,6 +151,9 @@ exp_string  			        [\"][^\"\n]+[\"]
     const ElseIf = require("../Interprete/Instrucciones/elseif")
     const Else = require("../Interprete/Instrucciones/else")
     const While = require("../Interprete/Instrucciones/while")
+    const DoWhile = require("../Interprete/Instrucciones/dowhile")
+    const Break = require("../Interprete/Instrucciones/break")
+    
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -186,8 +190,9 @@ entorno
     | funcionExecute
     | funciones
     | comentarios 
-    | impresionCout     {$$ = $1;} //console.log($1)}
+    | impresionCout             {$$ = $1;} //console.log($1)}
     | sentenciaIfCompleta       {$$ = $1;}
+    | ciclosWhile               {$$ = $1;}
 ;
 
  
@@ -207,7 +212,7 @@ instruccion
     | impresionCout             {$$ = $1;} 
     | switchCase
     | sentenciaReturn
-    | PR_BREAK PTCOMA
+    | PR_BREAK PTCOMA           {$$ = new Break($1, @1.first_line, @1.first_column);}
     | PR_CONTINUE PTCOMA
     | comentarios 
 ;
@@ -244,21 +249,21 @@ tiposVar
 ;
 
 valores
-    : DECIMAL                       {$$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column); }
+
+// Valores extras
+    : ID PUNTO PR_LENGTH PARIZQ PARDER
+    | PR_TYPEOF PARIZQ ID PARDER
+    | PR_ROUND PARIZQ valoresPlus PARDER                {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
+    | PR_TOUPPER PARIZQ valores PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
+    | PR_TOLOWER PARIZQ valores PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER      {$$ = new FuncionCout($4, $6, @1.first_line, @1.first_column);}
+    
+    | DECIMAL                       {$$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column); }
     | ENTERO                        {$$ = new Dato($1, TipoDato.ENTERO, @1.first_line, @1.first_column); }
     | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column); }
     | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column); }     
     | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
-
-    // Valores extras
-    | ID PUNTO PR_LENGTH PARIZQ PARDER
-    | PR_TYPEOF PARIZQ ID PARDER
-    | PR_ROUND PARIZQ DECIMAL PARDER
-    | PR_ROUND PARIZQ ENTERO PARDER
-    | PR_TOUPPER PARIZQ STRING PARDER
-    | PR_TOLOWER PARIZQ STRING PARDER
-    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER
-    | ID
+    | ID                            {$$ = new Dato($1, TipoDato.ID, @1.first_line, @1.first_column); }
 ;
 
 valoresPlus
@@ -296,7 +301,7 @@ declaracionVariables
     | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
 
     // Modificacion de variables
-    | identificadores IGUAL valoresPlus PTCOMA
+    | identificadores IGUAL sentenciaLogica PTCOMA
     | identificadores IGUAL ID CORIZQ valoresArreglos CORDER PTCOMA
 
     | VectoresMatrices
@@ -382,10 +387,10 @@ sentenciaLogica
 // Ciclos
 ciclosWhile
     // Ciclo While
-    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER        { $$ = new While($3, $6, @1.first_line, @1.first_column); }
+    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER                  { $$ = new While($3, $6, @1.first_line, @1.first_column); }
 
     // Ciclo Do While
-    | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA
+    | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA     { $$ = new DoWhile($7, $3, @1.first_line, @1.first_column); }
 ;
 
 // Ciclo For
@@ -435,7 +440,7 @@ funcionExecute
 
 posibilidadesCout
     : sentenciaRelacional               { $$ = $1;}
-    | NOT BOOLEAN %prec UNOT            { console.log($1, $2); }
+    | NOT BOOLEAN %prec UNOT            { $$ = Negacion($1, $2, @1.first_line, @1.first_column); }
     | PARIZQ sentenciaLogica PARDER
     | ID PARIZQ valoresArreglos PARDER
     | PR_ENDL

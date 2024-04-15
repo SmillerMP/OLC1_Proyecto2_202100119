@@ -26,6 +26,16 @@ class If extends Instruccion {
                 en el momento que se realiza el console log no se ha ejecutado las instrucciones por lo que el resultado de las instrucciones suele ser un error, debe de pasar por el interprete de primero
             */
 
+            // for (let i = 0; i < this.instrucciones.length; i++) {
+            //     const instruccion = this.instrucciones[i];
+            //     let resultado = instruccion.interpretar(entornoDoWhile);
+
+            //     if (resultado == "break") {
+            //         break;
+            //     } else if (resultado == "continue") {
+            //         continue;
+            //     }              
+            // }
             this.instrucciones.forEach(instruccion => {
                 instruccion.interpretar(entornoIf);
 

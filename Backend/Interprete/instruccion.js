@@ -17,6 +17,8 @@ const tipoInstruccion = {
     WHILE: 'WHILE',
     FOR: 'FOR',
     BREAK: 'BREAK',
+
+    FUNCIONCOUT: 'FUNCIONCOUT',
 }
 
 module.exports = { Instruccion, tipoInstruccion }

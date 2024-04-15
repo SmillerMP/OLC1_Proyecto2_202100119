@@ -37,7 +37,7 @@ class Aritmetica extends Expresion{
             
             } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.STRING) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor).replace(/["]/g, '');
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this; 
 
             }
@@ -66,7 +66,7 @@ class Aritmetica extends Expresion{
 
             } else if (this.izquierda.tipo == TipoDato.DECIMAL && this.derecha.tipo == TipoDato.STRING) {
                 this.tipo = TipoDato.STRING;
-                this.valor = Number(this.izquierda.valor) + String(this.derecha.valor).replace(/["]/g, '');
+                this.valor = Number(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             }
@@ -85,7 +85,7 @@ class Aritmetica extends Expresion{
 
             } else if (this.izquierda.tipo == TipoDato.BOOL && this.derecha.tipo == TipoDato.STRING) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor) + String(this.derecha.valor).replace(/["]/g, '');
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             }
@@ -104,12 +104,12 @@ class Aritmetica extends Expresion{
 
             } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.CHAR) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["']/g, '');
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             } else if (this.izquierda.tipo == TipoDato.CHAR && this.derecha.tipo == TipoDato.STRING) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["]/g, '');
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             }
@@ -118,27 +118,27 @@ class Aritmetica extends Expresion{
             // MANEJO DE STRING
             else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.ENTERO) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor);
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.DECIMAL) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor);
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.BOOL) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor);
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.CHAR) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["']/g, '');
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             } else if (this.izquierda.tipo == TipoDato.STRING && this.derecha.tipo == TipoDato.STRING) {
                 this.tipo = TipoDato.STRING;
-                this.valor = String(this.izquierda.valor).replace(/["']/g, '') + String(this.derecha.valor).replace(/["']/g, '');
+                this.valor = String(this.izquierda.valor) + String(this.derecha.valor);
                 return this;
 
             }

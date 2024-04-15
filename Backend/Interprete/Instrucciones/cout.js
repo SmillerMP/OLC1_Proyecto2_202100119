@@ -9,13 +9,9 @@ class Cout extends Instruccion {
     interpretar(entorno) {
         this.expresion.interpretar(entorno);
 
-        if (this.expresion.tipo == "STRING") {
-            console.log("salida: " + (this.expresion.valor).replace(/['"]+/g, ''));
-            return this;
-        } else {
-            console.log("salida: " + this.expresion.valor);
-            return this;
-        }
+        console.log("salida: " + this.expresion.valor);
+        return this;
+        
     }
 
 }
