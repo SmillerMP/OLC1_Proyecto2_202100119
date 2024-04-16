@@ -16,50 +16,79 @@ class If extends Instruccion {
         // cuando viene if, else if y else
         if (this.sentenciaIf != null && this.sentenciaElseIf != null && this.sentenciaElse != null) {
         
-            if (this.sentenciaIf.interpretar(entorno)) {
-                return;
+            let resultadoIf = this.sentenciaIf.interpretar(entorno)
+            if (resultadoIf != false) {
+                return resultadoIf;
             } 
 
 
             for (let i = 0; i < this.sentenciaElseIf.length; i++) {
-                const elseIf = this.sentenciaElseIf[i];
-                if (elseIf.interpretar(entorno)) {
-                    return;
-                }
+                let resultadoElseIf = this.sentenciaElseIf[i].interpretar(entorno)
+                if (resultadoElseIf != false) {
+                    return resultadoElseIf;
+                } 
             }
 
-            this.sentenciaElse.interpretar(entorno);
+            let resultadoElse = this.sentenciaElse.interpretar(entorno)
+            if (resultadoElse != false) {
+                return resultadoElse;
+            } 
+
+            return this;
+
 
 
         // cuando viene if y else if
         } else if (this.sentenciaIf != null && this.sentenciaElseIf != null && this.sentenciaElseIf == null) {
 
-            if (this.sentenciaIf.interpretar(entorno)) {
-                return;
+            let resultadoIf = this.sentenciaIf.interpretar(entorno)
+            if (resultadoIf != false) {
+                return resultadoIf;
             } 
 
-            for (let i = 0; i < this.sentenciaElseIf.length; i++) {
-                const elseIf = this.sentenciaElseIf[i];
-                if (elseIf.interpretar(entorno)) {
-                    return;
-                }
+            for (let i = 0; i < this.sentenciaElseIf.length; i++) {;
+                let resultadoElseIf = this.sentenciaElseIf[i].interpretar(entorno)
+                if (resultadoElseIf != false) {
+                    return resultadoElseIf;
+                } 
+                
             }
             
+
+            return this;
+
             
         // cuando viene if y else
         } else if (this.sentenciaIf != null && this.sentenciaElseIf == null && this.sentenciaElse != null) {
-            if (this.sentenciaIf.interpretar(entorno)) {
-                return;
+
+            let resultadoIf = this.sentenciaIf.interpretar(entorno)
+            if (resultadoIf != false) {
+                return resultadoIf;
             } 
 
-            this.sentenciaElse.interpretar(entorno);
+            let resultadoElse = this.sentenciaElse.interpretar(entorno)
+            if (resultadoElse != false) {
+                return resultadoElse;
+            } 
+
+            return this;
+
         
         // cuando viene if
         } else if (this.sentenciaIf != null && this.sentenciaElseIf == null && this.sentenciaElse == null) {
-            if (this.sentenciaIf.interpretar(entorno)) {
-                return;
+
+            let resultadoIf = this.sentenciaIf.interpretar(entorno)
+            if (resultadoIf != false) {
+                return resultadoIf;
             } 
+
+            return this;
+
         }
+
+
+        return this;
+
 
     }
 

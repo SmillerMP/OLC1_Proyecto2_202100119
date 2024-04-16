@@ -32,7 +32,9 @@ class Declaracion extends Instruccion {
         }
 
         // guardar el simbolo en el entorno
-        entorno.addSimbolo(this.id, this.expresion, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+        for (let i = 0; i < this.id.length; i++) {
+            entorno.addSimbolo(this.id[i], this.expresion, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+        }
 
         return this;
     }

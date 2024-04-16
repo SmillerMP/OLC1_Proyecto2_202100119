@@ -19,30 +19,26 @@ class If extends Instruccion {
         }
 
 
-        if (Boolean(this.condicion.valor)) {
+        if (this.condicion.valor.toLowerCase() == "true"){
 
             //console.log(this.instrucciones);
             /* 
                 en el momento que se realiza el console log no se ha ejecutado las instrucciones por lo que el resultado de las instrucciones suele ser un error, debe de pasar por el interprete de primero
             */
 
-            // for (let i = 0; i < this.instrucciones.length; i++) {
-            //     const instruccion = this.instrucciones[i];
-            //     let resultado = instruccion.interpretar(entornoDoWhile);
+            //console.log(this)
+            for (let i = 0; i < this.instrucciones.length; i++) {
+                const instruccion = this.instrucciones[i];
+                let resultado = instruccion.interpretar(entornoIf);
 
-            //     if (resultado == "break") {
-            //         break;
-            //     } else if (resultado == "continue") {
-            //         continue;
-            //     }              
-            // }
-            this.instrucciones.forEach(instruccion => {
-                instruccion.interpretar(entornoIf);
+                if (resultado.tipo == tipoInstruccion.BREAK) {
+                    return resultado;
+                } else if (resultado == "continue") {
+                    continue;
+                }              
+            }
 
-                //console.log(instruccion);
-            });
-
-            return true;
+            return this;
 
 
             // guardarrrr el entorno

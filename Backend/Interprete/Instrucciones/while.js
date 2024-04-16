@@ -19,35 +19,27 @@ class While extends Instruccion {
         }
 
         let salir = false;
-        if (Boolean(this.condicion.valor)) {
 
-            //console.log(this.instrucciones)
-            while (Boolean(this.condicion.valor)) {
-                for (let i = 0; i < this.instrucciones.length; i++) {
-                    const instruccion = this.instrucciones[i];
-                    let resultado = instruccion.interpretar(entornoWhile);
-                    //console.log(resultado)
+        while (this.condicion.valor.toLowerCase() == "true") {
+            for (let i = 0; i < this.instrucciones.length; i++) {
+                const instruccion = this.instrucciones[i];
+                let resultado = instruccion.interpretar(entornoWhile);
 
-                    if (resultado == "break") {
-                        salir = true;
-                        break;
-                    } else if (resultado == "continue") {
-                        continue;
-                    }              
-                }
-
-                if (salir) {
+                //console.log(resultado)
+                if (resultado.tipo ==  tipoInstruccion.BREAK) {
+                    salir = true;
                     break;
-                }
-                
+                } else if (resultado == "continue") {
+                    continue;
+                }              
             }
 
-            return this;
-        } else {
-            // la codicion no se cumple
-            return this;
-
+            if (salir) {
+                break;
+            }            
         }
+
+        return this;
 
     }
 

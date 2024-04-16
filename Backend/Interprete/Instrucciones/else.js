@@ -11,11 +11,18 @@ class Else extends Instruccion {
 
         let entornoElse = new Entorno(tipoInstruccion.ELSE, entorno)
 
-        this.instrucciones.forEach(instruccion => {
-            instruccion.interpretar(entornoElse);
+        for (let i = 0; i < this.instrucciones.length; i++) {
+            const instruccion = this.instrucciones[i];
+            let resultado = instruccion.interpretar(entornoElse);
 
-            //console.log(instruccion);
-        });
+            if (resultado.tipo == tipoInstruccion.BREAK) {
+                return resultado;
+            } else if (resultado == "continue") {
+                continue;
+            }              
+        }
+
+        return this;
 
     }
 

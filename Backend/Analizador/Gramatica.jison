@@ -154,6 +154,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const DoWhile = require("../Interprete/Instrucciones/dowhile")
     const Break = require("../Interprete/Instrucciones/break")
     const Declaracion = require("../Interprete/Instrucciones/declaracion")
+    const Ternario = require("../Interprete/Instrucciones/ternario")
     
     
 
@@ -211,11 +212,12 @@ instruccion
     | ciclosWhile
     | cicloFor
     | funcionExecute
-    | impresionCout             {$$ = $1;} 
+    | impresionCout                 {$$ = $1;} 
     | switchCase
+    | ternario PTCOMA
     | sentenciaReturn
-    | PR_BREAK PTCOMA           {$$ = new Break($1, @1.first_line, @1.first_column);}
-    | PR_CONTINUE PTCOMA
+    | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column);}
+    | PR_CONTINUE PTCOMA 
     | comentarios 
 ;
 
@@ -225,8 +227,8 @@ comentarios
 ;
 
 identificadores
-    : identificadores COMA ID       {}
-    | ID                            {$$ = $1;}
+    : identificadores COMA ID       {$$ = $1; $$.push($3);}
+    | ID                            {$$ = []; $$.push($1);}
 ;
 
 secuenciasEscape
@@ -251,7 +253,6 @@ tiposVar
 ;
 
 valores
-
 // Valores extras
     : ID PUNTO PR_LENGTH PARIZQ PARDER
     | PR_TYPEOF PARIZQ ID PARDER
@@ -265,7 +266,7 @@ valores
     | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column); }
     | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column); }     
     | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
-    | ID                            {$$ = new Dato($1, TipoDato.ID, @1.first_line, @1.first_column); }
+    | ID                                 
 ;
 
 valoresPlus
@@ -303,8 +304,8 @@ declaracionVariables
     | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
 
     // Modificacion de variables
-    | identificadores IGUAL sentenciaLogica PTCOMA
-    | identificadores IGUAL ID CORIZQ valoresArreglos CORDER PTCOMA
+    | INTERROGACION identificadores IGUAL sentenciaLogica PTCOMA
+    | INTERROGACION identificadores IGUAL ID CORIZQ valoresArreglos CORDER PTCOMA
 
     | VectoresMatrices
 ;
@@ -362,7 +363,7 @@ sentenciaIfCompleta
 
 // Operador Ternario
 ternario
-    : sentenciaLogica INTERROGACION valoresPlus DOSPUNTOS valoresPlus 
+    :  sentenciaLogica INTERROGACION instrucciones DOSPUNTOS instrucciones    {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
 ;
 
 
@@ -441,8 +442,8 @@ funcionExecute
 
 
 posibilidadesCout
-    : sentenciaRelacional               { $$ = $1;}
-    | NOT BOOLEAN %prec UNOT            { $$ = Negacion($1, $2, @1.first_line, @1.first_column); }
+    : sentenciaRelacional                   { $$ = $1;}
+    | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column); }
     | PARIZQ sentenciaLogica PARDER
     | ID PARIZQ valoresArreglos PARDER
     | PR_ENDL

@@ -9,11 +9,15 @@ class Dato extends Expresion{
     interpretar(entorno){
 
         if (this.tipo == "STRING") {
-            this.valor = this.valor.slice(1, -1);
+            if (this.valor.charAt(0) === '"' && this.valor.charAt(this.valor.length - 1) === '"') {
+                this.valor = this.valor.slice(1, -1);
+            }
         } 
 
         if (this.tipo == "BOOL") {
-            this.valor = this.valor.slice(1, -1);
+            if (this.valor.charAt(0) === '"' && this.valor.charAt(this.valor.length - 1) === '"') {
+                this.valor = this.valor.slice(1, -1);
+            }
         }
         return this;
     }

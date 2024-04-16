@@ -7,7 +7,7 @@ class Break extends Instruccion {
     }
 
     interpretar(entorno) {
-        return "break";
+        return this;
     }
 
 }
