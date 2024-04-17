@@ -1,6 +1,7 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const { TipoSimbolo } = require("../Entorno/simbolo");
 const { TipoDato } = require('../expresion');
+const Variable = require('../Expresiones/variable');
 
 class Declaracion extends Instruccion {
     constructor(tipo, id, expresion, fila, columna) {
@@ -14,7 +15,6 @@ class Declaracion extends Instruccion {
 
         // verifica si la variable se va a declarar con algun valor
         // ejemplo int a; o int a = 5;
-
         if (this.expresion != null) {
 
             this.expresion.interpretar(entorno);
@@ -33,12 +33,23 @@ class Declaracion extends Instruccion {
                 console.log("Error semántico: Error de tipo de dato en declaracion de variable");
                 return this;
             }
+
+            // guardar el simbolo en el entorno
+            for (let i = 0; i < this.id.length; i++) {
+                //console.log("entra aqui")
+                entorno.addSimbolo(this.id[i], this.expresion.valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+            }
+
+        } else {
+            // guardar el simbolo en el entorno null
+            for (let i = 0; i < this.id.length; i++) {
+                //console.log("entra aqui")
+                entorno.addSimbolo(this.id[i], this.expresion, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+            }
+
         }
 
-        // guardar el simbolo en el entorno
-        for (let i = 0; i < this.id.length; i++) {
-            entorno.addSimbolo(this.id[i], this.expresion.valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
-        }
+        
 
         return this;
     }

@@ -158,6 +158,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const Declaracion = require("../Interprete/Instrucciones/declaracion")
     const Ternario = require("../Interprete/Instrucciones/ternario")
     const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionfor")
+    const ModificarVar = require("../Interprete/Instrucciones/modificarvar")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -216,7 +217,7 @@ instruccion
     | funcionExecute
     | impresionCout                 {$$ = $1;} 
     | switchCase
-    | ternario PTCOMA
+    //| ternario PTCOMA
     | sentenciaReturn
     | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column);}
     | PR_CONTINUE PTCOMA 
@@ -274,7 +275,7 @@ valores
 valoresPlus
     : valoresPlus MAS valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
     | valoresPlus MENOS valoresPlus                                 { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | MENOS valoresPlus %prec UMENOS                                { $$ = new Negativo($2, @1.first_line, @1.first_column);           }
+    | MENOS valoresPlus  %prec UMENOS                               { $$ = new Negativo($2, @1.first_line, @1.first_column);           }
     | valoresPlus POR valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
     | valoresPlus DIVIDIDO valoresPlus                              { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }      
     | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER           { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column); }             
@@ -306,16 +307,22 @@ declaracionVariables
     | tiposVar identificadores IGUAL PARIZQ tiposVar PARDER valoresPlus PTCOMA
 
     // Modificacion de variables
-    | INTERROGACION identificadores IGUAL sentenciaLogica PTCOMA
-    | INTERROGACION identificadores IGUAL ID CORIZQ valoresArreglos CORDER PTCOMA
+    | modificarVariables PTCOMA                                     {$$ = $1;}
 
     | VectoresMatrices
 ;
 
 //Incremento y Decremento de variables
-IncrementoDecremento
-    : ID MAS MAS                {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
-    | ID MENOS MENOS            {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
+modificarVariables
+    : identificadores MAS MAS                                       {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
+    | identificadores MENOS MENOS                                   {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
+    | identificadores IGUAL sentenciaLogica                         {$$ = new ModificarVar($1, $2, $3, @1.first_line, @1.first_column);}
+    | identificadores MAS IGUAL sentenciaLogica                     {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
+    | identificadores MENOS IGUAL valoresPlus                       {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);}     
+    | identificadores POR IGUAL sentenciaLogica                     {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
+    | identificadores DIVIDIDO IGUAL sentenciaLogica                {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
+    | identificadores MODULO IGUAL sentenciaLogica                  {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
+    | identificadores IGUAL ID CORIZQ valoresArreglos CORDER 
 ;
 
 
@@ -400,8 +407,7 @@ ciclosWhile
 
 // Ciclo For
 cicloFor
-    : PR_FOR PARIZQ declaracionVariables sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER      { $$ = new For($3, $4, $6, $9, @1.first_line, @1.first_column);}
-    | PR_FOR PARIZQ identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+    : PR_FOR PARIZQ declaracionVariables sentenciaLogica PTCOMA modificarVariables PARDER LLAVIZQ instrucciones LLAVDER      { $$ = new For($3, $4, $6, $9, @1.first_line, @1.first_column);}
 ;
 
 

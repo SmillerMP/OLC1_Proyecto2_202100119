@@ -13,7 +13,7 @@ class Entorno{
 
     addSimbolo(nombre, valor, tipo, tipoVar, fila, columna){
         if(nombre in this.tablaSim){
-            console.log("Semantico: Variable ya declarada");
+            console.log("Error Semántico: La variable " + nombre + " ya ha sido declarada.");
             return;
         }
         this.tablaSim[nombre] = new Simbolo(nombre, valor, tipo, tipoVar, fila, columna);
@@ -25,11 +25,15 @@ class Entorno{
             if(!(nombre in entornoVar.tablaSim)){
                 entornoVar = entornoVar.anterior;
             }
-            return entornoVar.tablaSim[nombre]
-        }
 
-        console.log("Semantico: Variable no declarada");
-        return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
+            if (entornoVar == null){ 
+                console.log("Error Semántico: La variable " + nombre + " no ha sido declarada.");
+                return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
+            } else {
+                return entornoVar.tablaSim[nombre]
+            }
+
+        }
     }
     
 }
