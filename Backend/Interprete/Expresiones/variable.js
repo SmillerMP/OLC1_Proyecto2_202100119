@@ -16,6 +16,8 @@ class Variable extends Expresion{
             
             this.tipo = entorno.getSimbolo(this.id).tipo;
 
+        } else {
+            console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
         }
 
         return this;

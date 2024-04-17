@@ -448,12 +448,13 @@ posibilidadesCout
     | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column); }
     | PARIZQ sentenciaLogica PARDER
     | ID PARIZQ valoresArreglos PARDER
+    | ID PARIZQ PARDER
     | PR_ENDL
 ;
 
 funcionCout
-    : funcionCout SALIDA posibilidadesCout  { $$ = $3; }
-    | posibilidadesCout                     { $$ = $1; }
+    : funcionCout SALIDA posibilidadesCout  { $$ = $1; $$.push($3); }
+    | posibilidadesCout                     { $$ = []; $$.push($1); }
 ;
 
 impresionCout 

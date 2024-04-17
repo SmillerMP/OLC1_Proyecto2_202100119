@@ -7,9 +7,14 @@ class Cout extends Instruccion {
     }
 
     interpretar(entorno) {
-        this.expresion.interpretar(entorno);
+        
+        let salida = "";
+        for (let i = 0; i < this.expresion.length; i++) {
+            let resultado = this.expresion[i].interpretar(entorno)
+            salida += String(resultado.valor);
+        }
 
-        console.log("salida: " + this.expresion.valor);
+        console.log("salida: " + salida);
         return this;
         
     }

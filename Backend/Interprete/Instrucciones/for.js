@@ -40,6 +40,7 @@ class For extends Instruccion {
         while ( this.condicion.valor == true) {
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
+                //console.log(instruccion)
                 let resultado = instruccion.interpretar(entornoFor);
 
                 //console.log(resultado)
@@ -64,6 +65,9 @@ class For extends Instruccion {
             this.condicion.interpretar(entornoFor); 
             
         }
+
+
+        //console.log(entornoFor)
 
         return this;
 
