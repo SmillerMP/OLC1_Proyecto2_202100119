@@ -144,6 +144,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const opLogico = require("../Interprete/Expresiones/opLogicos")
     const Negacion = require("../Interprete/Expresiones/negacion")
     const FuncionCout = require("../Interprete/Expresiones/funcioncout")
+    const Variable = require("../Interprete/Expresiones/variable")
 
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")
@@ -267,7 +268,7 @@ valores
     | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column); }
     | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column); }     
     | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
-    | ID                            {$$ = new Dato($1, TipoDato.ID, @1.first_line, @1.first_column); }    
+    | ID                            {$$ = new Variable($1, @1.first_line, @1.first_column); }    
 ;
 
 valoresPlus

@@ -138,7 +138,7 @@ case 56:
 this.$ = new Dato($$[$0], TipoDato.CHAR, _$[$0].first_line, _$[$0].first_column); 
 break;
 case 57:
-this.$ = new Dato($$[$0], TipoDato.ID, _$[$0].first_line, _$[$0].first_column); 
+this.$ = new Variable($$[$0], _$[$0].first_line, _$[$0].first_column); 
 break;
 case 58: case 59: case 61: case 62: case 64:
  this.$ = new Aritmetica($$[$0-2], $$[$0], $$[$0-1], _$[$0-2].first_line, _$[$0-2].first_column); 
@@ -383,6 +383,7 @@ parse: function parse(input) {
     const opLogico = require("../Interprete/Expresiones/opLogicos")
     const Negacion = require("../Interprete/Expresiones/negacion")
     const FuncionCout = require("../Interprete/Expresiones/funcioncout")
+    const Variable = require("../Interprete/Expresiones/variable")
 
     // Instrucciones
     const Cout = require("../Interprete/Instrucciones/cout")

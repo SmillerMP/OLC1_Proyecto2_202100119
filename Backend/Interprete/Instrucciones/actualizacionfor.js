@@ -11,9 +11,8 @@ class ActualizacionFor extends Instruccion {
         let variable = entorno.getSimbolo(this.id);
 
         if (this.operador == "+") {
-            console.log("entra aqui")
             variable.valor = variable.valor + 1;
-            console.log(variable)
+            //onsole.log(variable);
             return this;
         }
 

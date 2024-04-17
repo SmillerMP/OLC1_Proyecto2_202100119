@@ -19,7 +19,7 @@ class If extends Instruccion {
         }
 
 
-        if (this.condicion.valor.toLowerCase() == "true"){
+        if (this.condicion.valor == true){
 
             //console.log(this.instrucciones);
             /* 

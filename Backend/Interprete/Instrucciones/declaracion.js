@@ -14,7 +14,6 @@ class Declaracion extends Instruccion {
 
         // verifica si la variable se va a declarar con algun valor
         // ejemplo int a; o int a = 5;
-        console.log(this.expresion)
 
         if (this.expresion != null) {
 
@@ -29,7 +28,7 @@ class Declaracion extends Instruccion {
             }
 
             // verifica que el tipo de dato de la variable sea igual al tipo de dato de la expresion
-            console.log(this.expresion)
+            //console.log(this.expresion)
             if(this.expresion.tipo != this.tipo){
                 console.log("Error semántico: Error de tipo de dato en declaracion de variable");
                 return this;

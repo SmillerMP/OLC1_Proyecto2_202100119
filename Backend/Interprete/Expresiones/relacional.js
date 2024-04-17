@@ -11,8 +11,6 @@ class Relacional extends Expresion{
 
     interpretar(entorno){
 
-        console.log(this.izquierda)
-        console.log(this.derecha)
 
         this.izquierda.interpretar(entorno);
         this.derecha.interpretar(entorno);

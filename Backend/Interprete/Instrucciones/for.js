@@ -16,6 +16,7 @@ class For extends Instruccion {
         let entornoFor = new Entorno(tipoInstruccion.FOR, entorno)
 
         let variableFor = this.variable.interpretar(entornoFor);
+        //console.log(this.condicion);
 
         if (variableFor.tipo != TipoDato.ENTERO) {
             console.log("Error Semántico: La variable del for no es de tipo entero.")
@@ -24,16 +25,22 @@ class For extends Instruccion {
 
 
         // Verifica que la condicion sea posible
-        this.condicion.interpretar(entornoFor);
-        if (this.condicion.tipo != "BOOL") {
+        //console.log(this.condicion.interpretar(entornoFor));
+        this.condicion.interpretar(entornoFor)
+        if (this.condicion.tipo != TipoDato.BOOL) {
             console.log("Error Semántico: La condición del for no es booleana.")
             return this;
         }
 
-        while ( this.condicion.valor.toLowerCase() == "true") {
+
+        // console.log("Condicion Original")
+        // console.log(condicionOriginal)
+        
+        let salir = false;
+        while ( this.condicion.valor == true) {
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
-                let resultado = instruccion.interpretar(entornoWhile);
+                let resultado = instruccion.interpretar(entornoFor);
 
                 //console.log(resultado)
                 if (resultado.tipo ==  tipoInstruccion.BREAK) {
@@ -48,8 +55,14 @@ class For extends Instruccion {
                 break;
             }    
             
+            
+            //console.log(condicionOriginal)
+            //console.log(this.actualizacion);
             this.actualizacion.interpretar(entornoFor);
-            this.condicion.interpretar(entornoFor);
+
+            //console.log(this.condicion);
+            this.condicion.interpretar(entornoFor); 
+            
         }
 
         return this;

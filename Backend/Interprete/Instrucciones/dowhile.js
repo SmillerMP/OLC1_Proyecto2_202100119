@@ -33,7 +33,7 @@ class While extends Instruccion {
 
         let salir = false;
 
-        while (this.condicion.valor.toLowerCase() == "true") {
+        while (this.condicion.valor == true) {
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
                 let resultado = instruccion.interpretar(entornoDoWhile);
@@ -45,11 +45,12 @@ class While extends Instruccion {
                     continue;
                 }            
             }
-            this.condicion.interpretar(entornoDoWhile);
+            
 
             if (salir) {
                 break;
             }
+            this.condicion.interpretar(entornoDoWhile);
         }
 
         return this;
