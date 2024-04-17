@@ -152,11 +152,11 @@ exp_string  			        [\"][^\"\n]+[\"]
     const Else = require("../Interprete/Instrucciones/else")
     const While = require("../Interprete/Instrucciones/while")
     const DoWhile = require("../Interprete/Instrucciones/dowhile")
+    const For = require("../Interprete/Instrucciones/for")
     const Break = require("../Interprete/Instrucciones/break")
     const Declaracion = require("../Interprete/Instrucciones/declaracion")
     const Ternario = require("../Interprete/Instrucciones/ternario")
-    
-    
+    const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionfor")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -196,6 +196,7 @@ entorno
     | impresionCout             {$$ = $1;} //console.log($1)}
     | sentenciaIfCompleta       {$$ = $1;}
     | ciclosWhile               {$$ = $1;}
+    | cicloFor                  {$$ = $1;}
 ;
 
  
@@ -266,7 +267,7 @@ valores
     | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column); }
     | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column); }     
     | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
-    | ID                                 
+    | ID                            {$$ = new Dato($1, TipoDato.ID, @1.first_line, @1.first_column); }    
 ;
 
 valoresPlus
@@ -282,8 +283,8 @@ valoresPlus
 
 
 valoresArreglos
-    : valoresArreglos COMA valoresPlus
-    | valoresPlus
+    : valoresArreglos COMA valoresPlus                              {$$ = $1; $$.push($2);}
+    | valoresPlus                                                   {$$ = []; $$.push($1);}
 ;
 
 arregloDeclaraciones
@@ -312,8 +313,8 @@ declaracionVariables
 
 //Incremento y Decremento de variables
 IncrementoDecremento
-    : ID MAS MAS
-    | ID MENOS MENOS
+    : ID MAS MAS                {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
+    | ID MENOS MENOS            {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
 ;
 
 
@@ -398,7 +399,7 @@ ciclosWhile
 
 // Ciclo For
 cicloFor
-    : PR_FOR PARIZQ tiposVar identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
+    : PR_FOR PARIZQ declaracionVariables sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER      { $$ = new For($3, $4, $6, $9, @1.first_line, @1.first_column);}
     | PR_FOR PARIZQ identificadores IGUAL valoresPlus PTCOMA sentenciaLogica PTCOMA IncrementoDecremento PARDER LLAVIZQ instrucciones LLAVDER
 ;
 

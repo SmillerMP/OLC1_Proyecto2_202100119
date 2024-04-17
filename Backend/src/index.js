@@ -40,7 +40,7 @@ app.post('/Analizar', (req, res) => {
         instruccion.interpretar(entornoGlobal);
     });
 
-    //console.log(entornoGlobal);
+    console.log(entornoGlobal);
 
     
 

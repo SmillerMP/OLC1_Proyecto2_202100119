@@ -19,6 +19,7 @@ const tipoInstruccion = {
     BREAK: 'BREAK',
     DECLARACION: 'DECLARACION',
     TERNARIO: 'TERNARIO',
+    ACTUALIZACIONFOR: 'ACTUALIZACIONFOR',
 }
 
 module.exports = { Instruccion, tipoInstruccion }
