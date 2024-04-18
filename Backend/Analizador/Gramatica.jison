@@ -187,7 +187,7 @@ inicio
 entornos
     : entornos entorno      {$$ = $1; $$.push($2);}
     | entorno               {$$ = []; $$.push($1);}
-    //| error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 entorno

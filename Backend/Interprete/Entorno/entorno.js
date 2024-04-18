@@ -21,19 +21,23 @@ class Entorno{
 
     getSimbolo(nombre){
         let entornoVar = this;
-        while(entornoVar != null){
-            if(!(nombre in entornoVar.tablaSim)){
-                entornoVar = entornoVar.anterior;
+        if (entornoVar != null){
+            while(entornoVar != null){            
+                if(!(nombre in entornoVar.tablaSim)){
+                    entornoVar = entornoVar.anterior;
+                } else {
+                    //console.log("recuperacion de variable")
+                    return entornoVar.tablaSim[nombre]
+                }
             }
 
-            if (entornoVar == null){ 
-                console.log("Error Semántico: La variable " + nombre + " no ha sido declarada.");
-                return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
-            } else {
-                return entornoVar.tablaSim[nombre]
-            }
-
+            return null;
+        } else {
+            // error no hay entorno
+            return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
         }
+
+       
     }
     
 }

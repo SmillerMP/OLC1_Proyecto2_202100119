@@ -11,9 +11,8 @@ class If extends Instruccion {
     interpretar(entorno) {
 
         let entornoIf = new Entorno(tipoInstruccion.IF, entorno)
-        //console.log(this.condicion)
         this.condicion.interpretar(entornoIf);
-        //console.log(this.condicion)
+
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del if no es booleana.")
             return this;
@@ -21,12 +20,6 @@ class If extends Instruccion {
 
 
         if (this.condicion.valor == true){
-
-            //console.log(this.instrucciones);
-            /* 
-                en el momento que se realiza el console log no se ha ejecutado las instrucciones por lo que el resultado de las instrucciones suele ser un error, debe de pasar por el interprete de primero
-            */
-
             //console.log(this)
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];

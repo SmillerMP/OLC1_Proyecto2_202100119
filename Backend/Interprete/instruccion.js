@@ -15,6 +15,7 @@ const tipoInstruccion = {
     ELSE: 'ELSE',
     SENTENCIAIF: 'SENTENCIAIF',
     WHILE: 'WHILE',
+    DOWHILE: 'DOWHILE',
     FOR: 'FOR',
     BREAK: 'BREAK',
     DECLARACION: 'DECLARACION',

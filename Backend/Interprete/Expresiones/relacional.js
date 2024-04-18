@@ -3,7 +3,7 @@ const { Expresion, TipoDato } = require('../expresion');
 
 class Relacional extends Expresion{
     constructor (izquierda, derecha, operacion, fila, columna){
-        super("Error", TipoDato.ERROR, fila, columna);
+        super("ERROR", TipoDato.ERROR, fila, columna);
         this.izquierda = izquierda;
         this.derecha = derecha;
         this.operacion = operacion;
@@ -11,9 +11,13 @@ class Relacional extends Expresion{
 
     interpretar(entorno){
 
-
+        console.log(this.izquierda)
         this.izquierda.interpretar(entorno);
+        console.log(this.izquierda)
+
+        //console.log(this.derecha)
         this.derecha.interpretar(entorno);
+        //console.log(this.derecha)
 
         if (this.operacion == "==") {
             this.tipo = TipoDato.BOOL;

@@ -20,10 +20,10 @@ class Dato extends Expresion{
 
         else if (this.tipo == TipoDato.BOOL) {
 
-            if (this.valor.toLowerCase() === "true") {
+            if (String(this.valor).toLowerCase() === "true") {
                 this.valor = true;
             }
-            else if (this.valor.toLowerCase() === "false") {
+            else if (String(this.valor).toLowerCase() === "false") {
                 this.valor = false;
             }
             

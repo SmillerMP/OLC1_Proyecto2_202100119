@@ -3,7 +3,7 @@ const { Expresion, TipoDato } = require('../expresion');
 
 class opLogicos extends Expresion{
     constructor (izquierda, derecha, operacion, fila, columna){
-        super("Error", TipoDato.ERROR, fila, columna);
+        super("ERROR", TipoDato.ERROR, fila, columna);
         this.izquierda = izquierda;
         this.derecha = derecha;
         this.operacion = operacion;

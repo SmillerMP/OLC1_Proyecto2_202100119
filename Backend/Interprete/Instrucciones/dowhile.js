@@ -1,7 +1,7 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
 
-class While extends Instruccion {
+class DoWhile extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
         super(tipoInstruccion.DOWHILE, fila, columna);
         this.condicion = condicion;
@@ -11,14 +11,6 @@ class While extends Instruccion {
     interpretar(entorno) {
 
         let entornoDoWhile = new Entorno(tipoInstruccion.DOWHILE, entorno)
-        this.condicion.interpretar(entornoDoWhile);
-
-        if (this.condicion.tipo != "BOOL") {
-            console.log("Error Semántico: La condición del do while no es booleana.")
-            return this;
-        }
-
-
 
         for (let i = 0; i < this.instrucciones.length; i++) {
             const instruccion = this.instrucciones[i];
@@ -32,6 +24,15 @@ class While extends Instruccion {
         }
 
         let salir = false;
+
+        //console.log(this.condicion)
+        this.condicion.interpretar(entornoDoWhile);
+        //console.log(this.condicion)
+
+        if (this.condicion.tipo != "BOOL") {
+            console.log("Error Semántico: La condición del do while no es booleana.")
+            return this;
+        }
 
         while (this.condicion.valor == true) {
             for (let i = 0; i < this.instrucciones.length; i++) {
@@ -59,4 +60,4 @@ class While extends Instruccion {
 
 }
 
-module.exports = While;
+module.exports = DoWhile;

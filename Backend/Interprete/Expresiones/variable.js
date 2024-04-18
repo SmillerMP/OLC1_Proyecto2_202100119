@@ -10,6 +10,8 @@ class Variable extends Expresion{
 
     interpretar(entorno){
 
+        //console.log(entorno.getSimbolo(this.id))
+
         if (entorno.getSimbolo(this.id) != null) {
             this.valor = entorno.getSimbolo(this.id).valor;
             //console.log(this.id)
@@ -18,6 +20,8 @@ class Variable extends Expresion{
 
         } else {
             console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
+            this.valor = "ERROR"
+            this.tipo = TipoDato.ERROR;
         }
 
         return this;

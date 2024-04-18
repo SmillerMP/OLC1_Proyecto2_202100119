@@ -36,9 +36,13 @@ app.post('/Analizar', (req, res) => {
     
     let entornoGlobal = new entorno("GLOBAL", null);
 
-    resultado.forEach(instruccion => {
-        instruccion.interpretar(entornoGlobal);
-    });
+    //console.log(resultado)
+    if (resultado != ""){
+        resultado.forEach(instruccion => {
+            instruccion.interpretar(entornoGlobal);
+        });
+    }
+
 
     console.log(entornoGlobal);
 
