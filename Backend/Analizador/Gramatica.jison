@@ -224,7 +224,7 @@ instruccion
     | switchCase                    {$$ = $1;}
     | INTERROGACION ternario PTCOMA {$$ = $2;}
     | sentenciaReturn
-    | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column);}
+    | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column+1);}
     | PR_CONTINUE PTCOMA 
     | comentarios 
 ;
@@ -264,27 +264,30 @@ valores
 // Valores extras
     : ID PUNTO PR_LENGTH PARIZQ PARDER
     | PR_TYPEOF PARIZQ ID PARDER                        {}
-    | PR_ROUND PARIZQ valoresPlus PARDER                {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
-    | PR_TOUPPER PARIZQ valores PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
-    | PR_TOLOWER PARIZQ valores PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
-    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER      {$$ = new FuncionCout($4, $6, @1.first_line, @1.first_column);}
+    | PR_ROUND PARIZQ valoresPlus PARDER                {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
+    | PR_TOUPPER PARIZQ valoresPlus PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
+    | PR_TOLOWER PARIZQ valoresPlus PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER      {$$ = new FuncionCout($4, $6, @1.first_line, @1.first_column+1);}
     
-    | DECIMAL                       {$$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column); }
-    | ENTERO                        {$$ = new Dato($1, TipoDato.ENTERO, @1.first_line, @1.first_column); }
-    | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column); }
-    | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column); }     
-    | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column); }
-    | ID                            {$$ = new Variable($1, @1.first_line, @1.first_column); }    
+    | DECIMAL                       {$$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column+1); }
+    | ENTERO                        {$$ = new Dato($1, TipoDato.ENTERO, @1.first_line, @1.first_column+1); }
+    | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column+1); }
+    | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column+1); }     
+    | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column+1); } 
+    | ID                            {$$ = new Variable($1, null, null, @1.first_line, @1.first_column+1); }
+    | ID CORIZQ valoresPlus CORDER  {$$ = new Variable($1, $3, null, @1.first_line, @1.first_column+1); }    
+    | ID CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER  {$$ = new Variable($1, $3, $6, @1.first_line, @1.first_column+1); }       
 ;
 
+
 valoresPlus
-    : valoresPlus MAS valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus MENOS valoresPlus                                 { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | MENOS valoresPlus  %prec UMENOS                               { $$ = new Negativo($2, @1.first_line, @1.first_column);           }
-    | valoresPlus POR valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
-    | valoresPlus DIVIDIDO valoresPlus                              { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }      
-    | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER           { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column); }             
-    | valoresPlus MODULO valoresPlus                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column); }
+    : valoresPlus MAS valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | valoresPlus MENOS valoresPlus                                 { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | MENOS valoresPlus  %prec UMENOS                               { $$ = new Negativo($2, @1.first_line, @1.first_column+1);           }
+    | valoresPlus POR valoresPlus                                   { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | valoresPlus DIVIDIDO valoresPlus                              { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }      
+    | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER           { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column+1); }             
+    | valoresPlus MODULO valoresPlus                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }
     | valores                                                       { $$ = $1; }
 ;
 
@@ -293,6 +296,12 @@ valoresArreglos
     : valoresArreglos COMA valoresPlus                              {$$ = $1; $$.push($3);}
     | valoresPlus                                                   {$$ = []; $$.push($1);}
 ;
+
+
+valoresArregloMatrices
+    : valoresArregloMatrices COMA CORIZQ valoresArreglos CORDER     {$$ = $1; $$.push($4);}
+    | CORIZQ valoresArreglos CORDER                                 {$$ = []; $$.push($2);}
+;                                          
 
 arregloDeclaraciones
     : arregloDeclaraciones COMA tiposVar ID 
@@ -303,8 +312,8 @@ arregloDeclaraciones
 ;
 
 declaracionVariables
-    : tiposVar identificadores PTCOMA                                           {$$ = new Declaracion($1, $2, null, @1.first_line, @1.first_column);}
-    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA                     {$$ = new Declaracion($1, $2, $4, @1.first_line, @1.first_column);}
+    : tiposVar identificadores PTCOMA                                           {$$ = new Declaracion($1, $2, null, @1.first_line, @1.first_column+1);}
+    | tiposVar identificadores IGUAL sentenciaLogica PTCOMA                     {$$ = new Declaracion($1, $2, $4, @1.first_line, @1.first_column+1);}
     | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA        
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
@@ -319,15 +328,15 @@ declaracionVariables
 
 //Incremento y Decremento de variables
 modificarVariables
-    : identificadores MAS MAS                                       {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
-    | identificadores MENOS MENOS                                   {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column);}
-    | identificadores IGUAL sentenciaLogica                         {$$ = new ModificarVar($1, $2, $3, @1.first_line, @1.first_column);}
-    | identificadores MAS IGUAL sentenciaLogica                     {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
-    | identificadores MENOS IGUAL valoresPlus                       {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);}     
-    | identificadores POR IGUAL sentenciaLogica                     {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
-    | identificadores DIVIDIDO IGUAL sentenciaLogica                {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
-    | identificadores MODULO IGUAL sentenciaLogica                  {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column);} 
-    | identificadores IGUAL ID CORIZQ valoresArreglos CORDER 
+    : identificadores MAS MAS                                       {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column+1);}
+    | identificadores MENOS MENOS                                   {$$ = new ActualizacionFor($1, $2, @1.first_line, @1.first_column+1);}
+    | identificadores IGUAL sentenciaLogica                         {$$ = new ModificarVar($1, $2, $3, @1.first_line, @1.first_column+1);}
+    | identificadores MAS IGUAL sentenciaLogica                     {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column+1);} 
+    | identificadores MENOS IGUAL valoresPlus                       {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column+1);}     
+    | identificadores POR IGUAL sentenciaLogica                     {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column+1);} 
+    | identificadores DIVIDIDO IGUAL sentenciaLogica                {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column+1);} 
+    | identificadores MODULO IGUAL sentenciaLogica                  {$$ = new ModificarVar($1, $2, $4, @1.first_line, @1.first_column+1);} 
+    //| identificadores IGUAL ID CORIZQ valoresArreglos CORDER 
 ;
 
 
@@ -336,14 +345,13 @@ modificarVariables
 
 VectoresMatrices
     // Tipo 1 de vectores y matrices declarados con tamaño
-    : tiposVar ID CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER PTCOMA       {$$ = new DeclaracionVec($1, $2, $7, $9, @1.first_line, @1.first_column);}
-    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER PTCOMA  {$$ = new DeclaracionMatriz($1, $2, $9, $11, $14, @1.first_line, @1.first_column);}
+    : tiposVar ID CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER PTCOMA       {$$ = new DeclaracionVec($1, $2, $7, $9, @1.first_line, @1.first_column+1);}
+    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER PTCOMA  {$$ = new DeclaracionMatriz($1, $2, $9, $11, $14, @1.first_line, @1.first_column+1);}
+
     // Tipo 2 de vectores y matrices declarados directamente
-    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA                   {$$ = new DeclaracionVec($1, $2, null, $7, @1.first_line, @1.first_column);}
-    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ CORIZQ valoresArreglos CORDER COMA CORIZQ valoresArreglos CORDER CORDER PTCOMA
-    // Acceso a Vectores
-    | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER PTCOMA
-    | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER PTCOMA
+    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA                   {$$ = new DeclaracionVec($1, $2, null, $7, @1.first_line, @1.first_column+1);}
+    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ valoresArregloMatrices CORDER PTCOMA {$$ = new DeclaracionMatriz($1, $2, null, $9, null, @1.first_line, @1.first_column+1);}
+
     // Modificacion de Vectores
     | ID CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
     | ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
@@ -355,48 +363,48 @@ VectoresMatrices
 
 // Setentecia if 
 sentenciaIf
-    : PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER     {$$ = new If($3, $6, @1.first_line, @1.first_column)}
+    : PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER     {$$ = new If($3, $6, @1.first_line, @1.first_column+1)}
 ;
 
 sentenciaIfElse
-    : sentenciaIfElse PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER     {$$ = $1; $$.push(new ElseIf($5, $8, @1.first_line, @1.first_column))}    
-    | PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER                     {$$ = []; $$.push(new ElseIf($4, $7, @1.first_line, @1.first_column))}
+    : sentenciaIfElse PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER     {$$ = $1; $$.push(new ElseIf($5, $8, @1.first_line, @1.first_column+1))}    
+    | PR_ELSE PR_IF PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER                     {$$ = []; $$.push(new ElseIf($4, $7, @1.first_line, @1.first_column+1))}
 ;
 
 sentenciaElse
-    : PR_ELSE LLAVIZQ instrucciones LLAVDER             {$$ = new Else($3, @1.first_line, @1.first_column)}
+    : PR_ELSE LLAVIZQ instrucciones LLAVDER             {$$ = new Else($3, @1.first_line, @1.first_column+1)}
 ;
 
 sentenciaIfCompleta
-    : sentenciaIf sentenciaIfElse sentenciaElse         {$$ = new SentenciaIf($1, $2, $3, @1.first_line, @1.first_column);}
-    | sentenciaIf sentenciaIfElse                       {$$ = new SentenciaIf($1, $2, null, @1.first_line, @1.first_column);}
-    | sentenciaIf sentenciaElse                         {$$ = new SentenciaIf($1, null, $2, @1.first_line, @1.first_column);}
-    | sentenciaIf                                       {$$ = new SentenciaIf($1, null, null, @1.first_line, @1.first_column);}    
+    : sentenciaIf sentenciaIfElse sentenciaElse         {$$ = new SentenciaIf($1, $2, $3, @1.first_line, @1.first_column+1);}
+    | sentenciaIf sentenciaIfElse                       {$$ = new SentenciaIf($1, $2, null, @1.first_line, @1.first_column+1);}
+    | sentenciaIf sentenciaElse                         {$$ = new SentenciaIf($1, null, $2, @1.first_line, @1.first_column+1);}
+    | sentenciaIf                                       {$$ = new SentenciaIf($1, null, null, @1.first_line, @1.first_column+1);}    
 ;
 
 
 // Operador Ternario
 ternario
-    :  sentenciaLogica INTERROGACION instrucciones DOSPUNTOS instrucciones    {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column);}
+    :  sentenciaLogica INTERROGACION instrucciones DOSPUNTOS instrucciones    {$$ = new Ternario($1, $3, $5, @1.first_line, @1.first_column+1);}
 ;
 
 
 // Sentencia Relacionales
 sentenciaRelacional
-    : sentenciaRelacional IGUALES sentenciaRelacional               { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaRelacional DIFERENTE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaRelacional MENOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaRelacional MENOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaRelacional MAYOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaRelacional MAYOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column); }
+    : sentenciaRelacional IGUALES sentenciaRelacional               { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | sentenciaRelacional DIFERENTE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | sentenciaRelacional MENOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | sentenciaRelacional MENOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | sentenciaRelacional MAYOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | sentenciaRelacional MAYOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
     | valoresPlus                                                   { $$ = $1; }
 ;
 
 // Sentencia Logicas
 sentenciaLogica
-    : sentenciaLogica OR sentenciaLogica            { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column); }
-    | sentenciaLogica AND sentenciaLogica           { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column); }
-    | NOT sentenciaLogica %prec UNOT                { $$ = new Negacion($1, $2, @1.first_line, @1.first_column); }
+    : sentenciaLogica OR sentenciaLogica            { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | sentenciaLogica AND sentenciaLogica           { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column+1); }
+    | NOT sentenciaLogica %prec UNOT                { $$ = new Negacion($1, $2, @1.first_line, @1.first_column+1); }
     | sentenciaRelacional                           { $$ = $1; }
 ;
 
@@ -404,29 +412,29 @@ sentenciaLogica
 // Ciclos
 ciclosWhile
     // Ciclo While
-    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER                  { $$ = new While($3, $6, @1.first_line, @1.first_column); }
+    : PR_WHILE PARIZQ sentenciaLogica PARDER LLAVIZQ instrucciones LLAVDER                  { $$ = new While($3, $6, @1.first_line, @1.first_column+1); }
 
     // Ciclo Do While
-    | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA     { $$ = new DoWhile($7, $3, @1.first_line, @1.first_column); }
+    | PR_DO LLAVIZQ instrucciones LLAVDER PR_WHILE PARIZQ sentenciaLogica PARDER PTCOMA     { $$ = new DoWhile($7, $3, @1.first_line, @1.first_column+1); }
 ;
 
 // Ciclo For
 cicloFor
-    : PR_FOR PARIZQ declaracionVariables sentenciaLogica PTCOMA modificarVariables PARDER LLAVIZQ instrucciones LLAVDER      { $$ = new For($3, $4, $6, $9, @1.first_line, @1.first_column);}
+    : PR_FOR PARIZQ declaracionVariables sentenciaLogica PTCOMA modificarVariables PARDER LLAVIZQ instrucciones LLAVDER      { $$ = new For($3, $4, $6, $9, @1.first_line, @1.first_column+1);}
 ;
 
 
 // Switch Case
 
 recursividadCase
-    : recursividadCase PR_CASE valoresPlus DOSPUNTOS instrucciones      {$$ = $1; $$.push(new Case($3, $5, @1.first_line, @1.first_column));}
-    | PR_CASE valoresPlus DOSPUNTOS instrucciones                       {$$ = []; $$.push(new Case($2, $4, @1.first_line, @1.first_column));}
+    : recursividadCase PR_CASE valoresPlus DOSPUNTOS instrucciones      {$$ = $1; $$.push(new Case($3, $5, @1.first_line, @1.first_column+1));}
+    | PR_CASE valoresPlus DOSPUNTOS instrucciones                       {$$ = []; $$.push(new Case($2, $4, @1.first_line, @1.first_column+1));}
 ;
 
 
 switchCase
-    : PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase PR_DEFAULT DOSPUNTOS instrucciones LLAVDER   {$$ = new Switch($3, $6, $9, @1.first_line, @1.first_column);}
-    | PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase LLAVDER          {$$ = new Switch($3, $6, null, @1.first_line, @1.first_column);}
+    : PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase PR_DEFAULT DOSPUNTOS instrucciones LLAVDER   {$$ = new Switch($3, $6, $9, @1.first_line, @1.first_column+1);}
+    | PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase LLAVDER          {$$ = new Switch($3, $6, null, @1.first_line, @1.first_column+1);}
 ;
 
 
@@ -456,7 +464,7 @@ funcionExecute
 
 posibilidadesCout
     : sentenciaRelacional                   { $$ = $1;}
-    | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column); }
+    | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
     | PARIZQ sentenciaLogica PARDER         { $$ = $2;}
     | ID PARIZQ valoresArreglos PARDER
     | ID PARIZQ PARDER
@@ -469,7 +477,7 @@ funcionCout
 ;
 
 impresionCout 
-    : PR_COUT SALIDA funcionCout PTCOMA     { $$ = new Cout($3, @1.first_line, @1.first_column);}
+    : PR_COUT SALIDA funcionCout PTCOMA     { $$ = new Cout($3, @1.first_line, @1.first_column+1);}
 ;
 
 sentenciaReturn

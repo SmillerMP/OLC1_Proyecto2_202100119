@@ -3,8 +3,9 @@ const { TipoSimbolo } = require("../Entorno/simbolo");
 const { TipoDato } = require('../expresion');
 
 class DeclaracionVec extends Instruccion {
-    constructor(tipo, id, tipo2, expresion, fila, columna) {
+    constructor(VecOrMat, tipo, id, tipo2, expresion, fila, columna) {
         super(tipoInstruccion.DECLARACION, fila, columna);
+        this.VecOrMat = VecOrMat;
         this.tipo = tipo;
         this.tipo2 = tipo2;
         this.id = id;
