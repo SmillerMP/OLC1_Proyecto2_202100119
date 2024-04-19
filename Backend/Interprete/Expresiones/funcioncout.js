@@ -56,6 +56,18 @@ class FuncionCout extends Expresion {
         }
 
 
+        // else if (this.tipoFuncion == "length") {
+        //     if (this.expresion.tipo == TipoDato.STRING) {
+        //         this.tipo = TipoDato.ENTERO;
+        //         this.valor = this.expresion.valor.length;
+        //         return this;
+        //     } else {
+        //         console.log("Error: El valor ingresado no es de tipo string");
+        //         return this;
+        //     }
+        // }
+
+
 
         return this;
     }

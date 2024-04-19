@@ -18,13 +18,30 @@ class ElseIf extends Instruccion {
             return this;
         }
        
-        if (this.condicion.valor.toLowerCase() == "true") {
+        if (this.condicion.valor = true) {
+
+            // verificacion de break dentro de un ciclo
+            for (let i = 0; i < this.instrucciones.length; i++) {
+                const instruccion = this.instrucciones[i];
+                if (instruccion.tipo == tipoInstruccion.BREAK) {
+                    if (!entornoIf.esCiclo()) {
+                        console.log("Error Semántico: El break no está dentro de un ciclo.")
+                        return this;
+                    }                        
+                }          
+            }
+
 
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
                 let resultado = instruccion.interpretar(entornoElseIf);
 
                 if (resultado.tipo == tipoInstruccion.BREAK) {
+                    if (!entornoIf.esCiclo()) {
+                        console.log("Error Semántico: El break no está dentro de un ciclo.")
+                        return this;
+                    } 
+                    
                     return resultado;
                 } else if (resultado == "continue") {
                     continue;

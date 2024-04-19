@@ -44,7 +44,7 @@ app.post('/Analizar', (req, res) => {
     }
 
 
-    console.log(resultado);
+    console.log(entornoGlobal.tablaSim.vec1);
 
     
 

@@ -152,15 +152,17 @@ exp_string  			        [\"][^\"\n]+[\"]
     const ElseIf = require("../Interprete/Instrucciones/elseif")
     const Else = require("../Interprete/Instrucciones/else")
     const While = require("../Interprete/Instrucciones/while")
-    const DoWhile = require("../Interprete/Instrucciones/dowhile")
+    const DoWhile = require("../Interprete/Instrucciones/doWhile")
     const For = require("../Interprete/Instrucciones/for")
     const Break = require("../Interprete/Instrucciones/break")
     const Declaracion = require("../Interprete/Instrucciones/declaracion")
     const Ternario = require("../Interprete/Instrucciones/ternario")
-    const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionfor")
-    const ModificarVar = require("../Interprete/Instrucciones/modificarvar")
+    const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionFor")
+    const ModificarVar = require("../Interprete/Instrucciones/modificarVar")
     const Case = require("../Interprete/Instrucciones/case")
     const Switch = require("../Interprete/Instrucciones/switch")
+    const DeclaracionVec = require("../Interprete/Instrucciones/declaracionVec")
+    const DeclaracionMatriz = require("../Interprete/Instrucciones/declaracionMatriz")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -212,15 +214,15 @@ instrucciones
 ;
 
 instruccion
-    : declaracionVariables
+    : declaracionVariables          {$$ = $1;}
     | llamarFunciones
-    | sentenciaIfCompleta
-    | ciclosWhile
-    | cicloFor
+    | sentenciaIfCompleta           {$$ = $1;}
+    | ciclosWhile                   {$$ = $1;}
+    | cicloFor                      {$$ = $1;}
     | funcionExecute
     | impresionCout                 {$$ = $1;} 
-    | switchCase
-    //| ternario PTCOMA
+    | switchCase                    {$$ = $1;}
+    | INTERROGACION ternario PTCOMA {$$ = $2;}
     | sentenciaReturn
     | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column);}
     | PR_CONTINUE PTCOMA 
@@ -261,7 +263,7 @@ tiposVar
 valores
 // Valores extras
     : ID PUNTO PR_LENGTH PARIZQ PARDER
-    | PR_TYPEOF PARIZQ ID PARDER
+    | PR_TYPEOF PARIZQ ID PARDER                        {}
     | PR_ROUND PARIZQ valoresPlus PARDER                {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
     | PR_TOUPPER PARIZQ valores PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
     | PR_TOLOWER PARIZQ valores PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column);}
@@ -288,14 +290,14 @@ valoresPlus
 
 
 valoresArreglos
-    : valoresArreglos COMA valoresPlus                              {$$ = $1; $$.push($2);}
+    : valoresArreglos COMA valoresPlus                              {$$ = $1; $$.push($3);}
     | valoresPlus                                                   {$$ = []; $$.push($1);}
 ;
 
 arregloDeclaraciones
     : arregloDeclaraciones COMA tiposVar ID 
-    | arregloDeclaraciones COMA tiposVar ID CORIZQ CORDER
-    | tiposVar ID CORIZQ CORDER
+    //| arregloDeclaraciones COMA tiposVar ID CORIZQ CORDER
+    //| tiposVar ID CORIZQ CORDER
     | tiposVar ID 
 
 ;
@@ -334,10 +336,10 @@ modificarVariables
 
 VectoresMatrices
     // Tipo 1 de vectores y matrices declarados con tamaño
-    : tiposVar ID CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ ENTERO CORDER PTCOMA
-    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER PTCOMA
+    : tiposVar ID CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER PTCOMA       {$$ = new DeclaracionVec($1, $2, $7, $9, @1.first_line, @1.first_column);}
+    | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER PTCOMA  {$$ = new DeclaracionMatriz($1, $2, $9, $11, $14, @1.first_line, @1.first_column);}
     // Tipo 2 de vectores y matrices declarados directamente
-    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA
+    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA                   {$$ = new DeclaracionVec($1, $2, null, $7, @1.first_line, @1.first_column);}
     | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ CORIZQ valoresArreglos CORDER COMA CORIZQ valoresArreglos CORDER CORDER PTCOMA
     // Acceso a Vectores
     | tiposVar identificadores IGUAL ID CORIZQ ENTERO CORDER PTCOMA
@@ -455,7 +457,7 @@ funcionExecute
 posibilidadesCout
     : sentenciaRelacional                   { $$ = $1;}
     | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column); }
-    | PARIZQ sentenciaLogica PARDER
+    | PARIZQ sentenciaLogica PARDER         { $$ = $2;}
     | ID PARIZQ valoresArreglos PARDER
     | ID PARIZQ PARDER
     | PR_ENDL

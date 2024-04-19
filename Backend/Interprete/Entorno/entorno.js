@@ -1,5 +1,6 @@
 const { Expresion, TipoDato } = require("../expresion");
 const { Simbolo } = require("./simbolo");
+const {tipoInstruccion} = require('../instruccion');
 
 class Entorno{
     constructor(nombre, anterior){
@@ -36,8 +37,17 @@ class Entorno{
             // error no hay entorno
             return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
         }
+    }
 
-       
+    esCiclo(){
+        let ent = this;
+        while(ent != null){
+            if(ent.nombre == tipoInstruccion.WHILE || ent.nombre == tipoInstruccion.FOR || ent.nombre == tipoInstruccion.DO_WHILE){
+                return true;
+            }
+            ent = ent.anterior;
+        }
+        return false;
     }
     
 }

@@ -1,7 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const { TipoSimbolo } = require("../Entorno/simbolo");
 const { TipoDato } = require('../expresion');
-const Variable = require('../Expresiones/variable');
 
 class Declaracion extends Instruccion {
     constructor(tipo, id, expresion, fila, columna) {
@@ -26,6 +25,10 @@ class Declaracion extends Instruccion {
             if (this.tipo == TipoDato.ENTERO && this.expresion.tipo == TipoDato.DECIMAL) {
                 this.expresion.valor = Math.round(this.expresion.valor);
                 this.expresion.tipo = TipoDato.ENTERO;
+                
+            } else if (this.tipo == TipoDato.DECIMAL && this.expresion.tipo == TipoDato.ENTERO) {
+                this.expresion.valor = parseFloat(this.expresion.valor);
+                this.expresion.tipo = TipoDato.DECIMAL;
             }
 
             // verifica que el tipo de dato de la variable sea igual al tipo de dato de la expresion
