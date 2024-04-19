@@ -18,6 +18,7 @@ class Declaracion extends Instruccion {
         if (this.expresion != null) {
 
             this.expresion.interpretar(entorno);
+            //console.log(this.expresion)
             //console.log(this.expresion.interpretar(entorno))
 
 
@@ -41,6 +42,22 @@ class Declaracion extends Instruccion {
             }
 
         } else {
+
+            if (this.tipo == TipoDato.ENTERO) {
+                this.expresion = 0;
+
+            } else if (this.tipo == TipoDato.DECIMAL) {
+                this.expresion = 0.0;
+
+            } else if (this.tipo == TipoDato.BOOL) {
+                this.expresion = true;
+            
+            } else if (this.tipo == TipoDato.STRING) {
+                this.expresion = "";
+            
+            } else if (this.tipo == TipoDato.CHAR) {
+                this.expresion = '';
+            }
             // guardar el simbolo en el entorno null
             for (let i = 0; i < this.id.length; i++) {
                 //console.log("entra aqui")

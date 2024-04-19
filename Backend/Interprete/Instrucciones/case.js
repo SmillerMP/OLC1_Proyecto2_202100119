@@ -1,49 +1,40 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
 
-class If extends Instruccion {
+class Case extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
-        super(tipoInstruccion.IF, fila, columna);
+        super(tipoInstruccion.CASE, fila, columna);
         this.condicion = condicion;
         this.instrucciones = instrucciones;
     }
 
     interpretar(entorno) {
 
-        let entornoIf = new Entorno(tipoInstruccion.IF, entorno)
-        this.condicion.interpretar(entornoIf);
+        
 
-        if (this.condicion.tipo != "BOOL") {
-            console.log("Error Semántico: La condición del if no es booleana.")
-            return this;
+        let entornoCase = new Entorno(tipoInstruccion.CASE, entorno)
+        this.condicion.interpretar(entornoCase);
+
+        //console.log(this)
+        for (let i = 0; i < this.instrucciones.length; i++) {
+            const instruccion = this.instrucciones[i];
+            let resultado = instruccion.interpretar(entornoCase);
+
+            if (resultado.tipo == tipoInstruccion.BREAK) {
+                //console.log("entra a brake")
+                return resultado;
+            } else if (resultado == "continue") {
+                continue;
+            }              
         }
 
+        //console.log("llega aqui")
 
-        if (this.condicion.valor == true){
-            //console.log(this)
-            for (let i = 0; i < this.instrucciones.length; i++) {
-                const instruccion = this.instrucciones[i];
-                let resultado = instruccion.interpretar(entornoIf);
+        return this;
 
-                if (resultado.tipo == tipoInstruccion.BREAK) {
-                    return resultado;
-                } else if (resultado == "continue") {
-                    continue;
-                }              
-            }
-
-            return this;
-
-
-            // guardarrrr el entorno
-        } else {
-            // else if posible
-            return false;
-
-        }
-
+         
     }
 
 }
 
-module.exports = If;
+module.exports = Case;

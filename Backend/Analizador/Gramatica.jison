@@ -159,6 +159,8 @@ exp_string  			        [\"][^\"\n]+[\"]
     const Ternario = require("../Interprete/Instrucciones/ternario")
     const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionfor")
     const ModificarVar = require("../Interprete/Instrucciones/modificarvar")
+    const Case = require("../Interprete/Instrucciones/case")
+    const Switch = require("../Interprete/Instrucciones/switch")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -199,6 +201,7 @@ entorno
     | sentenciaIfCompleta       {$$ = $1;}
     | ciclosWhile               {$$ = $1;}
     | cicloFor                  {$$ = $1;}
+    | switchCase                {$$ = $1;}
 ;
 
  
@@ -414,14 +417,14 @@ cicloFor
 // Switch Case
 
 recursividadCase
-    : recursividadCase PR_CASE valoresPlus DOSPUNTOS instrucciones 
-    | PR_CASE valoresPlus DOSPUNTOS instrucciones
+    : recursividadCase PR_CASE valoresPlus DOSPUNTOS instrucciones      {$$ = $1; $$.push(new Case($3, $5, @1.first_line, @1.first_column));}
+    | PR_CASE valoresPlus DOSPUNTOS instrucciones                       {$$ = []; $$.push(new Case($2, $4, @1.first_line, @1.first_column));}
 ;
 
 
 switchCase
-    : PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase PR_DEFAULT DOSPUNTOS instrucciones LLAVDER
-    | PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase LLAVDER
+    : PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase PR_DEFAULT DOSPUNTOS instrucciones LLAVDER   {$$ = new Switch($3, $6, $9, @1.first_line, @1.first_column);}
+    | PR_SWITCH PARIZQ valoresPlus PARDER LLAVIZQ recursividadCase LLAVDER          {$$ = new Switch($3, $6, null, @1.first_line, @1.first_column);}
 ;
 
 

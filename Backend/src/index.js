@@ -44,7 +44,7 @@ app.post('/Analizar', (req, res) => {
     }
 
 
-    console.log(entornoGlobal);
+    console.log(resultado);
 
     
 

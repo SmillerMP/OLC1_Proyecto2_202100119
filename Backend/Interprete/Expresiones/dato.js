@@ -13,10 +13,21 @@ class Dato extends Expresion{
         //console.log(entorno)
 
         if (this.tipo == TipoDato.STRING){
+            
+            //console.log("entra a string")
+            //console.log(this.valor)
             if (this.valor.charAt(0) === '"' && this.valor.charAt(this.valor.length - 1) === '"') {
                 this.valor = this.valor.slice(1, -1);
             }
         } 
+
+        else if (this.tipo == TipoDato.CHAR){
+            if (this.valor.charAt(0) === "'" && this.valor.charAt(this.valor.length - 1) === "'") {
+                this.valor = this.valor.slice(1, -1);
+                //console.log("entra aqui")
+                //console.log("tipo: " + this.tipo + "  |  valor: " + this.valor)
+            }
+        }
 
         else if (this.tipo == TipoDato.BOOL) {
 
