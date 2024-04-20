@@ -3,9 +3,8 @@ const { TipoSimbolo } = require("../Entorno/simbolo");
 const { TipoDato } = require('../expresion');
 
 class DeclaracionVec extends Instruccion {
-    constructor(VecOrMat, tipo, id, tipo2, expresion, fila, columna) {
+    constructor(tipo, id, tipo2, expresion, fila, columna) {
         super(tipoInstruccion.DECLARACION, fila, columna);
-        this.VecOrMat = VecOrMat;
         this.tipo = tipo;
         this.tipo2 = tipo2;
         this.id = id;
@@ -34,6 +33,8 @@ class DeclaracionVec extends Instruccion {
 
         // declaracion de vector sin valores, solo con tamaño
         } else {
+
+            //console.log(this.tipo, this.tipo2)
 
             if (this.tipo != this.tipo2) {
                 console.log("Error semántico: los tipos de datos no coinciden en la declaracion del vector");

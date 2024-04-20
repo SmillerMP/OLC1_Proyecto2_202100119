@@ -161,7 +161,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const ModificarVar = require("../Interprete/Instrucciones/modificarVar")
     const Case = require("../Interprete/Instrucciones/case")
     const Switch = require("../Interprete/Instrucciones/switch")
-    const DeclaracionVec = require("../Interprete/Instrucciones/declaracionVec")
+    const DeclaracionVec = require("../Interprete/Instrucciones/declaracionVector")
     const DeclaracionMatriz = require("../Interprete/Instrucciones/declaracionMatriz")
 
     // Operaciones Mayores
@@ -289,6 +289,7 @@ valoresPlus
     | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER           { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column+1); }             
     | valoresPlus MODULO valoresPlus                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }
     | valores                                                       { $$ = $1; }
+    | PARIZQ valoresPlus PARDER                                     { $$ = $2; }
 ;
 
 
@@ -323,7 +324,7 @@ declaracionVariables
     // Modificacion de variables
     | modificarVariables PTCOMA                                     {$$ = $1;}
 
-    | VectoresMatrices
+    | VectoresMatrices                                          {$$ = $1;}
 ;
 
 //Incremento y Decremento de variables
@@ -349,12 +350,12 @@ VectoresMatrices
     | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW tiposVar CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER PTCOMA  {$$ = new DeclaracionMatriz($1, $2, $9, $11, $14, @1.first_line, @1.first_column+1);}
 
     // Tipo 2 de vectores y matrices declarados directamente
-    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA                   {$$ = new DeclaracionVec($1, $2, null, $7, @1.first_line, @1.first_column+1);}
+    | tiposVar ID CORIZQ CORDER IGUAL CORIZQ valoresArreglos CORDER PTCOMA                      {$$ = new DeclaracionVec($1, $2, null, $7, @1.first_line, @1.first_column+1);}
     | tiposVar ID CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ valoresArregloMatrices CORDER PTCOMA {$$ = new DeclaracionMatriz($1, $2, null, $9, null, @1.first_line, @1.first_column+1);}
 
     // Modificacion de Vectores
-    | ID CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
-    | ID CORIZQ ENTERO CORDER CORIZQ ENTERO CORDER IGUAL valoresPlus PTCOMA
+    | ID CORIZQ valoresPlus CORDER IGUAL valoresPlus PTCOMA                                     {$$ = new ModificarVar(new Variable($1, $3, null, @1.first_line, @1.first_column+1) , $5, $6, @1.first_line, @1.first_column+1);} 
+    | ID CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER IGUAL valoresPlus PTCOMA           {$$ = new ModificarVar(new Variable($1, $3, $6, @1.first_line, @1.first_column+1) , $8, $9, @1.first_line, @1.first_column+1);} 
     // fUNCION C_STR
     | tiposVar ID CORIZQ CORDER IGUAL ID PUNTO PR_C_STR PARIZQ PARDER PTCOMA
 
@@ -398,6 +399,7 @@ sentenciaRelacional
     | sentenciaRelacional MAYOR_QUE sentenciaRelacional             { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
     | sentenciaRelacional MAYOR_IGUAL sentenciaRelacional           { $$ = new Relacional($1, $3, $2, @1.first_line, @1.first_column+1); }
     | valoresPlus                                                   { $$ = $1; }
+    //| PARIZQ sentenciaRelacional PARDER                             { $$ = $2; }
 ;
 
 // Sentencia Logicas
@@ -405,7 +407,8 @@ sentenciaLogica
     : sentenciaLogica OR sentenciaLogica            { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column+1); }
     | sentenciaLogica AND sentenciaLogica           { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column+1); }
     | NOT sentenciaLogica %prec UNOT                { $$ = new Negacion($1, $2, @1.first_line, @1.first_column+1); }
-    | sentenciaRelacional                           { $$ = $1; }
+    | sentenciaRelacional  
+    //| PARIZQ sentenciaRelacional PARDER                         { $$ = $1; }
 ;
 
 
@@ -465,7 +468,6 @@ funcionExecute
 posibilidadesCout
     : sentenciaRelacional                   { $$ = $1;}
     | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
-    | PARIZQ sentenciaLogica PARDER         { $$ = $2;}
     | ID PARIZQ valoresArreglos PARDER
     | ID PARIZQ PARDER
     | PR_ENDL

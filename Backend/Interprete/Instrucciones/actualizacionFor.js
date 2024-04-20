@@ -1,4 +1,5 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
+const { TipoDato } = require('../expresion');
 
 class ActualizacionFor extends Instruccion {
     constructor(id, operador, fila, columna) {
@@ -8,7 +9,11 @@ class ActualizacionFor extends Instruccion {
     }
 
     interpretar(entorno) {
-        let variable = entorno.getSimbolo(this.id);
+        let variable = this.id.interpretar(entorno);
+
+        if (variable.tipo ==  TipoDato.ERROR){
+            return this;
+        }
 
         if (this.operador == "+") {
             variable.valor = variable.valor + 1;

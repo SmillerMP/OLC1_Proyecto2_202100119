@@ -41,11 +41,14 @@ class Variable extends Expresion{
             if (entorno.getSimbolo(this.id) != null) {
                 this.vector1.interpretar(entorno);
 
-                if (entorno.getSimbolo(this.id).valor[this.vector1.valor] != null){
+                //console.log(entorno.getSimbolo(this.id).valor.length-1)
+                //console.log(this.vector1.valor)
+
+                if ((entorno.getSimbolo(this.id).valor.length - 1 > this.vector1.valor)  ||  this.vector1.valor < 0){
                     this.valor = entorno.getSimbolo(this.id).valor[this.vector1.valor];
                     this.tipo = entorno.getSimbolo(this.id).tipo;
                 } else {
-                    console.log("Error Semántico: La direccion" + this.id + "[" + this.vector1.valor + "] no ha sido declarada")
+                    console.log("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "] no ha sido declarada")
                     this.valor = "ERROR"
                     this.tipo = TipoDato.ERROR;
                 }
