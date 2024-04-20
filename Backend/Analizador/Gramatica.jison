@@ -164,6 +164,10 @@ exp_string  			        [\"][^\"\n]+[\"]
     const Switch = require("../Interprete/Instrucciones/switch")
     const DeclaracionVec = require("../Interprete/Instrucciones/declaracionVector")
     const DeclaracionMatriz = require("../Interprete/Instrucciones/declaracionMatriz")
+    const Return = require("../Interprete/Instrucciones/return")
+
+    //Funciones
+    const DeclararFuncion = require("../Interprete/Funciones/declararFuncion")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -193,6 +197,8 @@ entornos
     : entornos entorno      {$$ = $1; $$.push($2);}
     | entorno               {$$ = []; $$.push($1);}
     | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error PTCOMA { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error LLAVDER { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 entorno
@@ -224,7 +230,7 @@ instruccion
     | impresionCout                 {$$ = $1;} 
     | switchCase                    {$$ = $1;}
     | INTERROGACION ternario PTCOMA {$$ = $2;}
-    | sentenciaReturn
+    | sentenciaReturn               {$$ = $1;} 
     | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column+1);}
     | PR_CONTINUE PTCOMA            {$$ = new Continue($1, @1.first_line, @1.first_column+1);}
     | comentarios 
@@ -264,8 +270,8 @@ tiposVar
 valores
 // Valores extras
     : ID PUNTO PR_LENGTH PARIZQ PARDER
-    | PR_TYPEOF PARIZQ ID PARDER                        {}
-    | PR_ROUND PARIZQ valoresPlus PARDER                {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
+    | PR_TYPEOF PARIZQ valores PARDER                       {}
+    | PR_ROUND PARIZQ valoresPlus PARDER                    {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
     | PR_TOUPPER PARIZQ valoresPlus PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
     | PR_TOLOWER PARIZQ valoresPlus PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
     | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER      {$$ = new FuncionCout($4, $6, @1.first_line, @1.first_column+1);}
@@ -444,7 +450,7 @@ switchCase
 
 // Funciones
 funciones 
-    : tiposVar ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
+    : tiposVar ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones PR_RETURN LLAVDER
     | tiposVar ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
     
     //Void
@@ -484,7 +490,7 @@ impresionCout
 ;
 
 sentenciaReturn
-    : PR_RETURN valoresArreglos PTCOMA
+    : PR_RETURN valoresArreglos PTCOMA      { $$ = new Return($2, @1.first_line, @1.first_column+1);}
     | PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA
-    | PR_RETURN PTCOMA
+    | PR_RETURN PTCOMA                      { $$ = new Return(null, @1.first_line, @1.first_column+1);}
 ;

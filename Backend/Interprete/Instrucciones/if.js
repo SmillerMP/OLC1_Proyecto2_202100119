@@ -19,15 +19,31 @@ class If extends Instruccion {
             return this;
         }
 
-
+        let sizeInstrucciones = this.instrucciones.length - 1;
         for (let i = 0; i < this.instrucciones.length; i++) {
             const instruccion = this.instrucciones[i];
             if (instruccion.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) {
                 if (!entornoIf.esCiclo()) {
-                    console.log("Error Semántico: El break, continue o return,  no está dentro de un ciclo.")                    
+                    console.log("Error Semántico: break o continue, no está dentro de un ciclo.")                    
                     return this;
-                }                        
-            }          
+                } 
+
+                if (i != sizeInstrucciones) {
+                    console.log("Error Semántico: break o continue, no es la última instrucción.")
+                    return this;
+                }
+
+            } else if (instruccion.tipo == tipoInstruccion.RETURN) {
+                if (!entornoIf.esFuncion()) {
+                    console.log("Error Semántico: return no está dentro de una función.")
+                    return this;
+                }
+
+                if (i != sizeInstrucciones) {
+                    console.log("Error Semántico: return no es la ultima instruccion.")
+                    return this;
+                }
+            }         
         }
 
         if (this.condicion.valor == true){

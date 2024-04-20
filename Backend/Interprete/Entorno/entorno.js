@@ -1,5 +1,6 @@
 const { Expresion, TipoDato } = require("../expresion");
 const { Simbolo } = require("./simbolo");
+
 const {tipoInstruccion} = require('../instruccion');
 
 class Entorno{
@@ -48,6 +49,26 @@ class Entorno{
             ent = ent.anterior;
         }
         return false;
+    }
+
+    esFuncion(){
+        let ent = this;
+        while(ent != null){
+            if(ent.nombre == tipoInstruccion.FUNCION){
+                return true;
+            }
+            ent = ent.anterior;
+        }
+        return false;
+    }
+
+
+    addFuncion(nombre, funcion){
+        if(nombre in this.tablaFunc){
+            // error semantico
+            return;
+        }
+        this.tablaFunc[nombre] = funcion;
     }
     
 }

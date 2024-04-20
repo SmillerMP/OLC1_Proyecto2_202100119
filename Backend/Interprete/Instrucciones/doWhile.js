@@ -12,13 +12,29 @@ class DoWhile extends Instruccion {
 
         let entornoDoWhile = new Entorno(tipoInstruccion.DOWHILE, entorno)
 
+        // verificacion de break, continue y dentro de un ciclo
+        // y verificacion de return dentro de una funcion
+        let sizeInstrucciones = this.instrucciones.length - 1;
         for (let i = 0; i < this.instrucciones.length; i++) {
             const instruccion = this.instrucciones[i];
-            let resultado = instruccion.interpretar(entornoDoWhile);
+            if (instruccion.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) {
+                if ( i != sizeInstrucciones) {
+                    console.log("Error Semántico: break o continue, no es la última instrucción.")
+                    return this;
+                }  
+                                      
+            } else if (instruccion.tipo == tipoInstruccion.RETURN) {
+                if (!entornoDoWhile.esFuncion()) {
+                    console.log("Error Semántico: return no está dentro de una función.")
+                    return this;
+                }
 
-            if (resultado.tipo ==  tipoInstruccion.BREAK || resultado.tipo ==  tipoInstruccion.CONTINUE) {
-                break;
-            }           
+                if (i != sizeInstrucciones) {
+                    console.log("Error Semántico: return no es la ultima instruccion.")
+                    return this;
+                }
+
+            }          
         }
 
         let salir = false;

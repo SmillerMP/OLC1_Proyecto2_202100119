@@ -53,7 +53,7 @@ class DeclaracionMatriz extends Instruccion {
             }
 
             //console.log(matriz)
-            entorno.addSimbolo(this.id, matriz, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+            entorno.addSimbolo(this.id, matriz, this.tipo, TipoSimbolo.VECTOR, this.fila, this.columna);
 
 
         // declaracion de vector sin valores, solo con tamaño
@@ -83,7 +83,7 @@ class DeclaracionMatriz extends Instruccion {
             }
 
 
-            entorno.addSimbolo(this.id, matriz, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+            entorno.addSimbolo(this.id, matriz, this.tipo, TipoSimbolo.VECTOR, this.fila, this.columna);
 
         }
 
