@@ -1,7 +1,7 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 
-class If extends Instruccion {
-    constructor(sentenciaIf, sentenciaElseIf, sentenciaElse,fila, columna) {
+class SentenciaIf extends Instruccion {
+    constructor(sentenciaIf, sentenciaElseIf, sentenciaElse, fila, columna) {
         super(tipoInstruccion.SENTENCIAIF, fila, columna);
         this.sentenciaIf = sentenciaIf;
         this.sentenciaElseIf = sentenciaElseIf;
@@ -10,9 +10,9 @@ class If extends Instruccion {
 
     interpretar(entorno) {
 
-        // console.log("sentencia if: " + this.sentenciaIf);
-        // console.log("sentencia else if: " + this.sentenciaElseIf);
-        // console.log("sentencia else: " + this.sentenciaElse);
+        // console.log("sentencia if: " + (this.sentenciaIf == null));
+        // console.log("sentencia else if: " + (this.sentenciaElseIf == null));
+        // console.log("sentencia else: " + (this.sentenciaElse== null));
         // cuando viene if, else if y else
         if (this.sentenciaIf != null && this.sentenciaElseIf != null && this.sentenciaElse != null) {
         
@@ -39,8 +39,8 @@ class If extends Instruccion {
 
 
         // cuando viene if y else if
-        } else if (this.sentenciaIf != null && this.sentenciaElseIf != null && this.sentenciaElseIf == null) {
-
+        } else if (this.sentenciaIf != null && this.sentenciaElseIf != null && this.sentenciaElse == null) {
+        
             let resultadoIf = this.sentenciaIf.interpretar(entorno)
             if (resultadoIf != false) {
                 return resultadoIf;
@@ -48,6 +48,7 @@ class If extends Instruccion {
 
             for (let i = 0; i < this.sentenciaElseIf.length; i++) {;
                 let resultadoElseIf = this.sentenciaElseIf[i].interpretar(entorno)
+                //console.log(resultadoElseIf)
                 if (resultadoElseIf != false) {
                     return resultadoElseIf;
                 } 
@@ -76,8 +77,8 @@ class If extends Instruccion {
         
         // cuando viene if
         } else if (this.sentenciaIf != null && this.sentenciaElseIf == null && this.sentenciaElse == null) {
-
             let resultadoIf = this.sentenciaIf.interpretar(entorno)
+            //console.log(resultadoIf)
             if (resultadoIf != false) {
                 return resultadoIf;
             } 
@@ -94,4 +95,4 @@ class If extends Instruccion {
 
 }
 
-module.exports = If;
+module.exports = SentenciaIf;

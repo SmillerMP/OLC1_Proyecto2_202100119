@@ -12,47 +12,39 @@ class ElseIf extends Instruccion {
        
         let entornoElseIf = new Entorno(tipoInstruccion.ELSEIF, entorno)
         this.condicion.interpretar(entornoElseIf);
+        //console.log(this.condicion)
 
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del else if no es booleana.")
-            return this;
+            return this;  
         }
        
-        if (this.condicion.valor = true) {
-
-            // verificacion de break dentro de un ciclo
-            for (let i = 0; i < this.instrucciones.length; i++) {
-                const instruccion = this.instrucciones[i];
-                if (instruccion.tipo == tipoInstruccion.BREAK) {
-                    if (!entornoIf.esCiclo()) {
-                        console.log("Error Semántico: El break no está dentro de un ciclo.")
-                        return this;
-                    }                        
-                }          
-            }
-
+        // verificacion de break dentro de un ciclo
+        for (let i = 0; i < this.instrucciones.length; i++) {
+            const instruccion = this.instrucciones[i];
+            if (instruccion.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) {
+                if (!entornoElseIf.esCiclo()) {
+                    console.log("Error Semántico: El break, continue o return,  no está dentro de un ciclo.")
+                    return this;
+                }                        
+            }          
+        }
+        
+        if (this.condicion.valor == true) {
 
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
                 let resultado = instruccion.interpretar(entornoElseIf);
 
-                if (resultado.tipo == tipoInstruccion.BREAK) {
-                    if (!entornoIf.esCiclo()) {
-                        console.log("Error Semántico: El break no está dentro de un ciclo.")
-                        return this;
-                    } 
-                    
-                    return resultado;
-                } else if (resultado == "continue") {
-                    continue;
-                }              
+                if (resultado.tipo == tipoInstruccion.BREAK || resultado.tipo == tipoInstruccion.CONTINUE) {
+                    return resultado;             
+                }        
             }
-
             return this;
 
             // guardarrrr el entorno
         } else {
-            // else if posible
+
             return false;
 
         }

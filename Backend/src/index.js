@@ -33,7 +33,7 @@ app.post('/Analizar', (req, res) => {
     const entrada = req.body.entrada;
     // Analizador Sintactico y lexico
 
-    try {
+    // try {
     let resultado = analizador.parse(entrada);
     
     let entornoGlobal = new entorno("GLOBAL", null);
@@ -46,13 +46,14 @@ app.post('/Analizar', (req, res) => {
     }
 
 
-    console.log(entornoGlobal.tablaSim);
+    //console.log(entornoGlobal.tablaSim);
+    
     res.status(200).json({resultado: resultado});
     console.error('\x1b[31m%s\x1b[0m', ' --------------------------- Ejecucion terminada ----------------------------------\n\n');
 
-    } catch (error) {
-        //console.log(error);
-    }
+    // } catch (error) {
+    //     //console.log(error);
+    // }
 
     
 

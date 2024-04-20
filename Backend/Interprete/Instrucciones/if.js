@@ -20,6 +20,16 @@ class If extends Instruccion {
         }
 
 
+        for (let i = 0; i < this.instrucciones.length; i++) {
+            const instruccion = this.instrucciones[i];
+            if (instruccion.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) {
+                if (!entornoIf.esCiclo()) {
+                    console.log("Error Semántico: El break, continue o return,  no está dentro de un ciclo.")                    
+                    return this;
+                }                        
+            }          
+        }
+
         if (this.condicion.valor == true){
 
             //console.log(this.instrucciones);
@@ -28,35 +38,14 @@ class If extends Instruccion {
             */
 
             // For solo para verificar si existe un break dentro de un ciclo
-
             
-
-            for (let i = 0; i < this.instrucciones.length; i++) {
-                const instruccion = this.instrucciones[i];
-                if (instruccion.tipo == tipoInstruccion.BREAK) {
-                    if (!entornoIf.esCiclo()) {
-                        console.log("Error Semántico: El break no está dentro de un ciclo.")
-                        return this;
-                    }                        
-                }          
-            }
-            
-            //console.log(this)
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
                 let resultado = instruccion.interpretar(entornoIf);
 
-                if (resultado.tipo == tipoInstruccion.BREAK) {
-                    if (!entornoIf.esCiclo()) {
-                        console.log("Error Semántico: El break no está dentro de un ciclo.")
-                        return this;
-                    } 
-                    
+                if (resultado.tipo == tipoInstruccion.BREAK || resultado.tipo == tipoInstruccion.CONTINUE) {
                     return resultado;
-                    
-                } else if (resultado == "continue") {
-                    continue;
-                }              
+                }            
             }
 
             return this;
@@ -64,7 +53,6 @@ class If extends Instruccion {
 
             // guardarrrr el entorno
         } else {
-            // else if posible
             return false;
 
         }

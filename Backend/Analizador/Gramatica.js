@@ -104,6 +104,9 @@ break;
 case 26:
 this.$ = new Break($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column+1);
 break;
+case 27:
+this.$ = new Continue($$[$0-1], _$[$0-1].first_line, _$[$0-1].first_column+1);
+break;
 case 31: case 71:
 this.$ = $$[$0-2]; this.$.push($$[$0]);
 break;
@@ -555,6 +558,7 @@ _handle_error:
     const DoWhile = require("../Interprete/Instrucciones/doWhile")
     const For = require("../Interprete/Instrucciones/for")
     const Break = require("../Interprete/Instrucciones/break")
+    const Continue = require("../Interprete/Instrucciones/continue")
     const Declaracion = require("../Interprete/Instrucciones/declaracion")
     const Ternario = require("../Interprete/Instrucciones/ternario")
     const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionFor")

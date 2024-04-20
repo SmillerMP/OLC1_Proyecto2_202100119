@@ -23,14 +23,15 @@ class While extends Instruccion {
         while (this.condicion.valor == true) {
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
+                //console.log(instruccion)
                 let resultado = instruccion.interpretar(entornoWhile);
 
                 //console.log(resultado)
                 if (resultado.tipo ==  tipoInstruccion.BREAK) {
                     salir = true;
                     break;
-                } else if (resultado == "continue") {
-                    continue;
+                } else if (resultado.tipo ==  tipoInstruccion.CONTINUE) {
+                    break;
                 }              
             }
 

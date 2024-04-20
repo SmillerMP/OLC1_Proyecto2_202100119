@@ -32,6 +32,17 @@ class For extends Instruccion {
             return this;
         }
 
+        // verificacion de break, continue, o return dentro de un ciclo
+        for (let i = 0; i < this.instrucciones.length; i++) {
+            const instruccion = this.instrucciones[i];
+            if (instruccion.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) {
+                if (!entornoIf.esCiclo()) {
+                    console.log("Error Semántico: El break, continue o return,  no está dentro de un ciclo.")                    
+                    return this;
+                }                        
+            }          
+        }
+
 
         // console.log("Condicion Original")
         // console.log(condicionOriginal)
@@ -47,8 +58,8 @@ class For extends Instruccion {
                 if (resultado.tipo ==  tipoInstruccion.BREAK) {
                     salir = true;
                     break;
-                } else if (resultado == "continue") {
-                    continue;
+                } else if (instruccion.tipo == tipoInstruccion.CONTINU) {
+                    break;
                 }              
             }
 

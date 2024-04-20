@@ -8,10 +8,13 @@ class ActualizacionFor extends Instruccion {
         this.operador = operador;
     }
 
+    
     interpretar(entorno) {
-        let variable = this.id.interpretar(entorno);
 
-        if (variable.tipo ==  TipoDato.ERROR){
+        let variable = entorno.getSimbolo(this.id);
+
+        if (variable == null){
+            console.log("Error semántico: variable no declarada");
             return this;
         }
 

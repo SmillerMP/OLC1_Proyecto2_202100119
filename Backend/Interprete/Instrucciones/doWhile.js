@@ -16,11 +16,9 @@ class DoWhile extends Instruccion {
             const instruccion = this.instrucciones[i];
             let resultado = instruccion.interpretar(entornoDoWhile);
 
-            if (resultado == "break") {
+            if (resultado.tipo ==  tipoInstruccion.BREAK || resultado.tipo ==  tipoInstruccion.CONTINUE) {
                 break;
-            } else if (resultado == "continue") {
-                continue;
-            }              
+            }           
         }
 
         let salir = false;
@@ -42,8 +40,8 @@ class DoWhile extends Instruccion {
                 if (resultado.tipo ==  tipoInstruccion.BREAK) {
                     salir = true;
                     break;
-                } else if (resultado == "continue") {
-                    continue;
+                } else if (resultado.tipo ==  tipoInstruccion.CONTINUE) {
+                    break;
                 }            
             }
             

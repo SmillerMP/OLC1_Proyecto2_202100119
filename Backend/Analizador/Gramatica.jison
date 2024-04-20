@@ -155,6 +155,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const DoWhile = require("../Interprete/Instrucciones/doWhile")
     const For = require("../Interprete/Instrucciones/for")
     const Break = require("../Interprete/Instrucciones/break")
+    const Continue = require("../Interprete/Instrucciones/continue")
     const Declaracion = require("../Interprete/Instrucciones/declaracion")
     const Ternario = require("../Interprete/Instrucciones/ternario")
     const ActualizacionFor = require("../Interprete/Instrucciones/actualizacionFor")
@@ -225,7 +226,7 @@ instruccion
     | INTERROGACION ternario PTCOMA {$$ = $2;}
     | sentenciaReturn
     | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column+1);}
-    | PR_CONTINUE PTCOMA 
+    | PR_CONTINUE PTCOMA            {$$ = new Continue($1, @1.first_line, @1.first_column+1);}
     | comentarios 
 ;
 

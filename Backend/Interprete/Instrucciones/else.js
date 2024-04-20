@@ -14,9 +14,9 @@ class Else extends Instruccion {
         // verificacion de break dentro de un ciclo
         for (let i = 0; i < this.instrucciones.length; i++) {
             const instruccion = this.instrucciones[i];
-            if (instruccion.tipo == tipoInstruccion.BREAK) {
+            if (instruccion.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) {
                 if (!entornoIf.esCiclo()) {
-                    console.log("Error Semántico: El break no está dentro de un ciclo.")
+                    console.log("Error Semántico: El break, continue o return,  no está dentro de un ciclo.")
                     return this;
                 }                        
             }          
@@ -26,17 +26,10 @@ class Else extends Instruccion {
             const instruccion = this.instrucciones[i];
             let resultado = instruccion.interpretar(entornoElse);
 
-            if (resultado.tipo == tipoInstruccion.BREAK) {
-                if (!entornoIf.esCiclo()) {
-                    console.log("Error Semántico: El break no está dentro de un ciclo.")
-                    return this;
-                } 
-                
+            if (resultado.tipo == tipoInstruccion.BREAK || instruccion.tipo == tipoInstruccion.CONTINUE) { 
                 return resultado;
                 
-            } else if (resultado == "continue") {
-                continue;
-            }              
+            }           
         }
 
         return this;
