@@ -11,10 +11,12 @@ class Cout extends Instruccion {
         
         let salida = "";
         for (let i = 0; i < this.expresion.length; i++) {
-            let resultado = this.expresion[i].interpretar(entorno)
+            let resultado = this.expresion[i].interpretar(entorno);
+            //console.log(resultado)
             if (resultado.tipo == TipoDato.ERROR) {
                 return this;
             }
+
             salida += String(resultado.valor);
         }
 

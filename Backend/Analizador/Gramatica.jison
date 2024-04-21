@@ -168,6 +168,7 @@ exp_string  			        [\"][^\"\n]+[\"]
 
     //Funciones
     const DeclararFuncion = require("../Interprete/Funciones/declararFuncion")
+    const LlamarFuncion = require("../Interprete/Funciones/llamarFuncion")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
@@ -206,6 +207,8 @@ entorno
     | funcionExecute
     | funciones                 {$$ = $1;}
     | comentarios 
+    | llamarFunciones           {$$ = $1;}
+    //---------------------
     | impresionCout             {$$ = $1;} //console.log($1)}
     | sentenciaIfCompleta       {$$ = $1;}
     | ciclosWhile               {$$ = $1;}
@@ -312,8 +315,8 @@ valoresArregloMatrices
 ;                                          
 
 arregloDeclaraciones
-    : arregloDeclaraciones COMA tiposVar ID                         {$$ = $1; console.log($4); $$.push(new Declaracion($3, $4, null, @1.first_line, @1.first_column+1));}
-    | tiposVar ID                                                   {$$ = [];console.log($2); $$.push(new Declaracion($1, $2, null, @1.first_line, @1.first_column+1));}            
+    : arregloDeclaraciones COMA tiposVar ID                         {$$ = $1; $$.push(new Declaracion($3, $4, null, @1.first_line, @1.first_column+1));}
+    | tiposVar ID                                                   {$$ = []; $$.push(new Declaracion($1, $2, null, @1.first_line, @1.first_column+1));}            
 
 ;
 
@@ -453,14 +456,14 @@ funciones
     
     //Void
     | PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER       {$$ = new DeclararFuncion(null, $2, $4, $6, null, @1.first_line, @1.first_column+1);}
-    | PR_VOID ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
+    | PR_VOID ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER                            {$$ = new DeclararFuncion(null, $2, null, $6, null, @1.first_line, @1.first_column+1);}
     
 ;
 
 llamarFunciones
     // llamados para metodos y funciones
-    : ID PARIZQ valoresArreglos PARDER PTCOMA
-    | ID PARIZQ PARDER PTCOMA
+    : ID PARIZQ valoresArreglos PARDER PTCOMA       {$$ = new LlamarFuncion($1, $3, @1.first_line, @1.first_column+1);}                                              
+    | ID PARIZQ PARDER PTCOMA                       {$$ = new LlamarFuncion($1, null, @1.first_line, @1.first_column+1);}  
 ;
 
 funcionExecute 
@@ -473,8 +476,8 @@ funcionExecute
 posibilidadesCout
     : sentenciaRelacional                   { $$ = $1;}
     | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
-    | ID PARIZQ valoresArreglos PARDER
-    | ID PARIZQ PARDER
+    | ID PARIZQ valoresArreglos PARDER      { $$ = new LlamarFuncion($1, $3, @1.first_line, @1.first_column+1);}    
+    | ID PARIZQ PARDER                      { $$ = new LlamarFuncion($1, null, @1.first_line, @1.first_column+1);}    
     | PR_ENDL
 ;
 
@@ -488,7 +491,8 @@ impresionCout
 ;
 
 sentenciaReturn
-    : PR_RETURN valoresArreglos PTCOMA      { $$ = new Return($2, @1.first_line, @1.first_column+1);}
-    | PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA
-    | PR_RETURN PTCOMA                      { $$ = new Return(null, @1.first_line, @1.first_column+1);}
-;
+    : PR_RETURN valoresArreglos PTCOMA                          { $$ = new Return($2, @1.first_line, @1.first_column+1);}
+    | PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA         { $$ = new Return(new LlamarFuncion($2, $4, @1.first_line, @1.first_column+1), @1.first_line, @1.first_column+1);}
+    | PR_RETURN PTCOMA                                          { $$ = new Return(null, @1.first_line, @1.first_column+1);}
+;  
+

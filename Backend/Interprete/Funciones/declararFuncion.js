@@ -5,7 +5,7 @@ const Funcion = require("./funcion");
 class DeclaracionFuncion extends Instruccion{
 
     constructor(tipoVar, nombre, parametros, instrucciones, retorno, fila, columna){
-        super(tipoInstruccion.FUNCION, fila, columna);
+        super(tipoInstruccion.DECLARARFUNCION, fila, columna);
         this.tipoVar = tipoVar;
         this.nombre = nombre;
         this.retorno = retorno;
@@ -16,6 +16,15 @@ class DeclaracionFuncion extends Instruccion{
     interpretar(entorno){
 
         if (this.tipoVar != null) {
+
+            // console.log("----------->")
+            // console.log(this.tipoVar)
+            // console.log(this.nombre)
+            // console.log(this.parametros)
+            // console.log(this.instrucciones)
+            // console.log(this.retorno)
+            // console.log("----------->")
+
 
             let funcion = new Funcion(this.nombre, this.retorno, this.parametros, this.instrucciones, this.fila, this.columna);
             entorno.addFuncion(this.nombre, funcion);

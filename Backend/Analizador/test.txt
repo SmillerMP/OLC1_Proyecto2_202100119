@@ -35,3 +35,66 @@ switch (valor1) {
     case 5:
         cout<<"entra al valor 5";
 }
+
+
+
+
+
+
+cout<<5;
+
+
+while (true) {
+    if (1==4) {
+        cout<<"simon";
+    } else {
+        cout<<"nel esta mal";
+        if (false){
+            cout<<"no deberia de imprimir esto";
+        } else {
+            cout<<"esto si lo imprime";
+            break;
+        }
+        cout<<5;
+        
+    }
+}
+
+
+int valor1 = 10;
+
+switch (valor1) {
+    case 1: 
+        cout<<"entra al valor 1";
+    
+    case 2:
+        cout<<"entra al valor 2";
+    
+    case 3:
+        cout<<"entra al valor 3";
+        
+    case 10:
+        cout<<"entra al valor 10 deberia de salir";
+        break;
+    
+    case 5:
+        cout<<"entra al valor 5";
+}
+
+
+int mcd(int a, int b){
+    if(b==0){
+        return a;
+    }else{
+        return mdc(b, a%b);
+    }
+}
+
+
+int multi(int a, int b){
+    int resultado = a * b;
+    return resultado;
+}
+
+
+multi(12,3);

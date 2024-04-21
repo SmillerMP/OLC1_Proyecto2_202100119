@@ -19,15 +19,12 @@ class If extends Instruccion {
             return this;
         }
 
-
         if (this.condicion.valor == true){
 
             //console.log(this.instrucciones);
             /* 
                 en el momento que se realiza el console log no se ha ejecutado las instrucciones por lo que el resultado de las instrucciones suele ser un error, debe de pasar por el interprete de primero
             */
-
-            // For solo para verificar si existe un break dentro de un ciclo
             
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
@@ -48,6 +45,8 @@ class If extends Instruccion {
                     return resultado;
 
                 } else if (resultado.tipo == tipoInstruccion.RETURN) {
+
+                    //console.log(entornoIf.esFuncion())
                     if (!entornoIf.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
                         return this;

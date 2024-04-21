@@ -46,8 +46,10 @@ app.post('/Analizar', (req, res) => {
     }
 
 
-    console.log(entornoGlobal.tablaSim);
+    //console.log(entornoGlobal.tablaSim);
+    //console.log(entornoGlobal.tablaFunc);
     //console.log(resultado);
+
     
     res.status(200).json({resultado: resultado});
     console.error('\x1b[31m%s\x1b[0m', ' --------------------------- Ejecucion terminada ----------------------------------\n\n');

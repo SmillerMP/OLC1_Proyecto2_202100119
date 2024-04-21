@@ -54,7 +54,7 @@ class Entorno{
     esFuncion(){
         let ent = this;
         while(ent != null){
-            if(ent.nombre == tipoInstruccion.FUNCION){
+            if(ent.nombre == tipoInstruccion.LLAMARFUNCION){
                 return true;
             }
             ent = ent.anterior;
@@ -70,6 +70,25 @@ class Entorno{
         }
         this.tablaFunc[nombre] = funcion;
     }
+
+    getFuncion(nombre){
+        let entornoFunc = this;
+        if (entornoFunc != null){
+            while(entornoFunc != null){            
+                if(!(nombre in entornoFunc.tablaFunc)){
+                    entornoFunc = entornoFunc.anterior;
+                } else {
+                    //console.log("recuperacion de funcion")
+                    return entornoFunc.tablaFunc[nombre]
+                }
+            }
+
+            return null;
+        } else {
+            // error no hay entorno
+            return new Expresion("ERROR", TipoDato.ERROR, 0, 0);
+        }
+    }   
     
 }
 

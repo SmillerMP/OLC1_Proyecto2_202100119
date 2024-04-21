@@ -26,11 +26,7 @@ class Switch extends Instruccion {
                 //console.log(resultado.tipo)
 
                 if (resultado.tipo == tipoInstruccion.BREAK) {
-                    if (!entorno.esCiclo()) {
-                        console.log("Error Semántico: break, no está dentro de un ciclo.")                    
-                        return this;
-                    } 
-                    return resultado;
+                    break;
 
                 } else if (resultado.tipo == tipoInstruccion.CONTINUE) {
                     if (!entorno.esCiclo()) {
@@ -59,11 +55,7 @@ class Switch extends Instruccion {
                 let resultado = instruccion.interpretar(entorno);
 
                 if (resultado.tipo == tipoInstruccion.BREAK) {
-                    if (!entorno.esCiclo()) {
-                        console.log("Error Semántico: break, no está dentro de un ciclo.")                    
-                        return this;
-                    } 
-                    return resultado;
+                    break;
 
                 } else if (resultado.tipo == tipoInstruccion.CONTINUE) {
                     if (!entorno.esCiclo()) {

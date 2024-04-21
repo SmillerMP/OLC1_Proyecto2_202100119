@@ -25,8 +25,9 @@ const tipoInstruccion = {
     TERNARIO: 'TERNARIO',
     ACTUALIZACIONFOR: 'ACTUALIZACIONFOR',
     MODIFICARVAR: 'MODIFICARVAR',
-    FUNCION: 'FUNCION',
+    DECLARARFUNCION: 'DECLARARFUNCION',
     RETURN: 'RETURN',
+    LLAMARFUNCION: 'LLAMARFUNCION',
 }
 
 module.exports = { Instruccion, tipoInstruccion }

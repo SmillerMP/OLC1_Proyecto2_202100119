@@ -12,10 +12,19 @@ class Declaracion extends Instruccion {
 
     interpretar(entorno) {
 
+        // console.log("-------------------------------------------")
+        // console.log(this.tipo)
+        // console.log(this.id)
+        // console.log(this.expresion)
+        // console.log(typeof this.expresion == "object")
+        // console.log("-------------------------------------------")
+
+        
+
         // verifica si la variable se va a declarar con algun valor
         // ejemplo int a; o int a = 5;
-        if (this.expresion != null) {
-
+        if (typeof this.expresion == "object" && this.expresion != null) {
+            //console.log(this.expresion)
             this.expresion.interpretar(entorno);
             //console.log(this.expresion)
             //console.log(this.expresion.interpretar(entorno))
@@ -39,29 +48,32 @@ class Declaracion extends Instruccion {
             }
 
             // guardar el simbolo en el entorno
+            //console.log(this.id.length)
             for (let i = 0; i < this.id.length; i++) {
-                //console.log("entra aqui")
                 entorno.addSimbolo(this.id[i], this.expresion.valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                //console.log(entorno)
             }
 
         } else {
 
-            if (this.tipo == TipoDato.ENTERO) {
-                this.expresion = 0;
+            if (this.expresion == null) {
+                if (this.tipo == TipoDato.ENTERO) {
+                    this.expresion = 0;
 
-            } else if (this.tipo == TipoDato.DECIMAL) {
-                this.expresion = 0.0;
+                } else if (this.tipo == TipoDato.DECIMAL) {
+                    this.expresion = 0.0;
 
-            } else if (this.tipo == TipoDato.BOOL) {
-                this.expresion = true;
-            
-            } else if (this.tipo == TipoDato.STRING) {
-                this.expresion = "";
-            
-            } else if (this.tipo == TipoDato.CHAR) {
-                this.expresion = '';
+                } else if (this.tipo == TipoDato.BOOL) {
+                    this.expresion = true;
+                
+                } else if (this.tipo == TipoDato.STRING) {
+                    this.expresion = "";
+                
+                } else if (this.tipo == TipoDato.CHAR) {
+                    this.expresion = '';
+                }
+                // guardar el simbolo en el entorno null
             }
-            // guardar el simbolo en el entorno null
 
 
             if (Array.isArray(this.id)) {
