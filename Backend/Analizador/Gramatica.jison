@@ -204,7 +204,7 @@ entornos
 entorno
     : declaracionVariables      {$$ = $1;}
     | funcionExecute
-    | funciones
+    | funciones                 {$$ = $1;}
     | comentarios 
     | impresionCout             {$$ = $1;} //console.log($1)}
     | sentenciaIfCompleta       {$$ = $1;}
@@ -312,10 +312,8 @@ valoresArregloMatrices
 ;                                          
 
 arregloDeclaraciones
-    : arregloDeclaraciones COMA tiposVar ID 
-    //| arregloDeclaraciones COMA tiposVar ID CORIZQ CORDER
-    //| tiposVar ID CORIZQ CORDER
-    | tiposVar ID 
+    : arregloDeclaraciones COMA tiposVar ID                         {$$ = $1; console.log($4); $$.push(new Declaracion($3, $4, null, @1.first_line, @1.first_column+1));}
+    | tiposVar ID                                                   {$$ = [];console.log($2); $$.push(new Declaracion($1, $2, null, @1.first_line, @1.first_column+1));}            
 
 ;
 
@@ -450,11 +448,11 @@ switchCase
 
 // Funciones
 funciones 
-    : tiposVar ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones PR_RETURN LLAVDER
-    | tiposVar ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
+    : tiposVar ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER      {$$ = new DeclararFuncion($1, $2, $4, $7, null, @1.first_line, @1.first_column+1);}
+    | tiposVar ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER                           {$$ = new DeclararFuncion($1, $2, null, $6, null, @1.first_line, @1.first_column+1);}
     
     //Void
-    | PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER
+    | PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER       {$$ = new DeclararFuncion(null, $2, $4, $6, null, @1.first_line, @1.first_column+1);}
     | PR_VOID ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER
     
 ;

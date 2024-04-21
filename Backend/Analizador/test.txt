@@ -15,3 +15,23 @@ vector4[1][1] = 6;
 
 cout<<vec2[0];
 cout<<vector4[1][1]; 
+
+int valor1 = 10;
+
+switch (valor1) {
+    case 1: 
+        cout<<"entra al valor 1";
+    
+    case 2:
+        cout<<"entra al valor 2";
+    
+    case 3:
+        cout<<"entra al valor 3";
+        
+    case 10:
+        cout<<"entra al valor 10 deberia de salir";
+        break;
+    
+    case 5:
+        cout<<"entra al valor 5";
+}

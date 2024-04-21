@@ -23,9 +23,13 @@ class Case extends Instruccion {
             if (resultado.tipo == tipoInstruccion.BREAK) {
                 //console.log("entra a brake")
                 return resultado;
-            } else if (resultado == "continue") {
-                continue;
-            }              
+            } else if (resultado == tipoInstruccion.CONTINUE) {
+                return resultado;
+                
+            } else if (resultado == tipoInstruccion.RETURN) {
+                return resultado;
+            }   
+
         }
 
         //console.log("llega aqui")
