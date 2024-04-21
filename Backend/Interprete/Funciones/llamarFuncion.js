@@ -10,6 +10,8 @@ class LlamarFuncion extends Instruccion {
 
     interpretar(entorno) {
 
+        //console.log(this.parametros)
+
         if (entorno.getFuncion(this.id) != null) {
             if (this.parametros != null) {
                 let entornoFuncion = new Entorno(tipoInstruccion.LLAMARFUNCION, entorno)
@@ -24,14 +26,16 @@ class LlamarFuncion extends Instruccion {
                         return this;
                     }
 
+                    let valoresParametros = [];
                     for (let i = 0; i < tamanoParametros; i++) {
                         const parametro = entorno.getFuncion(this.id).parametros[i];
                         //console.log(parametro)
                         let resultado = parametro.interpretar(entornoFuncion);
 
-                        // console.log(resultado)
+                        //console.log("--------------------->> ?????")
                         //console.log(this.parametros[i])
                         let parametroLlamada = this.parametros[i].interpretar(entornoFuncion);
+                        //console.log(parametroLlamada)
 
 
                         if (resultado.tipo != parametroLlamada.tipo) {
@@ -39,12 +43,18 @@ class LlamarFuncion extends Instruccion {
                             return this;
 
                         } else {
-                            entornoFuncion.getSimbolo(resultado.id).valor = parametroLlamada.valor;
-                            resultado.expresion = parametroLlamada.valor;
+                            valoresParametros.push(parametroLlamada.valor);
+                            // entornoFuncion.getSimbolo(resultado.id).valor = parametroLlamada.valor;
+                            // resultado.expresion = parametroLlamada.valor;
 
                         }
+                    }
 
-
+                    for (let i = 0; i < valoresParametros.length; i++) {
+                        const parametro = entorno.getFuncion(this.id).parametros[i];
+                        let resultado = parametro.interpretar(entorno);
+                        entornoFuncion.getSimbolo(resultado.id).valor = valoresParametros[i];
+                        resultado.expresion = valoresParametros[i];
                     }
 
                     let returnEcontrado = false;
