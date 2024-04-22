@@ -1,5 +1,6 @@
  
 const { Expresion, TipoDato } = require('../expresion');
+let { agregarSalida } = require('../salidas');
 
 class opLogicos extends Expresion{
     constructor (izquierda, derecha, operacion, fila, columna){
@@ -27,6 +28,7 @@ class opLogicos extends Expresion{
         }
         // Error Semantico
         console.log("Error Semántico: Error en la operacion relacional.")
+        agregarSalida("Error Semántico: Error en la operacion relacional.");
         return this;
 
 

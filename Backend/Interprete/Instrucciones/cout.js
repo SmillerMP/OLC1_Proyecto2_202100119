@@ -1,5 +1,7 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const { TipoDato } = require('../expresion');
+let { agregarSalida } = require('../salidas');
+
 
 class Cout extends Instruccion {
     constructor(expresion, fila, columna) {
@@ -21,6 +23,7 @@ class Cout extends Instruccion {
         }
 
         console.log("salida: " + salida);
+        agregarSalida(salida);
         return this;
         
     }

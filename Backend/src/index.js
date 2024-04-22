@@ -4,6 +4,7 @@ const cors = require('cors');
 
 const analizador = require("../Analizador/Gramatica.js");
 const entorno = require("../Interprete/Entorno/entorno.js");
+let { borrarSalidas, obtenerSalidas}  = require("../Interprete/salidas.js");
 
 
 
@@ -12,8 +13,11 @@ const entorno = require("../Interprete/Entorno/entorno.js");
 const app = express();
 
 
+
+
 // Salida al puerto
 app.set('port', 8000);
+
 
 
 // Modulos
@@ -30,10 +34,11 @@ app.get('/Login', (req, res) => {
 
 
 app.post('/Analizar', (req, res) => {
+    borrarSalidas();
     const entrada = req.body.entrada;
     // Analizador Sintactico y lexico
 
-    // try {
+    try {
     let resultado = analizador.parse(entrada);
     
     let entornoGlobal = new entorno("GLOBAL", null);
@@ -48,15 +53,16 @@ app.post('/Analizar', (req, res) => {
 
     //console.log(entornoGlobal.tablaSim);
     //console.log(entornoGlobal.tablaFunc);
-    //console.log(resultado);
+    //console.log(obtenerSalidas());
+
 
     
-    res.status(200).json({resultado: resultado});
+    res.status(200).json({resultado: obtenerSalidas()});
     console.error('\x1b[31m%s\x1b[0m', ' --------------------------- Ejecucion terminada ----------------------------------\n\n');
 
-    // } catch (error) {
-    //     //console.log(error);
-    // }
+    } catch (error) {
+        //console.log(error);
+    }
 
     
 
@@ -73,3 +79,4 @@ app.listen(app.get('port'), () => {
     console.clear();
     console.log('Servidor iniciado en el puerto:  8000 ');
 });
+

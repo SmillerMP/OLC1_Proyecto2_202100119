@@ -1,5 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
+let { agregarSalida } = require('../salidas');
 
 class If extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
@@ -16,6 +17,7 @@ class If extends Instruccion {
         //console.log(this.condicion)
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del if no es booleana.")
+            agregarSalida("Error Semántico: La condición del if no es booleana.");
             return this;
         }
 
@@ -32,14 +34,16 @@ class If extends Instruccion {
 
                 if (resultado.tipo == tipoInstruccion.BREAK) {
                     if (!entornoIf.esCiclo()) {
-                        console.log("Error Semántico: break, no está dentro de un ciclo.")                    
+                        console.log("Error Semántico: break, no está dentro de un ciclo.")        
+                        agregarSalida("Error Semántico: break, no está dentro de un ciclo.")            
                         return this;
                     } 
                     return resultado;
 
                 } else if (resultado.tipo == tipoInstruccion.CONTINUE) {
                     if (!entornoIf.esCiclo()) {
-                        console.log("Error Semántico: Continue no está dentro de un ciclo.")                    
+                        console.log("Error Semántico: Continue no está dentro de un ciclo.")  
+                        agregarSalida("Error Semántico: Continue no está dentro de un ciclo.")                  
                         return this;
                     }
                     return resultado;
@@ -49,6 +53,8 @@ class If extends Instruccion {
                     //console.log(entornoIf.esFuncion())
                     if (!entornoIf.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
+                        agregarSalida("Error Semántico: return no está dentro de una función.")
+
                         return this;
                     }    
                     return resultado;

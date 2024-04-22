@@ -1,6 +1,7 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const { TipoSimbolo } = require("../Entorno/simbolo");
 const { TipoDato } = require('../expresion');
+let { agregarSalida } = require('../salidas');
 
 class DeclaracionMatriz extends Instruccion {
     constructor(tipo, id, tipo2, expresion, expresion2, fila, columna) {
@@ -19,6 +20,7 @@ class DeclaracionMatriz extends Instruccion {
             
             if (this.expresion.length <= 1) {
                 console.log("Error semántico: la matriz debe tener al menos 2 dimensiones");
+                agregarSalida("Error semántico: la matriz debe tener al menos 2 dimensiones");
                 return this;
             }
 
@@ -29,6 +31,7 @@ class DeclaracionMatriz extends Instruccion {
 
                 if (size2D != this.expresion[i].length) { 
                     console.log("Error semántico: las filas de la matriz deben tener la misma cantidad de columnas");
+                    agregarSalida("Error semántico: las filas de la matriz deben tener la misma cantidad de columnas");
                     return this;
                 }
                 
@@ -61,6 +64,7 @@ class DeclaracionMatriz extends Instruccion {
 
             if (this.tipo != this.tipo2) {
                 console.log("Error semántico: los tipos de datos no coinciden en la declaracion de la matriz");
+                agregarSalida("Error semántico: los tipos de datos no coinciden en la declaracion de la matriz");
                 return this;
             }
 
@@ -69,10 +73,12 @@ class DeclaracionMatriz extends Instruccion {
 
             if (this.expresion.tipo != TipoDato.ENTERO || this.expresion.valor < 0){
                 console.log("Error semántico: el tamaño de la matriz debe ser un entero positivo mayor a 0");
+                agregarSalida("Error semántico: el tamaño de la matriz debe ser un entero positivo mayor a 0");
                 return this;
 
             } else if (this.expresion2.tipo != TipoDato.ENTERO || this.expresion2.valor < 0){
                 console.log("Error semántico: el tamaño 2 de la matriz debe ser un entero positivo mayor a 0");
+                agregarSalida("Error semántico: el tamaño 2 de la matriz debe ser un entero positivo mayor a 0");
                 return this;
             }
 
@@ -102,6 +108,7 @@ function forzarNumero(valor, valor2) {
     
     } else {
     console.log("Error semántico: existen tipos de datos que no son del tipo del vector");
+    agregarSalida("Error semántico: existen tipos de datos que no son del tipo del vector");
     return this;
     }
 }

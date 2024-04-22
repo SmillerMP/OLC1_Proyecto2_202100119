@@ -1,5 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
+let { agregarSalida } = require('../salidas');
 
 class While extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
@@ -14,7 +15,9 @@ class While extends Instruccion {
         this.condicion.interpretar(entornoWhile);
 
         if (this.condicion.tipo != "BOOL") {
-            console.log("Error Semántico: La condición del if no es booleana.")
+            console.log("Error Semántico: La condición del while no es booleana.")
+            agregarSalida("Error Semántico: La condición del while no es booleana.");
+
             return this;
         }
         
@@ -34,6 +37,12 @@ class While extends Instruccion {
                 } else if (resultado.tipo ==  tipoInstruccion.CONTINUE) {
                     break;
                 } else if (resultado.tipo ==  tipoInstruccion.RETURN) {
+                    if (!entornoWhile.esFuncion()) {
+                        console.log("Error Semántico: return no está dentro de una función.")
+                        agregarSalida("Error Semántico: return no está dentro de una función.")
+
+                        return this;
+                    }    
                     return resultado;
                 }              
             }

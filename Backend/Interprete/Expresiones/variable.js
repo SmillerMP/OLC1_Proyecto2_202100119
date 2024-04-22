@@ -1,4 +1,5 @@
 const {Expresion, TipoDato} = require('../expresion');
+let { agregarSalida } = require('../salidas');
 
 class Variable extends Expresion{
     
@@ -25,6 +26,7 @@ class Variable extends Expresion{
                     this.tipo = entorno.getSimbolo(this.id).tipo;
                 } else{
                     console.log("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "][" + this.vector2.valor + "] no ha sido declarada")
+                    agregarSalida("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "][" + this.vector2.valor + "] no ha sido declarada");
                     this.valor = "ERROR"
                     this.tipo = TipoDato.ERROR;
                 }
@@ -32,6 +34,7 @@ class Variable extends Expresion{
 
             } else {
                 console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
+                agregarSalida("Error Semántico: La variable " + this.id + " no ha sido declarada.");
                 this.valor = "ERROR"
                 this.tipo = TipoDato.ERROR;
             }
@@ -49,6 +52,7 @@ class Variable extends Expresion{
                     this.tipo = entorno.getSimbolo(this.id).tipo;
                 } else {
                     console.log("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "] no ha sido declarada")
+                    agregarSalida("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "] no ha sido declarada");
                     this.valor = "ERROR"
                     this.tipo = TipoDato.ERROR;
                 }
@@ -56,6 +60,7 @@ class Variable extends Expresion{
 
             } else {
                 console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
+                agregarSalida("Error Semántico: La variable " + this.id + " no ha sido declarada.");
                 this.valor = "ERROR"
                 this.tipo = TipoDato.ERROR;
             }
@@ -70,6 +75,7 @@ class Variable extends Expresion{
 
             } else {
                 console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
+                agregarSalida("Error Semántico: La variable " + this.id + " no ha sido declarada.");
                 this.valor = "ERROR"
                 this.tipo = TipoDato.ERROR;
             }

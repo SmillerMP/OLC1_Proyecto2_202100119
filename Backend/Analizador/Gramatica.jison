@@ -19,14 +19,12 @@ exp_string  			        [\"][^\"\n]+[\"]
 
 %%
 /* Espacios en blanco */
+{exp_comentario_multilinea}	{}
+{exp_comentario_simple}	{}
 [ \r\t]+                {}
 \n                      {}
-{COM_MULT} 	            {} /* No hacer nada */
-{COM_SIMPLE} 		    {} /* No hacer nada */
 
-/* Expresiones Regulares */
-{exp_comentario_multilinea}		 return 'COM_MULT'; 
-{exp_comentario_simple}			 return 'COM_SIMPLE'; 
+	 
 
 
 // Palabras reservadas
@@ -121,14 +119,9 @@ exp_string  			        [\"][^\"\n]+[\"]
 
 
 
-
-
-
-
-
 <<EOF>>             return 'EOF';
 
-.                   {console.error('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
+.                   {agregarSalida('Este es un error léxico: ' + yytext + ', en la linea: ' + yylloc.first_line + ', en la columna: ' + yylloc.first_column);}
 /lex
 /* Asociación de operadores y precedencia */
 
@@ -169,9 +162,13 @@ exp_string  			        [\"][^\"\n]+[\"]
     //Funciones
     const DeclararFuncion = require("../Interprete/Funciones/declararFuncion")
     const LlamarFuncion = require("../Interprete/Funciones/llamarFuncion")
+    const Execute = require("../Interprete/Funciones/execute")
 
     // Operaciones Mayores
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
+
+
+    let { agregarSalida } = require('../Interprete/salidas');
     
 %}      
 
@@ -197,23 +194,16 @@ inicio
 entornos
     : entornos entorno      {$$ = $1; $$.push($2);}
     | entorno               {$$ = []; $$.push($1);}
-    | error { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-    | error PTCOMA { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-    | error LLAVDER { console.error('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error PTCOMA { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error LLAVDER { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
 ;
 
 entorno
     : declaracionVariables      {$$ = $1;}
-    | funcionExecute
+    | funcionExecute            {$$ = $1;}
     | funciones                 {$$ = $1;}
-    | comentarios 
     | llamarFunciones           {$$ = $1;}
-    //---------------------
-    | impresionCout             {$$ = $1;} //console.log($1)}
-    | sentenciaIfCompleta       {$$ = $1;}
-    | ciclosWhile               {$$ = $1;}
-    | cicloFor                  {$$ = $1;}
-    | switchCase                {$$ = $1;}
 ;
 
  
@@ -236,13 +226,8 @@ instruccion
     | sentenciaReturn               {$$ = $1;} 
     | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column+1);}
     | PR_CONTINUE PTCOMA            {$$ = new Continue($1, @1.first_line, @1.first_column+1);}
-    | comentarios 
 ;
 
-comentarios 
-    : COM_MULT
-    | COM_SIMPLE
-;
 
 identificadores
     : identificadores COMA ID       {$$ = $1; $$.push($3);}
@@ -279,14 +264,15 @@ valores
     | PR_TOLOWER PARIZQ valoresPlus PARDER                  {$$ = new FuncionCout($1, $3, @1.first_line, @1.first_column+1);}
     | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ valoresPlus PARDER      {$$ = new FuncionCout($4, $6, @1.first_line, @1.first_column+1);}
     
-    | DECIMAL                       {$$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column+1); }
-    | ENTERO                        {$$ = new Dato($1, TipoDato.ENTERO, @1.first_line, @1.first_column+1); }
-    | BOOLEAN                       {$$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column+1); }
-    | STRING                        {$$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column+1); }     
-    | CHAR                          {$$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column+1); } 
-    | ID                            {$$ = new Variable($1, null, null, @1.first_line, @1.first_column+1); }
-    | ID CORIZQ valoresPlus CORDER  {$$ = new Variable($1, $3, null, @1.first_line, @1.first_column+1); }    
-    | ID CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER  {$$ = new Variable($1, $3, $6, @1.first_line, @1.first_column+1); }       
+    | DECIMAL                       { $$ = new Dato($1, TipoDato.DECIMAL, @1.first_line, @1.first_column+1); }
+    | ENTERO                        { $$ = new Dato($1, TipoDato.ENTERO, @1.first_line, @1.first_column+1); }
+    | BOOLEAN                       { $$ = new Dato($1, TipoDato.BOOL, @1.first_line, @1.first_column+1); }
+    | STRING                        { $$ = new Dato($1, TipoDato.STRING, @1.first_line, @1.first_column+1); }     
+    | CHAR                          { $$ = new Dato($1, TipoDato.CHAR, @1.first_line, @1.first_column+1); } 
+    | ID                            { $$ = new Variable($1, null, null, @1.first_line, @1.first_column+1); }
+    | ID CORIZQ valoresPlus CORDER  { $$ = new Variable($1, $3, null, @1.first_line, @1.first_column+1); }    
+    | ID CORIZQ valoresPlus CORDER CORIZQ valoresPlus CORDER    { $$ = new Variable($1, $3, $6, @1.first_line, @1.first_column+1); }       
+    | ID PARIZQ valoresArreglos PARDER                          { $$ = new LlamarFuncion($1, $3, @1.first_line, @1.first_column+1);}
 ;
 
 
@@ -299,7 +285,7 @@ valoresPlus
     | POTENCIA PARIZQ valoresPlus COMA valoresPlus PARDER           { $$ = new Aritmetica($3, $5, $2, @1.first_line, @1.first_column+1); }             
     | valoresPlus MODULO valoresPlus                                { $$ = new Aritmetica($1, $3, $2, @1.first_line, @1.first_column+1); }
     | valores                                                       { $$ = $1; }
-    | PARIZQ valoresPlus PARDER                                     { $$ = $2; }
+    //| PARIZQ valoresPlus PARDER                                     { $$ = $2; }
 ;
 
 
@@ -323,7 +309,7 @@ arregloDeclaraciones
 declaracionVariables
     : tiposVar identificadores PTCOMA                                           {$$ = new Declaracion($1, $2, null, @1.first_line, @1.first_column+1);}
     | tiposVar identificadores IGUAL sentenciaLogica PTCOMA                     {$$ = new Declaracion($1, $2, $4, @1.first_line, @1.first_column+1);}
-    | tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA        
+    //| tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA        
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
@@ -455,7 +441,7 @@ funciones
     | tiposVar ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER                           {$$ = new DeclararFuncion($1, $2, null, $6, null, @1.first_line, @1.first_column+1);}
     
     //Void
-    | PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER       {$$ = new DeclararFuncion(null, $2, $4, $6, null, @1.first_line, @1.first_column+1);}
+    | PR_VOID ID PARIZQ arregloDeclaraciones PARDER LLAVIZQ instrucciones LLAVDER       {;$$ = new DeclararFuncion(null, $2, $4, $7, null, @1.first_line, @1.first_column+1);}
     | PR_VOID ID PARIZQ PARDER LLAVIZQ instrucciones LLAVDER                            {$$ = new DeclararFuncion(null, $2, null, $6, null, @1.first_line, @1.first_column+1);}
     
 ;
@@ -467,8 +453,7 @@ llamarFunciones
 ;
 
 funcionExecute 
-    : PR_EXECUTE ID PARIZQ valoresArreglos PARDER PTCOMA
-    | PR_EXECUTE ID PARIZQ PARDER PTCOMA
+    : PR_EXECUTE llamarFunciones    {$$ = new Execute($2, @1.first_line, @1.first_column+1);}
 ;
 
 
@@ -476,7 +461,7 @@ funcionExecute
 posibilidadesCout
     : sentenciaRelacional                   { $$ = $1;}
     | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
-    | ID PARIZQ valoresArreglos PARDER      { $$ = new LlamarFuncion($1, $3, @1.first_line, @1.first_column+1);}    
+    //| ID PARIZQ valoresArreglos PARDER      { $$ = new LlamarFuncion($1, $3, @1.first_line, @1.first_column+1);}    
     | ID PARIZQ PARDER                      { $$ = new LlamarFuncion($1, null, @1.first_line, @1.first_column+1);}    
     | PR_ENDL
 ;
@@ -492,7 +477,7 @@ impresionCout
 
 sentenciaReturn
     : PR_RETURN valoresArreglos PTCOMA                          { $$ = new Return($2, @1.first_line, @1.first_column+1);}
-    | PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA         { $$ = new Return(new LlamarFuncion($2, $4, @1.first_line, @1.first_column+1), @1.first_line, @1.first_column+1);}
+    //| PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA         { $$ = new Return(new LlamarFuncion($2, $4, @1.first_line, @1.first_column+1), @1.first_line, @1.first_column+1);}
     | PR_RETURN PTCOMA                                          { $$ = new Return(null, @1.first_line, @1.first_column+1);}
 ;  
 

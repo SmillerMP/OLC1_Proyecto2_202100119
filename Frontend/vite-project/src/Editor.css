@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+  }
+  
+  .editorCodigo {
+    width: 47%; /* Asegura que el editor ocupe todo el espacio del contenedor */
+    height: 90vh; /* Altura deseada */
+  }
+
+  .terminal {
+    flex: 1; /* Ocupa todo el espacio restante */
+    margin-left: 45px; /* Margen a la izquierda */
+    
+
+  }
+
+  .terminal textarea {
+    background-color: #000000; /* Color de fondo negro */
+    font-size: 14px;
+    color: #47f180; /* Color del texto blanco */
+    font-family: monospace; 
+    border: none; /* Sin borde */
+    resize: none; /* No permitir redimensionamiento de la caja de texto */
+}

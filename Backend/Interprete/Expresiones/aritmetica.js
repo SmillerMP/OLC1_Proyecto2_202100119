@@ -1,5 +1,6 @@
  
 const { Expresion, TipoDato } = require('../expresion');
+let { agregarSalida } = require('../salidas');
 
 class Aritmetica extends Expresion{
     constructor (izquierda, derecha, operacion, fila, columna){
@@ -146,6 +147,7 @@ class Aritmetica extends Expresion{
 
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Suma");
+            agregarSalida("Error Semantico: los tipos no son validos operacion Suma");
             return this;
         
         
@@ -229,6 +231,7 @@ class Aritmetica extends Expresion{
 
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Resta");
+            agregarSalida("Error Semantico: los tipos no son validos operacion Resta");
             return this;
         }
 
@@ -286,6 +289,7 @@ class Aritmetica extends Expresion{
         
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Multiplicacion");
+            agregarSalida("Error Semantico: los tipos no son validos operacion Multiplicacion");
             return this;
         }
 
@@ -342,6 +346,7 @@ class Aritmetica extends Expresion{
 
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Division");
+            agregarSalida("Error Semantico: los tipos no son validos operacion Division");
             return this;
         }
 
@@ -377,6 +382,7 @@ class Aritmetica extends Expresion{
 
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Potencia");
+            agregarSalida("Error Semantico: los tipos no son validos operacion Potencia");
             return this;
 
         }
@@ -413,6 +419,7 @@ class Aritmetica extends Expresion{
 
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Modulo");
+            agregarSalida("Error Semantico: los tipos no son validos operacion Modulo");
             return this;
 
         }

@@ -1,5 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const { TipoDato } = require('../expresion');
+let { agregarSalida } = require('../salidas');
 
 class ModificarVar extends Instruccion {
     constructor(id, operador, operacion, fila, columna) {
@@ -32,6 +33,7 @@ class ModificarVar extends Instruccion {
 
                     } else {
                         console.log("Error semántico: Error de tipo de dato en modificación de variable");
+                        agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
                         return this;
                     }               
                 }
@@ -54,6 +56,7 @@ class ModificarVar extends Instruccion {
                 if (forzarInt) {
                     variable.valor = Math.round(variable.valor);
                     console.log("operacion de tipo DECIMAL forazada para ENTERO")
+                    agregarSalida("operacion de tipo DECIMAL forazada para ENTERO")
                        
                 }
             }
@@ -87,6 +90,7 @@ class ModificarVar extends Instruccion {
     
                     } else {
                         console.log("Error semántico: Error de tipo de dato en modificación de variable");
+                        agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
                         return this;
                     }               
                 }
@@ -139,6 +143,7 @@ class ModificarVar extends Instruccion {
 
                     } else {
                         console.log("Error semántico: Error de tipo de dato en modificación de variable");
+                        agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
                         return this;
                     }               
                 }

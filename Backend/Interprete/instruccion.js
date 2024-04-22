@@ -9,6 +9,7 @@ class Instruccion {
 }
 
 const tipoInstruccion = {
+    EXECUTE: 'EXECUTE',
     COUT: 'COUT',
     IF: 'IF',
     ELSEIF: 'ELSEIF',

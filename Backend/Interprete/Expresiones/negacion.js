@@ -1,4 +1,6 @@
 const {Expresion, TipoDato} = require('../expresion');
+let { agregarSalida } = require('../salidas');
+
 
 class Negacion extends Expresion{
 
@@ -20,6 +22,8 @@ class Negacion extends Expresion{
 
         // Error Semantico
         console.log("Error Semántico: Error en la operacion negativo.")
+        agregarSalida("Error Semántico: Error en la operacion negativo.");
+
         return this;
     }
 

@@ -1,5 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
+let { agregarSalida } = require('../salidas');
 
 class ElseIf extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
@@ -16,6 +17,7 @@ class ElseIf extends Instruccion {
 
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del else if no es booleana.")
+            agregarSalida("Error Semántico: La condición del else if no es booleana.");
             return this;  
         }
        
@@ -29,14 +31,16 @@ class ElseIf extends Instruccion {
 
                 if (resultado.tipo == tipoInstruccion.BREAK) {
                     if (!entornoElseIf.esCiclo()) {
-                        console.log("Error Semántico: break, no está dentro de un ciclo.")                    
+                        console.log("Error Semántico: break, no está dentro de un ciclo.") 
+                        agregarSalida("Error Semántico: break, no está dentro de un ciclo.")                   
                         return this;
                     } 
                     return resultado;
     
                 } else if (resultado.tipo == tipoInstruccion.CONTINUE) {
                     if (!entornoElseIf.esCiclo()) {
-                        console.log("Error Semántico: Continue no está dentro de un ciclo.")                    
+                        console.log("Error Semántico: Continue no está dentro de un ciclo.") 
+                        agregarSalida("Error Semántico: Continue no está dentro de un ciclo.")                   
                         return this;
                     }
                     return resultado;
@@ -44,6 +48,7 @@ class ElseIf extends Instruccion {
                 } else if (resultado.tipo == tipoInstruccion.RETURN) {
                     if (!entornoElseIf.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
+                        agregarSalida("Error Semántico: return no está dentro de una función.")
                         return this;
                     }    
                     return resultado;

@@ -1,4 +1,5 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
+let { agregarSalida } = require('../salidas');
 
 class Switch extends Instruccion {
     constructor(condicional, cases, defaultCase, fila, columna) {
@@ -30,7 +31,8 @@ class Switch extends Instruccion {
 
                 } else if (resultado.tipo == tipoInstruccion.CONTINUE) {
                     if (!entorno.esCiclo()) {
-                        console.log("Error Semántico: Continue no está dentro de un ciclo.")                    
+                        console.log("Error Semántico: Continue no está dentro de un ciclo.")      
+                        agregarSalida("Error Semántico: Continue no está dentro de un ciclo.")              
                         return this;
                     }
                     return resultado;
@@ -38,6 +40,7 @@ class Switch extends Instruccion {
                 } else if (resultado.tipo == tipoInstruccion.RETURN) {
                     if (!entorno.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
+                        agregarSalida("Error Semántico: return no está dentro de una función.")
                         return this;
                     }    
                     return resultado;
@@ -59,7 +62,8 @@ class Switch extends Instruccion {
 
                 } else if (resultado.tipo == tipoInstruccion.CONTINUE) {
                     if (!entorno.esCiclo()) {
-                        console.log("Error Semántico: Continue no está dentro de un ciclo.")                    
+                        console.log("Error Semántico: Continue no está dentro de un ciclo.")    
+                        agregarSalida("Error Semántico: Continue no está dentro de un ciclo.")                
                         return this;
                     }
                     return resultado;
@@ -67,6 +71,7 @@ class Switch extends Instruccion {
                 } else if (resultado.tipo == tipoInstruccion.RETURN) {
                     if (!entorno.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
+                        agregarSalida("Error Semántico: return no está dentro de una función.")
                         return this;
                     }    
                     return resultado;

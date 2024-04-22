@@ -1,6 +1,7 @@
 
 class Funcion{
-    constructor(nombre, retorno, parametros, instrucciones, fila, columna){
+    constructor(tipoVar, nombre, retorno, parametros, instrucciones, fila, columna){
+        this.tipoVar = tipoVar;
         this.retorno = retorno;
         this.parametros = parametros;
         this.instrucciones = instrucciones;
