@@ -10,9 +10,11 @@ class ElseIf extends Instruccion {
     }
 
     interpretar(entorno) {
+
+        this.condicion.interpretar(entorno);
        
         let entornoElseIf = new Entorno(tipoInstruccion.ELSEIF, entorno)
-        this.condicion.interpretar(entornoElseIf);
+        
         //console.log(this.condicion)
 
         if (this.condicion.tipo != "BOOL") {

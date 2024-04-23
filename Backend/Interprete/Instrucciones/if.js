@@ -11,9 +11,16 @@ class If extends Instruccion {
 
     interpretar(entorno) {
 
+
+        //console.log("inicio????????")
+        // console.log(this.condicion)
+        this.condicion.interpretar(entorno);
+        // console.log(this.condicion)
+        // console.log("fin????????")
+
+
         let entornoIf = new Entorno(tipoInstruccion.IF, entorno)
         //console.log(this.condicion)
-        this.condicion.interpretar(entornoIf);
         //console.log(this.condicion)
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del if no es booleana.")
@@ -31,6 +38,7 @@ class If extends Instruccion {
             for (let i = 0; i < this.instrucciones.length; i++) {
                 const instruccion = this.instrucciones[i];
                 let resultado = instruccion.interpretar(entornoIf);
+                
 
                 if (resultado.tipo == tipoInstruccion.BREAK) {
                     if (!entornoIf.esCiclo()) {
@@ -49,6 +57,7 @@ class If extends Instruccion {
                     return resultado;
 
                 } else if (resultado.tipo == tipoInstruccion.RETURN) {
+                    //console.log(instruccion.expresion[0].parametros)
 
                     //console.log(entornoIf.esFuncion())
                     if (!entornoIf.esFuncion()) {

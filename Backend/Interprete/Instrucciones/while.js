@@ -11,8 +11,9 @@ class While extends Instruccion {
 
     interpretar(entorno) {
 
+        this.condicion.interpretar(entorno);
         let entornoWhile = new Entorno(tipoInstruccion.WHILE, entorno)
-        this.condicion.interpretar(entornoWhile);
+        
 
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del while no es booleana.")

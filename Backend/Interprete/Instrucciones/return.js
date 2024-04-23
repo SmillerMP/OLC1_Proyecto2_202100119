@@ -11,8 +11,11 @@ class Return extends Instruccion{
 
     interpretar(entorno){
 
-        //console.log("------------------------------>")
-        //console.log(this.expresion)
+        // console.log("------------------------------>")
+        // if (this.expresion[0].tipo == tipoInstruccion.LLAMARFUNCION){
+        //     console.log(this.expresion[0].parametros)
+        // }
+        // console.log("------------------------------>")
 
         let arreglo = []
 

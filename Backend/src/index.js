@@ -4,7 +4,7 @@ const cors = require('cors');
 
 const analizador = require("../Analizador/Gramatica.js");
 const entorno = require("../Interprete/Entorno/entorno.js");
-let { borrarSalidas, obtenerSalidas}  = require("../Interprete/salidas.js");
+let { borrarSalidas, obtenerSalidas, agregarSalida}  = require("../Interprete/salidas.js");
 
 
 
@@ -38,17 +38,41 @@ app.post('/Analizar', (req, res) => {
     const entrada = req.body.entrada;
     // Analizador Sintactico y lexico
 
-    try {
+
     let resultado = analizador.parse(entrada);
     
     let entornoGlobal = new entorno("GLOBAL", null);
 
-    //console.log(resultado)
-    if (resultado != ""){
-        resultado.forEach(instruccion => {
-            instruccion.interpretar(entornoGlobal);
-        });
+    encontrado = false;
+
+    let posicion = 0;
+
+    for (let i = 0; i < resultado.length; i++) {
+        if (resultado[i].tipo == "EXECUTE") {
+            encontrado = true;
+            posicion = i;      
+            continue;      
+        }
+        resultado[i].interpretar(entornoGlobal);
     }
+
+    //console.log(encontrado)
+    if (encontrado) {
+        //console.log(posicion)
+        resultado[posicion].interpretar(entornoGlobal);
+    } else {
+        console.log("Error Semantico: No se encontro la instruccion EXECUTE");
+        agregarSalida("Error Semantico: No se encontro la instruccion EXECUTE");
+    }
+
+
+
+    // if (!encontrado) {
+    //     console.log("Error Semantico: No se encontro la instruccion EXECUTE");
+    //     agregarSalida("Error Semantico: No se encontro la instruccion EXECUTE");
+    // } else {
+    //     resultado.interpretar(entornoGlobal);
+    // }
 
 
     //console.log(entornoGlobal.tablaSim);
@@ -60,9 +84,6 @@ app.post('/Analizar', (req, res) => {
     res.status(200).json({resultado: obtenerSalidas()});
     console.error('\x1b[31m%s\x1b[0m', ' --------------------------- Ejecucion terminada ----------------------------------\n\n');
 
-    } catch (error) {
-        //console.log(error);
-    }
 
     
 

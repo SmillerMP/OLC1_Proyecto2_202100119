@@ -11,242 +11,194 @@ class LlamarFuncion extends Instruccion {
 
     interpretar(entorno) {
 
-        //console.log(this.parametros)
 
-        if (entorno.getFuncion(this.id) != null) {
-            if (entorno.getFuncion(this.id).tipoVar != null) {
-                if (this.parametros != null) {
-                    let entornoFuncion = new Entorno(tipoInstruccion.LLAMARFUNCION, entorno)
 
+        let funcion = entorno.getFuncion(this.id);
+        //console.log(this.parametros[0])
+        //this.parametros[0].interpretar(entorno)
+        //console.log(this.parametros[0])
 
-                    // verifica si necesita parametros
-                    if (entorno.getFuncion(this.id).parametros != null) {
-                        let tamanoParametros = entorno.getFuncion(this.id).parametros.length
-
-                        if (tamanoParametros != this.parametros.length) {
-                            console.log("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.")
-                            agregarSalida("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.");
-                            return this;
-                        }
-
-                        let valoresParametros = [];
-                        for (let i = 0; i < tamanoParametros; i++) {
-                            const parametro = entorno.getFuncion(this.id).parametros[i];
-                            //console.log(parametro)
-                            let resultado = parametro.interpretar(entornoFuncion);
-
-                            //console.log("--------------------->> ?????")
-                            //console.log(this.parametros[i])
-                            let parametroLlamada = this.parametros[i].interpretar(entornoFuncion);
-                            //console.log(parametroLlamada)
-
-
-                            if (resultado.tipo != parametroLlamada.tipo) {
-                                console.log("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.")
-                                agregarSalida("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.");
-                                return this;
-
-                            } else {
-                                valoresParametros.push(parametroLlamada.valor);
-                                // entornoFuncion.getSimbolo(resultado.id).valor = parametroLlamada.valor;
-                                // resultado.expresion = parametroLlamada.valor;
-
-                            }
-                        }
-
-                        for (let i = 0; i < valoresParametros.length; i++) {
-                            const parametro = entorno.getFuncion(this.id).parametros[i];
-                            let resultado = parametro.interpretar(entorno);
-                            entornoFuncion.getSimbolo(resultado.id).valor = valoresParametros[i];
-                            resultado.expresion = valoresParametros[i];
-                        }
-
-                        let returnEcontrado = false;
-
-                        for (let i = 0; i < entorno.getFuncion(this.id).instrucciones.length; i++) {
-                            const instruccion = entorno.getFuncion(this.id).instrucciones[i];
-                            let resultado = instruccion.interpretar(entornoFuncion);
-
-                            // console.log("-------------------------------------")
-                            //console.log(resultado)
-
-                            if (resultado.tipo == tipoInstruccion.RETURN) {
-                                returnEcontrado = true;
-                                return resultado;
-                            }
-
-                        }
-
-                        if (!returnEcontrado) {
-                            console.log("Error Semántico: La función " + this.id + " no tiene un return.")
-                            agregarSalida("Error Semántico: La función " + this.id + " no tiene un return.");
-                            return this;
-                        }
-
-                        // en caso de que no necesite parametros
-                    } else {
-
-                        let tamanoParametros = entorno.getFuncion(this.id).parametros.length
-
-                        if (tamanoParametros != this.parametros.length) {
-                            console.log("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.")
-                            agregarSalida("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.");
-                            return this;
-                        }
-
-
-                        for (let i = 0; i < valoresParametros.length; i++) {
-                            const parametro = entorno.getFuncion(this.id).parametros[i];
-                            let resultado = parametro.interpretar(entorno);
-                            entornoFuncion.getSimbolo(resultado.id).valor = valoresParametros[i];
-                            resultado.expresion = valoresParametros[i];
-                        }
-
-                        let returnEcontrado = false;
-
-                        for (let i = 0; i < entorno.getFuncion(this.id).instrucciones.length; i++) {
-                            const instruccion = entorno.getFuncion(this.id).instrucciones[i];
-                            let resultado = instruccion.interpretar(entornoFuncion);
-
-                            // console.log("-------------------------------------")
-                            //console.log(resultado)
-
-                            if (resultado.tipo == tipoInstruccion.RETURN) {
-                                returnEcontrado = true;
-                                return resultado;
-                            }
-
-                        }
-
-                        if (!returnEcontrado) {
-                            console.log("Error Semántico: La función " + this.id + " no tiene un return.")
-                            agregarSalida("Error Semántico: La función " + this.id + " no tiene un return.");
-                            return this;
-                        }
-
-
-
-                    }
-                }
-
-
-
-            } else {
-
-                if (this.parametros != null) {
-                    let entornoFuncion = new Entorno(tipoInstruccion.LLAMARFUNCION, entorno)
-
-
-                    // verifica si necesita parametros
-                    if (entorno.getFuncion(this.id).parametros != null) {
-                        let tamanoParametros = entorno.getFuncion(this.id).parametros.length
-
-                        if (tamanoParametros != this.parametros.length) {
-                            console.log("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.")
-                            agregarSalida("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.");
-                            return this;
-                        }
-
-                        let valoresParametros = [];
-                        for (let i = 0; i < tamanoParametros; i++) {
-                            const parametro = entorno.getFuncion(this.id).parametros[i];
-                            //console.log(parametro)
-                            let resultado = parametro.interpretar(entornoFuncion);
-
-                            //console.log("--------------------->> ?????")
-                            //console.log(this.parametros[i])
-                            let parametroLlamada = this.parametros[i].interpretar(entornoFuncion);
-                            //console.log(parametroLlamada)
-
-
-                            if (resultado.tipo != parametroLlamada.tipo) {
-                                console.log("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.")
-                                agregarSalida("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.");
-                                return this;
-
-                            } else {
-                                valoresParametros.push(parametroLlamada.valor);
-                                // entornoFuncion.getSimbolo(resultado.id).valor = parametroLlamada.valor;
-                                // resultado.expresion = parametroLlamada.valor;
-
-                            }
-                        }
-
-                        for (let i = 0; i < valoresParametros.length; i++) {
-                            const parametro = entorno.getFuncion(this.id).parametros[i];
-                            let resultado = parametro.interpretar(entorno);
-                            entornoFuncion.getSimbolo(resultado.id).valor = valoresParametros[i];
-                            resultado.expresion = valoresParametros[i];
-                        }
-
-
-                        
-                        for (let i = 0; i < entorno.getFuncion(this.id).instrucciones.length; i++) {
-                            const instruccion = entorno.getFuncion(this.id).instrucciones[i];
-                            let resultado = instruccion.interpretar(entornoFuncion);
-
-                            // console.log("-------------------------------------")
-                            //console.log(resultado)
-
-                            if (resultado.tipo == tipoInstruccion.RETURN) {
-                                console.log("Error Semantico: no se espera un return en una función de tipo void")
-                                agregarSalida("Error Semantico: no se espera un return en una función de tipo void");
-
-                            }
-
-                        }
-
-
-                        // en caso de que no necesite parametros
-                    } else {
-
-                        let tamanoParametros = entorno.getFuncion(this.id).parametros.length
-
-                        if (tamanoParametros != this.parametros.length) {
-                            console.log("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.")
-                            agregarSalida("Error Semántico: La función " + this.id + " requiere de " + tamanoParametros + " parametros.");
-                            return this;
-                        }
-
-
-                        for (let i = 0; i < valoresParametros.length; i++) {
-                            const parametro = entorno.getFuncion(this.id).parametros[i];
-                            let resultado = parametro.interpretar(entorno);
-                            entornoFuncion.getSimbolo(resultado.id).valor = valoresParametros[i];
-                            resultado.expresion = valoresParametros[i];
-                        }
-
-                        let returnEcontrado = false;
-
-                        for (let i = 0; i < entorno.getFuncion(this.id).instrucciones.length; i++) {
-                            const instruccion = entorno.getFuncion(this.id).instrucciones[i];
-                            let resultado = instruccion.interpretar(entornoFuncion);
-
-                            // console.log("-------------------------------------")
-                            //console.log(resultado)
-
-                            if (resultado.tipo == tipoInstruccion.RETURN) {
-                                console.log("Error Semantico: no se espera un return en una función de tipo void")
-                                agregarSalida("Error Semantico: no se espera un return en una función de tipo void");
-
-                            }
-
-                        }
-
-                    }
-                }
-
-
-            }
-
-            //console.log(entorno.tablaFunc)
-
-            return this;
-        } else {
+        if (funcion == null) {
             console.log("Error Semántico: La función " + this.id + " no existe.")
             agregarSalida("Error Semántico: La función " + this.id + " no existe.");
             return this;
         }
+
+
+        if (funcion.tipoVar != null) {
+
+            let entornoFuncion = new Entorno(tipoInstruccion.LLAMARFUNCION, entorno)
+
+
+            // verifica si la funcion necesita parametros necesita parametros
+            if (funcion.parametros != null) {
+
+                let tamanoParametrosFunc = funcion.parametros.length
+
+                if (tamanoParametrosFunc != this.parametros.length) {
+                    console.log("Error Semántico: La función " + this.id + " requiere de " + tamanoParametrosFunc + " parametros.")
+                    agregarSalida("Error Semántico: La función " + this.id + " requiere de " + tamanoParametrosFunc + " parametros.");
+                    return this;
+                }
+
+
+                for (let i = 0; i < tamanoParametrosFunc; i++) {
+                    let resultado = funcion.parametros[i].interpretar(entornoFuncion);
+                    let parametroLlamada = this.parametros[i].interpretar(entorno);
+
+
+
+                    if (resultado.tipo != parametroLlamada.tipo) {
+                        console.log("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.")
+                        agregarSalida("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.");
+                        return this;
+
+                    } else {
+                        entornoFuncion.getSimbolo(resultado.id).valor = parametroLlamada.valor
+                    }
+                }
+
+                let returnEcontrado = false;
+                //console.log(funcion.parametros)
+
+                // recorre las instrucciones de la funcion
+                for (let i = 0; i < funcion.instrucciones.length; i++) {
+                    const instruccion = funcion.instrucciones[i];
+                    //console.log(instruccion)
+
+                    let resultado = instruccion.interpretar(entornoFuncion);
+
+                    if (resultado.tipo == tipoInstruccion.RETURN) {
+                        returnEcontrado = true;
+                        return resultado;
+                    }
+
+                }
+
+                if (!returnEcontrado) {
+                    console.log("Error Semántico: La función " + this.id + " no tiene un return.")
+                    agregarSalida("Error Semántico: La función " + this.id + " no tiene un return.");
+                    return this;
+                }
+
+
+                // en caso de que no necesite parametros
+            } else {
+
+
+                if (this.parametros.length != null) {
+                    console.log("Error Semántico: La función " + this.id + "no requiere parametros.");
+                    agregarSalida("Error Semántico: La función " + this.id + " no requiere parametros.");
+                    return this;
+                }
+
+
+
+                let returnEcontrado = false;
+
+                for (let i = 0; i < entorno.getFuncion(this.id).instrucciones.length; i++) {
+                    const instruccion = entorno.getFuncion(this.id).instrucciones[i];
+                    let resultado = instruccion.interpretar(entornoFuncion);
+
+                    // console.log("-------------------------------------")
+                    //console.log(resultado)
+
+                    if (resultado.tipo == tipoInstruccion.RETURN) {
+                        returnEcontrado = true;
+                        return resultado;
+                    }
+
+                }
+
+                if (!returnEcontrado) {
+                    console.log("Error Semántico: La función " + this.id + " no tiene un return.")
+                    agregarSalida("Error Semántico: La función " + this.id + " no tiene un return.");
+                    return this;
+                }
+
+
+
+            }
+
+
+        } else {
+            let entornoFuncion = new Entorno(tipoInstruccion.LLAMARFUNCION, entorno)
+
+
+            // verifica si la funcion necesita parametros necesita parametros
+            if (funcion.parametros != null) {
+
+                let tamanoParametrosFunc = funcion.parametros.length
+
+                if (tamanoParametrosFunc != this.parametros.length) {
+                    console.log("Error Semántico: La función " + this.id + " requiere de " + tamanoParametrosFunc + " parametros.")
+                    agregarSalida("Error Semántico: La función " + this.id + " requiere de " + tamanoParametrosFunc + " parametros.");
+                    return this;
+                }
+
+
+                for (let i = 0; i < tamanoParametrosFunc; i++) {
+                    let resultado = funcion.parametros[i].interpretar(entornoFuncion);
+                    let parametroLlamada = this.parametros[i].interpretar(entorno);
+
+
+
+                    if (resultado.tipo != parametroLlamada.tipo) {
+                        console.log("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.")
+                        agregarSalida("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.");
+                        return this;
+
+                    } else {
+                        entornoFuncion.getSimbolo(resultado.id).valor = parametroLlamada.valor
+                    }
+                }
+
+
+                for (let i = 0; i < funcion.instrucciones.length; i++) {
+                    const instruccion = funcion.instrucciones[i];
+                    //console.log(instruccion)
+
+                    let resultado = instruccion.interpretar(entornoFuncion);
+
+                    if (resultado.tipo == tipoInstruccion.RETURN) {
+                        console.log("Error Semantico: La función " + this.id + " es del tipo void.")
+                        agregarSalida("Error Semantico: La función " + this.id + " es del tipo void.")
+                        return this;
+                    }
+
+                }
+
+
+
+                // en caso de que no necesite parametros
+            } else {
+
+
+                let returnEcontrado = false;
+
+                for (let i = 0; i < entorno.getFuncion(this.id).instrucciones.length; i++) {
+                    const instruccion = entorno.getFuncion(this.id).instrucciones[i];
+                    let resultado = instruccion.interpretar(entornoFuncion);
+
+                    // console.log("-------------------------------------")
+                    //console.log(resultado)
+
+                    if (resultado.tipo == tipoInstruccion.RETURN) {
+                        console.log("Error Semantico: La función " + this.id + " es del tipo void.")
+                        agregarSalida("Error Semantico: La función " + this.id + " es del tipo void.")
+                        return this;
+                    }
+
+                }
+
+            }
+
+        }
+
+        //console.log(entorno.tablaFunc)
+
+        return this;
+
 
     }
 

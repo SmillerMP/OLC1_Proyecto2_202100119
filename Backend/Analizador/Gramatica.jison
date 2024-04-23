@@ -213,13 +213,15 @@ instrucciones
 	| instruccion                   {$$ = []; $$.push($1);}
 ;
 
+
+
+
 instruccion
     : declaracionVariables          {$$ = $1;}
-    | llamarFunciones
+    | llamarFunciones               {$$ = $1;}
     | sentenciaIfCompleta           {$$ = $1;}
     | ciclosWhile                   {$$ = $1;}
     | cicloFor                      {$$ = $1;}
-    | funcionExecute
     | impresionCout                 {$$ = $1;} 
     | switchCase                    {$$ = $1;}
     | INTERROGACION ternario PTCOMA {$$ = $2;}
@@ -457,7 +459,6 @@ funcionExecute
 ;
 
 
-
 posibilidadesCout
     : sentenciaRelacional                   { $$ = $1;}
     | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
@@ -479,5 +480,6 @@ sentenciaReturn
     : PR_RETURN valoresArreglos PTCOMA                          { $$ = new Return($2, @1.first_line, @1.first_column+1);}
     //| PR_RETURN ID PARIZQ valoresArreglos PARDER PTCOMA         { $$ = new Return(new LlamarFuncion($2, $4, @1.first_line, @1.first_column+1), @1.first_line, @1.first_column+1);}
     | PR_RETURN PTCOMA                                          { $$ = new Return(null, @1.first_line, @1.first_column+1);}
+    | PR_RETURN PARIZQ valoresArreglos PARDER PTCOMA            { $$ = new Return($3, @1.first_line, @1.first_column+1);}
 ;  
 

@@ -21,7 +21,6 @@ class Declaracion extends Instruccion {
         // console.log("-------------------------------------------")
 
 
-
         // verifica si la variable se va a declarar con algun valor
         // ejemplo int a; o int a = 5;
         if (typeof this.expresion == "object" && this.expresion != null) {
@@ -33,7 +32,6 @@ class Declaracion extends Instruccion {
             if (resultado.tipo == tipoInstruccion.RETURN) {
 
                 if (this.id.length != resultado.expresion.length) {
-                    console.log("no deberia de entra aqui")
                     console.log("Error semántico: el retorno regresa mas valores de los esperados");
                     agregarSalida("Error semántico: el retorno regresa mas valores de los esperados");
                     return this;

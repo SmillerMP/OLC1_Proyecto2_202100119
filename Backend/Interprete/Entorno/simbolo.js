@@ -13,7 +13,6 @@ const TipoSimbolo = {
     VARIABLE: 'VARIABLE',
     VECTOR: 'VECTOR',
     ARREGLO: 'ARREGLO',
-    FUNCION: 'FUNCION'
 }
 
 module.exports = {Simbolo, TipoSimbolo};

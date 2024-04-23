@@ -7,6 +7,7 @@ class Execute extends Instruccion {
     }
 
     interpretar(entorno) {
+
         this.funcion.interpretar(entorno);
         return this;
     }

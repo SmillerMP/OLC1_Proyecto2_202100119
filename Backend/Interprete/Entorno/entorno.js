@@ -79,6 +79,7 @@ class Entorno{
                     entornoFunc = entornoFunc.anterior;
                 } else {
                     //console.log("recuperacion de funcion")
+                    //console.log("funcion conseguida en el entorno " + entornoFunc.nombre)
                     return entornoFunc.tablaFunc[nombre]
                 }
             }
