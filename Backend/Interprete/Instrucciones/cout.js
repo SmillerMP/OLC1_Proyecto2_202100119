@@ -11,7 +11,8 @@ class Cout extends Instruccion {
 
     interpretar(entorno) {
         
-        console.log(this.expresion)
+        //let resultado = this.expresion[0].interpretar(entorno)
+        //console.log(resultado)
         let salida = "";
         for (let i = 0; i < this.expresion.length; i++) {
             let resultado = this.expresion[i].interpretar(entorno);

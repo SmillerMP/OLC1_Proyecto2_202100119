@@ -31,32 +31,25 @@ class Declaracion extends Instruccion {
 
             if (resultado.tipo == tipoInstruccion.RETURN) {
 
+
                 if (this.id.length != resultado.expresion.length) {
                     console.log("Error semántico: el retorno regresa mas valores de los esperados");
                     agregarSalida("Error semántico: el retorno regresa mas valores de los esperados");
                     return this;
                 }
 
+                //console.log(resultado)
                 for (let i = 0; i < this.id.length; i++) {
 
-                    // Si la variable debe ser entero y el resultado es decimal, debe forzar a entero por redondeo
-                    if (this.tipo == TipoDato.ENTERO && resultado.expresion[i].tipo == TipoDato.DECIMAL) {
-                        resultado.expresion[i].valor = Math.round(resultado.expresion[i].valor);
-                        resultado.expresion[i].tipo = TipoDato.ENTERO;
-
-                    } else if (this.tipo == TipoDato.DECIMAL && resultado.expresion[i].tipo == TipoDato.ENTERO) {
-                        resultado.expresion[i].valor = parseFloat(resultado.expresion[i].valor);
-                        resultado.expresion[i].tipo = TipoDato.DECIMAL;
-                    }
-
-                    if (resultado.expresion[i].tipo != this.tipo) {
+                    if (resultado.tipoVar != this.tipo) {
                         console.log("Error semántico: Error de tipo de dato en declaracion de variable");
                         agregarSalida("Error semántico: Error de tipo de dato en declaracion de variable");
                         return this;
                     }
 
 
-                    entorno.addSimbolo(this.id[i], resultado.expresion[i].valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                    entorno.addSimbolo(this.id[i], resultado.valor, this.tipo, TipoSimbolo.VARIABLE, this.fila, this.columna);
+                    //console.log(entorno)
 
                 }
             
@@ -64,16 +57,6 @@ class Declaracion extends Instruccion {
                 return this;
 
             } else {
-
-                // Si la variable debe ser entero y el resultado es decimal, debe forzar a entero por redondeo
-                if (this.tipo == TipoDato.ENTERO && this.expresion.tipo == TipoDato.DECIMAL) {
-                    this.expresion.valor = Math.round(this.expresion.valor);
-                    this.expresion.tipo = TipoDato.ENTERO;
-
-                } else if (this.tipo == TipoDato.DECIMAL && this.expresion.tipo == TipoDato.ENTERO) {
-                    this.expresion.valor = parseFloat(this.expresion.valor);
-                    this.expresion.tipo = TipoDato.DECIMAL;
-                }
 
                 // verifica que el tipo de dato de la variable sea igual al tipo de dato de la expresion
                 //console.log(this.expresion)

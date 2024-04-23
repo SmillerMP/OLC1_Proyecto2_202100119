@@ -29,6 +29,7 @@ const tipoInstruccion = {
     DECLARARFUNCION: 'DECLARARFUNCION',
     RETURN: 'RETURN',
     LLAMARFUNCION: 'LLAMARFUNCION',
+    ENDL: 'ENDL',
 }
 
 module.exports = { Instruccion, tipoInstruccion }

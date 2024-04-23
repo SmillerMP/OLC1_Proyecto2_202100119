@@ -200,10 +200,10 @@ entornos
 ;
 
 entorno
-    : declaracionVariables      {$$ = $1;}
-    | funcionExecute            {$$ = $1;}
-    | funciones                 {$$ = $1;}
-    | llamarFunciones           {$$ = $1;}
+    : declaracionVariables      { $$ = $1;}
+    | funcionExecute            { $$ = $1;}
+    | funciones                 { $$ = $1;}
+    | llamarFunciones           { $$ = $1;}
 ;
 
  
@@ -311,7 +311,7 @@ arregloDeclaraciones
 declaracionVariables
     : tiposVar identificadores PTCOMA                                           {$$ = new Declaracion($1, $2, null, @1.first_line, @1.first_column+1);}
     | tiposVar identificadores IGUAL sentenciaLogica PTCOMA                     {$$ = new Declaracion($1, $2, $4, @1.first_line, @1.first_column+1);}
-    //| tiposVar identificadores IGUAL ID PARIZQ valoresArreglos PARDER PTCOMA        
+    
     | tiposVar identificadores IGUAL ID PARIZQ PARDER PTCOMA
     | tiposVar identificadores IGUAL ternario PTCOMA
     // Casteos
@@ -403,7 +403,7 @@ sentenciaLogica
     : sentenciaLogica OR sentenciaLogica            { $$ = new opLogicos($1, $3, $2, @1.first_line, @1.first_column+1); }
     | sentenciaLogica AND sentenciaLogica           { $$ = new opLogico($1, $3, $2, @1.first_line, @1.first_column+1); }
     | NOT sentenciaLogica %prec UNOT                { $$ = new Negacion($1, $2, @1.first_line, @1.first_column+1); }
-    | sentenciaRelacional  
+    | sentenciaRelacional                           { $$ = $1; }
     //| PARIZQ sentenciaRelacional PARDER                         { $$ = $1; }
 ;
 
@@ -460,11 +460,12 @@ funcionExecute
 
 
 posibilidadesCout
-    : sentenciaRelacional                   { $$ = $1;}
-    | NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
-    //| ID PARIZQ valoresArreglos PARDER      { $$ = new LlamarFuncion($1, $3, @1.first_line, @1.first_column+1);}    
+    : sentenciaLogica                       { $$ = $1;}
+    | PARIZQ sentenciaLogica PARDER         { $$ = $1;}
+    //| NOT BOOLEAN %prec UNOT                { $$ = Negacion($1, $2, @1.first_line, @1.first_column+1); }
     | ID PARIZQ PARDER                      { $$ = new LlamarFuncion($1, null, @1.first_line, @1.first_column+1);}    
-    | PR_ENDL
+    | PR_ENDL                               { $$ = new Dato("\n", TipoDato.STRING, @1.first_line, @1.first_column+1);}
+
 ;
 
 funcionCout

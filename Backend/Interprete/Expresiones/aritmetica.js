@@ -11,6 +11,7 @@ class Aritmetica extends Expresion{
     }
 
     interpretar(entorno){
+
         this.izquierda.interpretar(entorno);
         this.derecha.interpretar(entorno);
 
@@ -391,12 +392,12 @@ class Aritmetica extends Expresion{
         else if (this.operacion == "%"){
             //MANEJO DE ENTERO
             if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
-                this.tipo = TipoDato.DECIMAL;
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) % Number(this.derecha.valor);
                 return this;
             
             } else if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.DECIMAL) {
-                this.tipo = TipoDato.DECIMAL;
+                this.tipo = TipoDato.ENTERO;
                 this.valor = Number(this.izquierda.valor) % Number(this.derecha.valor);
                 return this;
             

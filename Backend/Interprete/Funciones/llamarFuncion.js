@@ -49,6 +49,7 @@ class LlamarFuncion extends Instruccion {
 
 
                     if (resultado.tipo != parametroLlamada.tipo) {
+                        console.log(parametroLlamada)
                         console.log("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.")
                         agregarSalida("Error Semántico: El parametro " + (i + 1) + " no coincide con el tipo de dato.");
                         return this;
@@ -70,6 +71,7 @@ class LlamarFuncion extends Instruccion {
 
                     if (resultado.tipo == tipoInstruccion.RETURN) {
                         returnEcontrado = true;
+                        // console.log(resultado)
                         return resultado;
                     }
 
@@ -161,8 +163,11 @@ class LlamarFuncion extends Instruccion {
                     let resultado = instruccion.interpretar(entornoFuncion);
 
                     if (resultado.tipo == tipoInstruccion.RETURN) {
-                        console.log("Error Semantico: La función " + this.id + " es del tipo void.")
-                        agregarSalida("Error Semantico: La función " + this.id + " es del tipo void.")
+
+                        if (resultado.valor != null) {
+                            console.log("Error Semantico: La función " + this.id + " es del tipo void.")
+                            agregarSalida("Error Semantico: La función " + this.id + " es del tipo void.")
+                        }
                         return this;
                     }
 
@@ -184,8 +189,10 @@ class LlamarFuncion extends Instruccion {
                     //console.log(resultado)
 
                     if (resultado.tipo == tipoInstruccion.RETURN) {
-                        console.log("Error Semantico: La función " + this.id + " es del tipo void.")
-                        agregarSalida("Error Semantico: La función " + this.id + " es del tipo void.")
+                        if (resultado.valor != null) {
+                            console.log("Error Semantico: La función " + this.id + " es del tipo void.")
+                            agregarSalida("Error Semantico: La función " + this.id + " es del tipo void.")
+                        }
                         return this;
                     }
 

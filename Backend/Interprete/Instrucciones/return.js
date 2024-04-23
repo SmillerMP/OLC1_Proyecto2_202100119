@@ -7,6 +7,7 @@ class Return extends Instruccion{
         super(tipoInstruccion.RETURN, fila, columna);
         this.expresion = expresion;
         this.valor = null;
+        this.tipoVar = null;
     }
 
     interpretar(entorno){
@@ -23,8 +24,16 @@ class Return extends Instruccion{
 
             if (Array.isArray(this.expresion)) {
 
+                if (this.expresion[0].tipo == tipoInstruccion.LLAMARFUNCION) {
+                    this.tipoVar = entorno.getFuncion(this.expresion[0].id).tipoVar;
+                }
+
+
                 if (this.expresion.length == 1){
+                    console.log("-------------------------------------------------------------")
+                    console.log(this.valor)
                     this.valor = this.expresion[0].interpretar(entorno).valor;
+
                     return this;
 
                 }
