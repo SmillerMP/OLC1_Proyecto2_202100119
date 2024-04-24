@@ -168,7 +168,7 @@ exp_string  			        [\"][^\"\n]+[\"]
     const SentenciaIf = require("../Interprete/OperacionesMayores/sentenciaIf")
 
 
-    let { agregarSalida } = require('../Interprete/salidas');
+    let { agregarSalida, agregarError } = require('../Interprete/salidas');
     
 %}      
 
@@ -194,9 +194,8 @@ inicio
 entornos
     : entornos entorno      {$$ = $1; $$.push($2);}
     | entorno               {$$ = []; $$.push($1);}
-    | error { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-    | error PTCOMA { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
-    | error LLAVDER { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); }
+    | error { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); agregarError("Sintáctico", "No se esperaba: " + yytext, this._$.first_line, this._$.first_column); }
+    | error LLAVDER { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); agregarError("Sintáctico", "No se esperaba: " + yytext, this._$.first_line, this._$.first_column);}
 ;
 
 entorno
@@ -228,6 +227,8 @@ instruccion
     | sentenciaReturn               {$$ = $1;} 
     | PR_BREAK PTCOMA               {$$ = new Break($1, @1.first_line, @1.first_column+1);}
     | PR_CONTINUE PTCOMA            {$$ = new Continue($1, @1.first_line, @1.first_column+1);}
+
+    | error LLAVDER { agregarSalida('Este es un error sintáctico: ' + yytext + ', en la linea: ' + this._$.first_line + ', en la columna: ' + this._$.first_column); agregarError("Sintáctico", "No se esperaba: " + yytext, this._$.first_line, this._$.first_column);}
 ;
 
 

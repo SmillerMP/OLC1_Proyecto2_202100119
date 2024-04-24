@@ -1,5 +1,5 @@
 const {Expresion, TipoDato} = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class Variable extends Expresion{
     
@@ -27,6 +27,7 @@ class Variable extends Expresion{
                 } else{
                     console.log("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "][" + this.vector2.valor + "] no ha sido declarada")
                     agregarSalida("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "][" + this.vector2.valor + "] no ha sido declarada");
+                    agregarError("Semántico", "La direccion " + this.id + "[" + this.vector1.valor + "][" + this.vector2.valor + "] no ha sido declarada", this.fila, this.columna)
                     this.valor = "ERROR"
                     this.tipo = TipoDato.ERROR;
                 }
@@ -35,6 +36,7 @@ class Variable extends Expresion{
             } else {
                 console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
                 agregarSalida("Error Semántico: La variable " + this.id + " no ha sido declarada.");
+                agregarError("Semántico", "La variable " + this.id + " no ha sido declarada", this.fila, this.columna)
                 this.valor = "ERROR"
                 this.tipo = TipoDato.ERROR;
             }
@@ -53,6 +55,7 @@ class Variable extends Expresion{
                 } else {
                     console.log("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "] no ha sido declarada")
                     agregarSalida("Error Semántico: La direccion " + this.id + "[" + this.vector1.valor + "] no ha sido declarada");
+                    agregarError("Semántico", "La direccion " + this.id + "[" + this.vector1.valor + "] no ha sido declarada", this.fila, this.columna)
                     this.valor = "ERROR"
                     this.tipo = TipoDato.ERROR;
                 }
@@ -61,6 +64,7 @@ class Variable extends Expresion{
             } else {
                 console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
                 agregarSalida("Error Semántico: La variable " + this.id + " no ha sido declarada.");
+                agregarError("Semántico", "La variable " + this.id + " no ha sido declarada", this.fila, this.columna)
                 this.valor = "ERROR"
                 this.tipo = TipoDato.ERROR;
             }
@@ -76,6 +80,7 @@ class Variable extends Expresion{
             } else {
                 console.log("Error Semántico: La variable " + this.id + " no ha sido declarada.")
                 agregarSalida("Error Semántico: La variable " + this.id + " no ha sido declarada.");
+                agregarError("Semántico", "La variable " + this.id + " no ha sido declarada", this.fila, this.columna)
                 this.valor = "ERROR"
                 this.tipo = TipoDato.ERROR;
             }

@@ -1,5 +1,5 @@
 const {Expresion, TipoDato} = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { get, agregarError} = require('../salidas');
 
 class FuncionCout extends Expresion {
     constructor(tipoFuncion, expresion, fila, columna) {
@@ -21,6 +21,7 @@ class FuncionCout extends Expresion {
             } else {
                 console.log("Error Semantico: El valor ingresado no es de tipo string");
                 agregarSalida("Error Semantico: El valor ingresado no es de tipo string");
+                agregarError("Semántico", "El valor ingresado no es de tipo string", this.fila, this.columna)
                 return this;
             }
         } 
@@ -34,6 +35,7 @@ class FuncionCout extends Expresion {
             } else {
                 console.log("Error Semantico: El valor ingresado no es de tipo string");
                 agregarSalida("Error Semantico: El valor ingresado no es de tipo string");
+                agregarError("Semántico", "El valor ingresado no es de tipo string", this.fila, this.columna)
                 return this;
             }
 
@@ -48,6 +50,7 @@ class FuncionCout extends Expresion {
             } else {
                 console.log("Error Semantico: El valor ingresado no es de tipo entero o decimal");
                 agregarSalida("Error Semantico: El valor ingresado no es de tipo entero o decimal");
+                agregarError("Semántico", "El valor ingresado no es de tipo entero o decimal", this.fila, this.columna)
                 return this;
             }
         }

@@ -30,8 +30,8 @@ class Return extends Instruccion{
 
 
                 if (this.expresion.length == 1){
-                    console.log("-------------------------------------------------------------")
-                    console.log(this.valor)
+                    //console.log("-------------------------------------------------------------")
+                    //console.log(this.valor)
                     this.valor = this.expresion[0].interpretar(entorno).valor;
 
                     return this;

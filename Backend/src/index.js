@@ -4,7 +4,9 @@ const cors = require('cors');
 
 const analizador = require("../Analizador/Gramatica.js");
 const entorno = require("../Interprete/Entorno/entorno.js");
-let { borrarSalidas, obtenerSalidas, agregarSalida}  = require("../Interprete/salidas.js");
+let { borrarSalidas, obtenerSalidas, agregarSalida, borrarErrores, agregarError}  = require("../Interprete/salidas.js");
+let  {reporteErrores, reporteSimbolos} = require('../Interprete/Reportes/funcionesReportes.js')
+const { tipoInstruccion } = require('../Interprete/instruccion.js');
 
 
 
@@ -35,6 +37,8 @@ app.get('/Login', (req, res) => {
 
 app.post('/Analizar', (req, res) => {
     borrarSalidas();
+    borrarErrores();
+    borrarSalidas();
     const entrada = req.body.entrada;
     // Analizador Sintactico y lexico
 
@@ -48,7 +52,7 @@ app.post('/Analizar', (req, res) => {
     let posicion = 0;
 
     for (let i = 0; i < resultado.length; i++) {
-        if (resultado[i].tipo == "EXECUTE") {
+        if (resultado[i].tipo == tipoInstruccion.EXECUTE) {
             encontrado = true;
             posicion = i;      
             continue;      
@@ -63,17 +67,11 @@ app.post('/Analizar', (req, res) => {
     } else {
         console.log("Error Semantico: No se encontro la instruccion EXECUTE");
         agregarSalida("Error Semantico: No se encontro la instruccion EXECUTE");
+        agregarError("Semantico", "No se encontro la instruccion EXECUTE", 0, 0);
     }
 
-
-
-    // if (!encontrado) {
-    //     console.log("Error Semantico: No se encontro la instruccion EXECUTE");
-    //     agregarSalida("Error Semantico: No se encontro la instruccion EXECUTE");
-    // } else {
-    //     resultado.interpretar(entornoGlobal);
-    // }
-
+    reporteErrores();
+    reporteSimbolos();
 
     //console.log(entornoGlobal.tablaSim);
     //console.log(entornoGlobal.tablaFunc);

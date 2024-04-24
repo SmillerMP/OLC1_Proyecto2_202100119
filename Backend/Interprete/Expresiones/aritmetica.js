@@ -1,6 +1,6 @@
  
 const { Expresion, TipoDato } = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class Aritmetica extends Expresion{
     constructor (izquierda, derecha, operacion, fila, columna){
@@ -149,6 +149,7 @@ class Aritmetica extends Expresion{
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Suma");
             agregarSalida("Error Semantico: los tipos no son validos operacion Suma");
+            agregarError("Semántico", "los tipos no son validos operacion Suma", this.fila, this.columna);
             return this;
         
         
@@ -233,6 +234,7 @@ class Aritmetica extends Expresion{
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Resta");
             agregarSalida("Error Semantico: los tipos no son validos operacion Resta");
+            agregarError("Semántico", "los tipos no son validos operacion Resta", this.fila, this.columna);
             return this;
         }
 
@@ -291,12 +293,21 @@ class Aritmetica extends Expresion{
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Multiplicacion");
             agregarSalida("Error Semantico: los tipos no son validos operacion Multiplicacion");
+            agregarError("Semántico", "los tipos no son validos operacion Multiplicacion", this.fila, this.columna);
             return this;
         }
 
         // OPERACION DIVISION
         else if (this.operacion == "/") {
             // MANEJO DE ENTERO
+
+            if (this.derecha.valor == 0) {
+                console.log("Error Semantico: Division por 0");
+                agregarSalida("Error Semantico: Division por 0");
+                agregarError("Semántico", "Division por 0", this.fila, this.columna);
+                return this;
+            }
+
             if (this.izquierda.tipo == TipoDato.ENTERO && this.derecha.tipo == TipoDato.ENTERO) {
                 this.tipo = TipoDato.DECIMAL;
                 this.valor = Number(this.izquierda.valor) / Number(this.derecha.valor);
@@ -348,6 +359,7 @@ class Aritmetica extends Expresion{
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Division");
             agregarSalida("Error Semantico: los tipos no son validos operacion Division");
+            agregarError("Semántico", "los tipos no son validos operacion Division", this.fila, this.columna);
             return this;
         }
 
@@ -384,6 +396,7 @@ class Aritmetica extends Expresion{
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Potencia");
             agregarSalida("Error Semantico: los tipos no son validos operacion Potencia");
+            agregarError("Semántico", "los tipos no son validos operacion Potencia", this.fila, this.columna);
             return this;
 
         }
@@ -421,6 +434,7 @@ class Aritmetica extends Expresion{
             // Error Semantico
             console.log("Error Semantico: los tipos no son validos operacion Modulo");
             agregarSalida("Error Semantico: los tipos no son validos operacion Modulo");
+            agregarError("Semántico", "los tipos no son validos operacion Modulo", this.fila, this.columna);
             return this;
 
         }

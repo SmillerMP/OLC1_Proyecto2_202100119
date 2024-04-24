@@ -1,6 +1,6 @@
-const {Instruccion, tipoInstruccion} = require('../instruccion');
+const { Instruccion, tipoInstruccion } = require('../instruccion');
 const { TipoDato } = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class ModificarVar extends Instruccion {
     constructor(id, operador, operacion, fila, columna) {
@@ -15,30 +15,24 @@ class ModificarVar extends Instruccion {
 
             for (let i = 0; i < this.id.length; i++) {
                 //console.log(entorno.getSimbolo(this.id[i]))
-                let variable = entorno.getSimbolo(this.id[i]);                
+                let variable = entorno.getSimbolo(this.id[i]);
                 let resultadoOperacion = this.operacion.interpretar(entorno);
-                let forzarInt = false;
 
-                if (variable == null){
+                if (variable == null) {
                     console.log("Error semántico: variable no declarada");
+                    agregarSalida("Error semántico: variable no declarada");
+                    agregarError("Semántico", "variable no declarada", this.fila, this.columna);
                     return this;
                 }
                 if (variable.tipo != resultadoOperacion.tipo) {
+                    console.log("Error semántico: Error de tipo de dato en modificación de variable");
+                    agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
+                    agregarError("Semántico", "Error de tipo de dato en modificación de variable", this.fila, this.columna);
+                    return this;
 
-                    if (variable.tipo == TipoDato.ENTERO && resultadoOperacion.tipo == TipoDato.DECIMAL) {
-                        forzarInt = true;
-                    
-                    }else if (variable.tipo == TipoDato.DECIMAL && resultadoOperacion.tipo == TipoDato.ENTERO) {
-                        // que se lo pase
-
-                    } else {
-                        console.log("Error semántico: Error de tipo de dato en modificación de variable");
-                        agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
-                        return this;
-                    }               
                 }
 
-            
+
                 if (this.operador == "+") {
                     variable.valor += resultadoOperacion.valor;
                 } else if (this.operador == "-") {
@@ -53,16 +47,8 @@ class ModificarVar extends Instruccion {
                     variable.valor = resultadoOperacion.valor;
                 }
 
-                if (forzarInt) {
-                    variable.valor = Math.round(variable.valor);
-                    console.log("operacion de tipo DECIMAL forazada para ENTERO")
-                    agregarSalida("operacion de tipo DECIMAL forazada para ENTERO")
-                       
-                }
             }
-        } else { 
-
-            let forzarInt = false;
+        } else {
             let variable;
             let resultadoOperacion;
 
@@ -74,31 +60,24 @@ class ModificarVar extends Instruccion {
                 let direccion1 = variable.vector1.valor;
                 let direccion2 = variable.vector2.valor;
                 let matriz = variable.id
-                
+
                 if (variable.tipo == TipoDato.ERROR) {
                     return this;
                 }
 
 
                 if (variable.tipo != resultadoOperacion.tipo) {
-
-                    if (variable.tipo == TipoDato.ENTERO && resultadoOperacion.tipo == TipoDato.DECIMAL) {
-                        forzarInt = true;
-                    
-                    }else if (variable.tipo == TipoDato.DECIMAL && resultadoOperacion.tipo == TipoDato.ENTERO) {
-                        // que se lo pase
-    
-                    } else {
-                        console.log("Error semántico: Error de tipo de dato en modificación de variable");
-                        agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
-                        return this;
-                    }               
+                    console.log("Error semántico: Error de tipo de dato en modificación de variable");
+                    agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
+                    agregarError("Semántico", "Error de tipo de dato en modificación de variable", this.fila, this.columna);
+                    return this;
                 }
 
 
 
+
                 if (this.operador == "+") {
-                    entorno.getSimbolo(matriz).valor[direccion1][direccion2]+= resultadoOperacion.valor;
+                    entorno.getSimbolo(matriz).valor[direccion1][direccion2] += resultadoOperacion.valor;
                 } else if (this.operador == "-") {
                     entorno.getSimbolo(matriz).valor[direccion1][direccion2] -= resultadoOperacion.valor;
                 } else if (this.operador == "*") {
@@ -111,12 +90,6 @@ class ModificarVar extends Instruccion {
                     entorno.getSimbolo(matriz).valor[direccion1][direccion2] = resultadoOperacion.valor;
                 }
 
-                if (forzarInt) {
-                    entorno.getSimbolo(matriz).valor[direccion1][direccion2] = Math.round(entorno.getSimbolo(matriz).valor[direccion1][direccion2]);
-                    console.log("operacion de tipo DECIMAL forazada para ENTERO")
-                    
-                }
- 
 
             }
 
@@ -134,18 +107,11 @@ class ModificarVar extends Instruccion {
 
 
                 if (variable.tipo != resultadoOperacion.tipo) {
+                    console.log("Error semántico: Error de tipo de dato en modificación de variable");
+                    agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
+                    agregarError("Semántico", "Error de tipo de dato en modificación de variable", this.fila, this.columna);
+                    return this;
 
-                    if (variable.tipo == TipoDato.ENTERO && resultadoOperacion.tipo == TipoDato.DECIMAL) {
-                        forzarInt = true;
-                    
-                    }else if (variable.tipo == TipoDato.DECIMAL && resultadoOperacion.tipo == TipoDato.ENTERO) {
-                        // que se lo pase
-
-                    } else {
-                        console.log("Error semántico: Error de tipo de dato en modificación de variable");
-                        agregarSalida("Error semántico: Error de tipo de dato en modificación de variable");
-                        return this;
-                    }               
                 }
 
                 if (this.operador == "+") {
@@ -162,13 +128,7 @@ class ModificarVar extends Instruccion {
                     entorno.getSimbolo(matriz).valor[direccion1] = resultadoOperacion.valor;
                 }
 
-                if (forzarInt) {
-                    entorno.getSimbolo(matriz).valor[direccion1] = Math.round(entorno.getSimbolo(matriz).valor[direccion1]);
-                    console.log("operacion de tipo DECIMAL forazada para ENTERO")
-                    
-                }
- 
-            }      
+            }
 
         }
 

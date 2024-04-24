@@ -1,6 +1,8 @@
-const { TipoDato } = require('../expresion');
 const { Instruccion, tipoInstruccion } = require('../instruccion');
 const Funcion = require("./funcion");
+let { agregarSimbolo } = require('../salidas');
+let TablaSimbolo = require('../Reportes/simbolo');
+const { Simbolo, TipoSimbolo } = require("../Entorno/simbolo");
 
 class DeclaracionFuncion extends Instruccion {
 
@@ -26,6 +28,7 @@ class DeclaracionFuncion extends Instruccion {
 
         let funcion = new Funcion(this.tipoVar, this.nombre, this.retorno, this.parametros, this.instrucciones, this.fila, this.columna);
         entorno.addFuncion(this.nombre, funcion);
+        agregarSimbolo(new TablaSimbolo(this.nombre, TipoSimbolo.FUNCION, this.tipoVar, this.fila, this.fila));
         return this;
 
 

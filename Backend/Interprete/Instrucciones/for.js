@@ -1,7 +1,7 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
 const { TipoDato } = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class For extends Instruccion {
     constructor(variable, condicion, actualizacion, instrucciones, fila, columna) {
@@ -22,6 +22,7 @@ class For extends Instruccion {
         if (variableFor.tipo != TipoDato.ENTERO) {
             console.log("Error Semántico: La variable del for no es de tipo entero.")
             agregarSalida("Error Semántico: La variable del for no es de tipo entero.");
+            agregarError("Semántico", "La variable del for no es de tipo entero.", this.fila, this.columna)
             return this;
         }
 
@@ -32,6 +33,7 @@ class For extends Instruccion {
         if (this.condicion.tipo != TipoDato.BOOL) {
             console.log("Error Semántico: La condición del for no es booleana.")
             agregarSalida("Error Semántico: La condición del for no es booleana.");
+            agregarError("Semántico", "La condición del for no es booleana.", this.fila, this.columna)
             return this;
         }
 
@@ -53,6 +55,7 @@ class For extends Instruccion {
                     if (!entornoFor.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
                         agregarSalida("Error Semántico: return no está dentro de una función.")
+                        agregarError("Semántico", "return no está dentro de una función.", this.fila, this.columna)
 
                         return this;
                     }    

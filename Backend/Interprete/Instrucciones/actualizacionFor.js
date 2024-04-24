@@ -1,6 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const { TipoDato } = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class ActualizacionFor extends Instruccion {
     constructor(id, operador, fila, columna) {
@@ -17,6 +17,7 @@ class ActualizacionFor extends Instruccion {
         if (variable == null){
             console.log("Error semántico: variable no declarada");
             agregarSalida("Error semántico: variable no declarada");
+            agregarError("Semántico", "variable no declarada", this.fila, this.columna);
             return this;
         }
 

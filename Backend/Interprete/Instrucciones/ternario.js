@@ -1,6 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError} = require('../salidas');
 
 class Ternario extends Instruccion {
     constructor(condicion, insTrue, insFalse ,fila, columna) {
@@ -16,7 +16,9 @@ class Ternario extends Instruccion {
         this.condicion.interpretar(entornoTernario);
 
         if (this.condicion.tipo != "BOOL") {
-            console.log("Error Semántico: La condición del if no es booleana.")
+            console.log("Error Semántico: La condición del ternario no es booleana.")
+            agregarSalida("Error Semántico: La condición del ternario no es booleana.")
+            agregarError("Semántico", "La condición del ternario no es booleana.", this.fila, this.columna)
             return this;
         }
 
@@ -31,6 +33,8 @@ class Ternario extends Instruccion {
                     if (!entornoIf.esCiclo()) {
                         console.log("Error Semántico: El break no está dentro de un ciclo.")
                         agregarSalida("Error Semántico: El break no está dentro de un ciclo.")
+                        agregarError("Semántico", "El break no está dentro de un ciclo.", this.fila, this.columna)
+
                         return this;
                     } 
                     return resultado;
@@ -39,6 +43,7 @@ class Ternario extends Instruccion {
                     if (!entornoIf.esCiclo()) {
                         console.log("Error Semántico: El continue no está dentro de un ciclo.")
                         agregarSalida("Error Semántico: El continue no está dentro de un ciclo.")
+                        agregarError("Semántico", "El continue no está dentro de un ciclo.", this.fila, this.columna)
                         return this;
                     } 
                     return resultado;
@@ -56,6 +61,7 @@ class Ternario extends Instruccion {
                     if (!entornoIf.esCiclo()) {
                         console.log("Error Semántico: El break no está dentro de un ciclo.")
                         agregarSalida("Error Semántico: El break no está dentro de un ciclo.")
+                        agregarError("Semántico", "El break no está dentro de un ciclo.", this.fila, this.columna)
                         return this;
                     } 
                     return resultado;
@@ -64,6 +70,7 @@ class Ternario extends Instruccion {
                     if (!entornoIf.esCiclo()) {
                         console.log("Error Semántico: El continue no está dentro de un ciclo.")
                         agregarSalida("Error Semántico: El continue no está dentro de un ciclo.")
+                        agregarError("Semántico", "El continue no está dentro de un ciclo.", this.fila, this.columna)
                         return this;
                     } 
                     return resultado;

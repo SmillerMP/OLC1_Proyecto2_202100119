@@ -1,7 +1,7 @@
 const { Instruccion, tipoInstruccion } = require('../instruccion');
 const { TipoSimbolo } = require("../Entorno/simbolo");
 const { TipoDato } = require('../expresion');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class Declaracion extends Instruccion {
     constructor(tipo, id, expresion, fila, columna) {
@@ -35,6 +35,7 @@ class Declaracion extends Instruccion {
                 if (this.id.length != resultado.expresion.length) {
                     console.log("Error semántico: el retorno regresa mas valores de los esperados");
                     agregarSalida("Error semántico: el retorno regresa mas valores de los esperados");
+                    agregarError("Semántico", "el retorno regresa mas valores de los esperados", this.fila, this.columna);
                     return this;
                 }
 
@@ -44,6 +45,7 @@ class Declaracion extends Instruccion {
                     if (resultado.tipoVar != this.tipo) {
                         console.log("Error semántico: Error de tipo de dato en declaracion de variable");
                         agregarSalida("Error semántico: Error de tipo de dato en declaracion de variable");
+                        agregarError("Semántico", "Error de tipo de dato en declaracion de variable", this.fila, this.columna);
                         return this;
                     }
 
@@ -63,6 +65,7 @@ class Declaracion extends Instruccion {
                 if (this.expresion.tipo != this.tipo) {
                     console.log("Error semántico: Error de tipo de dato en declaracion de variable");
                     agregarSalida("Error semántico: Error de tipo de dato en declaracion de variable");
+                    agregarError("Semántico", "Error de tipo de dato en declaracion de variable", this.fila, this.columna);
                     return this;
                 }
 

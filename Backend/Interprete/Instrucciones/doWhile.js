@@ -1,6 +1,6 @@
 const {Instruccion, tipoInstruccion} = require('../instruccion');
 const Entorno = require('../Entorno/entorno');
-let { agregarSalida } = require('../salidas');
+let { agregarSalida, agregarError } = require('../salidas');
 
 class DoWhile extends Instruccion {
     constructor(condicion, instrucciones, fila, columna) {
@@ -28,6 +28,7 @@ class DoWhile extends Instruccion {
                 if (!entornoDoWhile.esFuncion()) {
                     console.log("Error Semántico: return no está dentro de una función.")
                     agregarSalida("Error Semántico: return no está dentro de una función.")
+                    agregarError("Semántico", "return no está dentro de una función.", this.fila, this.columna)
 
                     return this;
                 }    
@@ -43,6 +44,7 @@ class DoWhile extends Instruccion {
         if (this.condicion.tipo != "BOOL") {
             console.log("Error Semántico: La condición del do while no es booleana.")
             agregarSalida("Error Semántico: La condición del do while no es booleana.");
+            agregarError("Semántico", "La condición del do while no es booleana.", this.fila, this.columna)
 
             return this;
         }
@@ -63,6 +65,7 @@ class DoWhile extends Instruccion {
                     if (!entornoDoWhile.esFuncion()) {
                         console.log("Error Semántico: return no está dentro de una función.")
                         agregarSalida("Error Semántico: return no está dentro de una función.")
+                        agregarError("Semántico", "return no está dentro de una función.", this.fila, this.columna)
 
                         return this;
                     }    

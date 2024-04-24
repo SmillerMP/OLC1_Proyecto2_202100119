@@ -1,5 +1,7 @@
 const { Expresion, TipoDato } = require("../expresion");
 const { Simbolo } = require("./simbolo");
+let { agregarSalida, agregarError, agregarSimbolo } = require('../salidas');
+let TablaSimbolo = require('../Reportes/simbolo');
 
 const {tipoInstruccion} = require('../instruccion');
 
@@ -16,9 +18,13 @@ class Entorno{
     addSimbolo(nombre, valor, tipo, tipoVar, fila, columna){
         if(nombre in this.tablaSim){
             console.log("Error Semántico: La variable " + nombre + " ya ha sido declarada.");
+            agregarSalida("Error Semántico: La variable " + nombre + " ya ha sido declarada.");
+            agregarError("Semántico", "La variable " + nombre + " ya ha sido declarada.", fila, columna);
+
             return;
         }
         this.tablaSim[nombre] = new Simbolo(nombre, valor, tipo, tipoVar, fila, columna);
+        agregarSimbolo(new TablaSimbolo(nombre, tipoVar, tipo, this.nombre, fila, columna));
     }
 
     getSimbolo(nombre){
@@ -68,7 +74,8 @@ class Entorno{
             // error semantico
             return;
         }
-        this.tablaFunc[nombre] = funcion;
+        this.tablaFunc[nombre] = funcion;        
+
     }
 
     getFuncion(nombre){
