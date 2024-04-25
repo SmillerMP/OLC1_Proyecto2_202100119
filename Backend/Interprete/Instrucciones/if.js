@@ -11,13 +11,7 @@ class If extends Instruccion {
 
     interpretar(entorno) {
 
-
-        //console.log("inicio????????")
-        // console.log(this.condicion)
         this.condicion.interpretar(entorno);
-        // console.log(this.condicion)
-        // console.log("fin????????")
-
 
         let entornoIf = new Entorno(tipoInstruccion.IF, entorno)
         //console.log(this.condicion)

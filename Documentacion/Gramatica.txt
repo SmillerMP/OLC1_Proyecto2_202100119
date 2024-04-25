@@ -1,0 +1,235 @@
+<inicio> ::= <entornos> EOF      
+
+
+
+<entornos> ::= <entornos> <entorno>      
+    | <entorno>               
+
+
+
+
+<entorno> ::= <declaracionVariables>      
+    | <funcionExecute>            
+    | <funciones>                 
+    | <llamarFunciones>           
+
+
+ 
+<instrucciones> ::= <instrucciones> instruccion     
+	| instruccion                   
+
+
+
+instruccion ::= <declaracionVariables>          
+    | <llamarFunciones>               
+    | <sentenciaIfCompleta>           
+    | <ciclosWhile>                   
+    | <cicloFor>                      
+    | <impresionCout>                  
+    | <switchCase>                    
+    | INTERROGACION <ternario> PTCOMA 
+    | <sentenciaReturn>                
+    | PR_BREAK PTCOMA               
+    | PR_CONTINUE PTCOMA            
+    | error LLAVDER 
+
+
+
+<identificadores> ::= <identificadores> COMA ID       
+    | ID                            
+
+
+
+<secuenciasEscape> ::= <secuenciasEscape> SALTO_LINEA
+    | <secuenciasEscape> BARRA_INVERTIDA
+    | <secuenciasEscape> COMILLA_DOBLE
+    | <secuenciasEscape> TABULACION
+    | <secuenciasEscape> COMILLA_SIMPLE
+    | SALTO_LINEA
+    | BARRA_INVERTIDA
+    | COMILLA_DOBLE
+    | TABULACION
+    | COMILLA_SIMPLE
+
+
+
+<tiposVar> ::= PR_INT                                    
+    | PR_DOUBLE                                 
+    | PR_BOOL                                   
+    | PR_CHAR                                   
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_STRING      
+
+
+
+<valores> ::= ID PUNTO PR_LENGTH PARIZQ PARDER
+    | PR_TYPEOF PARIZQ <valores> PARDER                       
+    | PR_ROUND PARIZQ <valoresPlus> PARDER                    
+    | PR_TOUPPER PARIZQ <valoresPlus> PARDER                  
+    | PR_TOLOWER PARIZQ <valoresPlus> PARDER                  
+    | PR_STD DOSPUNTOS DOSPUNTOS PR_TOSTRING PARIZQ <valoresPlus> PARDER      
+    | DECIMAL                       
+    | ENTERO                        
+    | BOOLEAN                       
+    | STRING                             
+    | CHAR                           
+    | ID                            
+    | ID CORIZQ <valoresPlus> CORDER      
+    | ID CORIZQ <valoresPlus> CORDER CORIZQ <valoresPlus> CORDER           
+    | ID PARIZQ <valoresArreglos> PARDER                          
+
+
+
+<valoresPlus> ::= <valoresPlus> MAS <valoresPlus>                                   
+    | <valoresPlus> MENOS <valoresPlus>                                 
+    | MENOS <valoresPlus>                             
+    | <valoresPlus> POR <valoresPlus>                                   
+    | <valoresPlus> DIVIDIDO <valoresPlus>                                    
+    | POTENCIA PARIZQ <valoresPlus> COMA <valoresPlus> PARDER                        
+    | <valoresPlus> MODULO <valoresPlus>                                
+    | <valores>                                                       
+    
+
+
+<valoresArreglos> ::= <valoresArreglos> COMA <valoresPlus>                              
+    | <valoresPlus>                                                   
+
+
+
+<valoresArregloMatrices> ::= <valoresArregloMatrices> COMA CORIZQ <valoresArreglos> CORDER     
+    | CORIZQ <valoresArreglos> CORDER                                 
+
+
+
+<arregloDeclaraciones> ::= <arregloDeclaraciones> COMA <tiposVar> ID                         
+    | <tiposVar> ID                                                               
+
+
+
+<declaracionVariables> ::= <tiposVar> <identificadores> PTCOMA                                           
+    | <tiposVar> <identificadores> IGUAL <sentenciaLogica> PTCOMA                     
+    | <tiposVar> <identificadores> IGUAL ID PARIZQ PARDER PTCOMA
+    | <tiposVar> <identificadores> IGUAL <ternario> PTCOMA
+    | <tiposVar> <identificadores> IGUAL PARIZQ <tiposVar> PARDER <valoresPlus> PTCOMA
+    | <modificarVariables> PTCOMA                                     
+    | <VectoresMatrices>                                          
+
+
+
+<modificarVariables> ::= <identificadores> MAS MAS                                       
+    | <identificadores> MENOS MENOS                                   
+    | <identificadores> IGUAL <sentenciaLogica>                         
+    | <identificadores> MAS IGUAL <sentenciaLogica>                      
+    | <identificadores> MENOS IGUAL <valoresPlus>                            
+    | <identificadores> POR IGUAL <sentenciaLogica>                      
+    | <identificadores> DIVIDIDO IGUAL <sentenciaLogica>                 
+    | <identificadores> MODULO IGUAL <sentenciaLogica>                     
+
+
+
+<VectoresMatrices> ::= <tiposVar> ID CORIZQ CORDER IGUAL PR_NEW <tiposVar> CORIZQ <valoresPlus> CORDER PTCOMA       
+    | <tiposVar> ID CORIZQ CORDER CORIZQ CORDER IGUAL PR_NEW <tiposVar> CORIZQ <valoresPlus> CORDER CORIZQ <valoresPlus> CORDER PTCOMA  
+    | <tiposVar> ID CORIZQ CORDER IGUAL CORIZQ <valoresArreglos> CORDER PTCOMA                      
+    | <tiposVar> ID CORIZQ CORDER CORIZQ CORDER IGUAL CORIZQ <valoresArregloMatrices> CORDER PTCOMA 
+    | ID CORIZQ <valoresPlus> CORDER IGUAL <valoresPlus> PTCOMA                                      
+    | ID CORIZQ <valoresPlus> CORDER CORIZQ <valoresPlus> CORDER IGUAL <valoresPlus> PTCOMA            
+    | <tiposVar> ID CORIZQ CORDER IGUAL ID PUNTO PR_C_STR PARIZQ PARDER PTCOMA
+
+
+
+<sentenciaIf> ::= PR_IF PARIZQ <sentenciaLogica> PARDER LLAVIZQ <instrucciones> LLAVDER     
+
+
+
+<sentenciaIfElse> ::= <sentenciaIfElse> PR_ELSE PR_IF PARIZQ <sentenciaLogica> PARDER LLAVIZQ <instrucciones> LLAVDER         
+    | PR_ELSE PR_IF PARIZQ <sentenciaLogica> PARDER LLAVIZQ <instrucciones> LLAVDER                     
+
+
+
+<sentenciaElse> ::= PR_ELSE LLAVIZQ <instrucciones> LLAVDER             
+
+
+
+<sentenciaIfCompleta> ::= <sentenciaIf> <sentenciaIfElse> <sentenciaElse>         
+    | <sentenciaIf> <sentenciaIfElse>                       
+    | <sentenciaIf> <sentenciaElse>                         
+    | <sentenciaIf>                                           
+
+
+
+<ternario> ::= <sentenciaLogica> INTERROGACION <instrucciones> DOSPUNTOS <instrucciones>    
+
+
+
+<sentenciaRelacional> ::= <sentenciaRelacional> IGUALES <sentenciaRelacional>               
+    | <sentenciaRelacional> DIFERENTE <sentenciaRelacional>             
+    | <sentenciaRelacional> MENOR_QUE <sentenciaRelacional>             
+    | <sentenciaRelacional> MENOR_IGUAL <sentenciaRelacional>           
+    | <sentenciaRelacional> MAYOR_QUE <sentenciaRelacional>             
+    | <sentenciaRelacional> MAYOR_IGUAL <sentenciaRelacional>           
+    | <valoresPlus>                                                   
+    
+
+
+<sentenciaLogica> ::= <sentenciaLogica> OR <sentenciaLogica>            
+    | <sentenciaLogica> AND <sentenciaLogica>           
+    | NOT <sentenciaLogica>               
+    | <sentenciaRelacional>                           
+    
+
+
+<ciclosWhile> ::= PR_WHILE PARIZQ <sentenciaLogica> PARDER LLAVIZQ <instrucciones> LLAVDER                  
+    | PR_DO LLAVIZQ <instrucciones> LLAVDER PR_WHILE PARIZQ <sentenciaLogica> PARDER PTCOMA     
+
+
+
+<cicloFor> ::= PR_FOR PARIZQ <declaracionVariables> <sentenciaLogica> PTCOMA <modificarVariables> PARDER LLAVIZQ <instrucciones> LLAVDER      
+
+
+
+<recursividadCase> ::= <recursividadCase> PR_CASE <valoresPlus> DOSPUNTOS <instrucciones>      
+    | PR_CASE <valoresPlus> DOSPUNTOS <instrucciones>                       
+
+
+
+<switchCase> ::= PR_SWITCH PARIZQ <valoresPlus> PARDER LLAVIZQ <recursividadCase> PR_DEFAULT DOSPUNTOS <instrucciones> LLAVDER   
+    | PR_SWITCH PARIZQ <valoresPlus> PARDER LLAVIZQ <recursividadCase> LLAVDER          
+
+
+
+<funciones> ::= <tiposVar> ID PARIZQ <arregloDeclaraciones> PARDER LLAVIZQ <instrucciones> LLAVDER      
+    | <tiposVar> ID PARIZQ PARDER LLAVIZQ <instrucciones> LLAVDER                           
+    | PR_VOID ID PARIZQ <arregloDeclaraciones> PARDER LLAVIZQ <instrucciones> LLAVDER       
+    | PR_VOID ID PARIZQ PARDER LLAVIZQ <instrucciones> LLAVDER                            
+
+
+
+<llamarFunciones> ::= ID PARIZQ <valoresArreglos> PARDER PTCOMA                                                     
+    | ID PARIZQ PARDER PTCOMA                         
+
+
+
+<funcionExecute> ::= PR_EXECUTE <llamarFunciones>    
+
+
+
+<posibilidadesCout> ::= <sentenciaLogica>                       
+    | PARIZQ <sentenciaLogica> PARDER          
+    | ID PARIZQ PARDER                          
+    | PR_ENDL                               
+
+
+
+<funcionCout> ::= <funcionCout> SALIDA <posibilidadesCout>  
+    | <posibilidadesCout>                     
+
+
+
+<impresionCout> ::= PR_COUT SALIDA <funcionCout> PTCOMA     
+
+
+
+<<sentenciaReturn>> ::= PR_RETURN <valoresArreglos> PTCOMA                          
+    | PR_RETURN PTCOMA                                          
+    | PR_RETURN PARIZQ <valoresArreglos> PARDER PTCOMA            
+  
+
